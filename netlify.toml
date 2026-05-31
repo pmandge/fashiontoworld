@@ -1,0 +1,28 @@
+# ============================================================
+# FashionToWorld — Netlify configuration
+# ============================================================
+# Deploy: drag this whole folder onto app.netlify.com/drop,
+# or connect a GitHub repo. Then add the 3 ADMITAD_* env vars
+# under Site settings → Environment variables.
+# ============================================================
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# Send all /api/* calls to the serverless function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# Cache static assets hard for speed (global CDN)
+[[headers]]
+  for = "/public/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

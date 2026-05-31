@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FashionToWorld — Global Style Destination</title>
+<meta name="description" content="Discover the world's best fashion brands. Curated collections, exclusive deals, and global delivery. Your ultimate fashion affiliate destination.">
+
+<!-- ============================================================ -->
+<!-- ADMITAD WEBSITE VERIFICATION                                  -->
+<!-- ============================================================ -->
+<meta name="verify-admitad" content="272a4927b9" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="public/css/main.css">
+<link rel="stylesheet" href="public/css/home.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="pages/women.html">Women</a></li>
+      <li><a href="pages/men.html">Men</a></li>
+      <li><a href="pages/women.html?cat=shoes">Shoes</a></li>
+      <li><a href="pages/women.html?cat=bags">Bags</a></li>
+      <li><a href="pages/women.html?cat=jewellery">Jewellery &amp; Watches</a></li>
+      <li><a href="pages/women.html?cat=accessories">Accessories</a></li>
+      <li><a href="pages/brands.html">Brands</a></li>
+      <li><a href="pages/deals.html">Deals</a></li>
+    </ul>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <button class="btn-search" onclick="toggleSearch()" aria-label="Search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <a href="pages/deals.html" class="btn-nav-cta">Shop Deals</a>
+    </div>
+    <button class="nav-burger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="search-bar" id="searchBar">
+    <input type="text" placeholder="Search brands, styles, products..." id="searchInput" onkeyup="handleSearch(event)">
+    <button onclick="toggleSearch()">✕</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-shape hero-shape-1"></div>
+    <div class="hero-shape hero-shape-2"></div>
+    <div class="hero-shape hero-shape-3"></div>
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">New Season · Global Delivery</p>
+    <h1 class="hero-title">
+      The World's<br>
+      <em>Best Fashion</em><br>
+      In One Place
+    </h1>
+    <p class="hero-subtitle">10,000+ products from 200+ premium brands. Curated collections, real-time deals, and worldwide shipping.</p>
+    <div class="hero-actions">
+      <a href="pages/women.html" class="btn-primary">Shop Women</a>
+      <a href="pages/men.html" class="btn-secondary">Shop Men</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">200+</span><span class="stat-label">Brands</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num">10K+</span><span class="stat-label">Products</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num">180+</span><span class="stat-label">Countries</span></div>
+    </div>
+  </div>
+  <div class="hero-image-area">
+    <div class="hero-image-frame">
+      <div class="hero-badge hero-badge-1">
+        <span>✦</span> New In
+      </div>
+      <div class="hero-badge hero-badge-2">
+        Up to 60% Off
+      </div>
+      <div class="product-card-float">
+        <div class="pcf-img"></div>
+        <div class="pcf-info">
+          <p class="pcf-brand">Gucci</p>
+          <p class="pcf-name">Marmont Bag</p>
+          <p class="pcf-price">$1,250</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE BRANDS -->
+<div class="brands-ticker">
+  <div class="ticker-track">
+    <span>Gucci</span><span>•</span>
+    <span>Zara</span><span>•</span>
+    <span>H&M</span><span>•</span>
+    <span>Prada</span><span>•</span>
+    <span>ASOS</span><span>•</span>
+    <span>Mango</span><span>•</span>
+    <span>Versace</span><span>•</span>
+    <span>Balenciaga</span><span>•</span>
+    <span>Net-a-Porter</span><span>•</span>
+    <span>Farfetch</span><span>•</span>
+    <span>Valentino</span><span>•</span>
+    <span>Burberry</span><span>•</span>
+    <span>Gucci</span><span>•</span>
+    <span>Zara</span><span>•</span>
+    <span>H&M</span><span>•</span>
+    <span>Prada</span><span>•</span>
+    <span>ASOS</span><span>•</span>
+    <span>Mango</span><span>•</span>
+    <span>Versace</span><span>•</span>
+    <span>Balenciaga</span><span>•</span>
+  </div>
+</div>
+
+<!-- CATEGORY GRID -->
+<section class="section categories-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Shop by Category</p>
+      <h2 class="section-title">Find Your Style</h2>
+    </div>
+    <div class="category-grid" id="categoryGrid">
+      <!-- Populated by JS / API -->
+    </div>
+  </div>
+</section>
+
+<!-- TRENDING PRODUCTS -->
+<section class="section trending-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">What's Hot Right Now</p>
+      <h2 class="section-title">Trending This Week</h2>
+      <a href="pages/products.html" class="section-link">View All →</a>
+    </div>
+    <div class="products-grid" id="trendingProducts">
+      <!-- Populated via Admitad API -->
+      <div class="loading-skeleton"></div>
+      <div class="loading-skeleton"></div>
+      <div class="loading-skeleton"></div>
+      <div class="loading-skeleton"></div>
+      <div class="loading-skeleton"></div>
+      <div class="loading-skeleton"></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEALS BANNER -->
+<section class="deals-banner">
+  <div class="container">
+    <div class="deals-inner">
+      <div class="deals-text">
+        <p class="deals-eyebrow">Limited Time</p>
+        <h2 class="deals-title">Up to 60% Off<br><em>Top Brands</em></h2>
+        <p class="deals-sub">Exclusive deals updated daily. Don't miss out on the season's biggest discounts.</p>
+        <a href="pages/deals.html" class="btn-primary">See All Deals</a>
+      </div>
+      <div class="deals-coupons" id="dealsPreview">
+        <!-- Populated by API -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED BRANDS -->
+<section class="section brands-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Partner Brands</p>
+      <h2 class="section-title">Shop Top Brands</h2>
+      <a href="pages/brands.html" class="section-link">All Brands →</a>
+    </div>
+    <div class="brands-grid" id="brandsGrid">
+      <!-- Populated via Admitad API -->
+    </div>
+  </div>
+</section>
+
+<!-- STYLE BLOG PREVIEW -->
+<section class="section blog-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Inspiration & Guides</p>
+      <h2 class="section-title">From the Style Blog</h2>
+      <a href="pages/blog.html" class="section-link">All Articles →</a>
+    </div>
+    <div class="blog-grid" id="blogGrid">
+      <article class="blog-card">
+        <div class="blog-img blog-img-1"></div>
+        <div class="blog-body">
+          <span class="blog-tag">Trends</span>
+          <h3><a href="pages/blog-post.html">The 10 Fashion Trends Dominating 2025</a></h3>
+          <p>From quiet luxury to maximalist prints — here's what the runways say you should be wearing.</p>
+          <span class="blog-date">May 28, 2025</span>
+        </div>
+      </article>
+      <article class="blog-card">
+        <div class="blog-img blog-img-2"></div>
+        <div class="blog-body">
+          <span class="blog-tag">Style Guide</span>
+          <h3><a href="pages/blog-post.html">How to Build a Capsule Wardrobe on Any Budget</a></h3>
+          <p>A timeless wardrobe doesn't require a luxury budget. Here's how to shop smart.</p>
+          <span class="blog-date">May 22, 2025</span>
+        </div>
+      </article>
+      <article class="blog-card">
+        <div class="blog-img blog-img-3"></div>
+        <div class="blog-body">
+          <span class="blog-tag">Brand Spotlight</span>
+          <h3><a href="pages/blog-post.html">Inside Zara's New Sustainable Collection</a></h3>
+          <p>The fast-fashion giant makes a major push toward eco-conscious design this season.</p>
+          <span class="blog-date">May 15, 2025</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="nl-text">
+        <h2>Get Exclusive Deals<br><em>First</em></h2>
+        <p>Join 50,000+ fashion lovers. Weekly curated deals, new arrivals, and style inspiration delivered to your inbox.</p>
+      </div>
+      <form class="nl-form" onsubmit="handleNewsletter(event)">
+        <input type="email" placeholder="Your email address" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span></a>
+        <p>Your global destination for fashion discovery. We connect you with the world's best brands and exclusive deals.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="Pinterest">PT</a>
+          <a href="#" aria-label="TikTok">TK</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="pages/women.html">Women</a></li>
+          <li><a href="pages/men.html">Men</a></li>
+          <li><a href="pages/kids.html">Kids</a></li>
+          <li><a href="pages/accessories.html">Accessories</a></li>
+          <li><a href="pages/beauty.html">Beauty</a></li>
+          <li><a href="pages/deals.html">Sales & Deals</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Brands</h4>
+        <ul>
+          <li><a href="pages/brands.html">All Brands</a></li>
+          <li><a href="pages/brands.html?tier=luxury">Luxury</a></li>
+          <li><a href="pages/brands.html?tier=premium">Premium</a></li>
+          <li><a href="pages/brands.html?tier=highstreet">High Street</a></li>
+          <li><a href="pages/brands.html?tier=sport">Sport & Active</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="pages/about.html">About Us</a></li>
+          <li><a href="pages/blog.html">Style Blog</a></li>
+          <li><a href="pages/contact.html">Contact</a></li>
+          <li><a href="pages/affiliate-disclosure.html">Affiliate Disclosure</a></li>
+          <li><a href="pages/privacy.html">Privacy Policy</a></li>
+          <li><a href="pages/terms.html">Terms of Use</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 FashionToWorld. All rights reserved. This site contains affiliate links. We may earn a commission when you purchase through our links at no extra cost to you.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="public/js/categories.js"></script>
+<script src="public/js/i18n.js"></script>
+<script src="public/js/admitad-api.js"></script>
+<script src="public/js/site-content.js"></script>
+<script src="public/js/main.js"></script>
+<script src="public/js/footer.js"></script>
+<script src="public/js/mobile-menu.js"></script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fashion Brands — FashionToWorld</title>
+<meta name="description" content="Shop from 200+ fashion brands worldwide. Luxury, premium, high street and sport brands with global delivery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../public/css/main.css">
+<style>
+.page-hero { padding: calc(var(--nav-h) + 60px) 0 60px; text-align: center; }
+.page-hero h1 { font-size: clamp(40px, 6vw, 80px); }
+
+.brands-search {
+  max-width: 480px;
+  margin: 32px auto 0;
+  position: relative;
+}
+.brands-search input {
+  width: 100%;
+  padding: 16px 52px 16px 20px;
+  border: 2px solid var(--black);
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  outline: none;
+}
+.brands-search svg {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.tier-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 48px 0 40px;
+  flex-wrap: wrap;
+}
+.tier-tab {
+  padding: 10px 28px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 100px;
+  transition: all 0.2s;
+}
+.tier-tab:hover, .tier-tab.active { background: var(--black); color: var(--white); border-color: var(--black); }
+
+.brands-a-z {
+  margin-bottom: 48px;
+}
+.alpha-nav {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.alpha-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  background: var(--white);
+  transition: all 0.15s;
+}
+.alpha-btn:hover, .alpha-btn.active {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+.brand-card {
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.25s;
+  background: var(--white);
+}
+.brand-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(201,168,76,0.15);
+}
+.brand-card-header {
+  height: 100px;
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: var(--black);
+}
+.brand-card-body { padding: 16px; }
+.brand-card-name { font-family: var(--font-serif); font-size: 18px; margin-bottom: 4px; }
+.brand-card-meta { font-size: 12px; color: var(--text-muted); }
+.brand-card-tier {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-top: 8px;
+}
+.tier-luxury { background: #f5f0e5; color: #8b6914; }
+.tier-premium { background: #e8f5f0; color: #1a7a5e; }
+.tier-highstreet { background: #e8edf5; color: #1a3d7a; }
+.tier-sport { background: #f5e8e8; color: #7a1a1a; }
+
+.brands-count-bar {
+  background: var(--cream);
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+.brands-count-bar p { font-size: 14px; color: var(--text-muted); }
+.brands-count-bar strong { color: var(--black); }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span></a>
+        <ul class="nav-links">
+      <li><a href="women.html">Women</a></li>
+      <li><a href="men.html">Men</a></li>
+      <li><a href="women.html?cat=shoes">Shoes</a></li>
+      <li><a href="women.html?cat=bags">Bags</a></li>
+      <li><a href="women.html?cat=jewellery">Jewellery &amp; Watches</a></li>
+      <li><a href="women.html?cat=accessories">Accessories</a></li>
+      <li><a href="brands.html">Brands</a></li>
+      <li><a href="deals.html">Deals</a></li>
+    </ul>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <a href="deals.html" class="btn-nav-cta">Deals</a>
+    </div>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="container">
+    <p class="section-eyebrow" style="justify-content:center;display:flex">200+ Partners</p>
+    <h1>Shop the World's<br><em>Best Brands</em></h1>
+    <div class="brands-search">
+      <input type="text" placeholder="Search brands..." id="brandSearch" oninput="filterBrands(this.value)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="container">
+
+    <div class="tier-tabs">
+      <button class="tier-tab active" onclick="filterTier('all', this)">All Brands</button>
+      <button class="tier-tab" onclick="filterTier('luxury', this)">Luxury</button>
+      <button class="tier-tab" onclick="filterTier('premium', this)">Premium</button>
+      <button class="tier-tab" onclick="filterTier('highstreet', this)">High Street</button>
+      <button class="tier-tab" onclick="filterTier('sport', this)">Sport & Active</button>
+    </div>
+
+    <!-- A-Z Navigation -->
+    <div class="alpha-nav" id="alphaNav"></div>
+
+    <div class="brands-count-bar">
+      <p>Showing <strong id="brandCount">—</strong> brands</p>
+      <p style="font-size:12px">Commissions earned on qualifying purchases</p>
+    </div>
+
+    <div class="brands-grid" id="brandsDirectory" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
+      <!-- Populated by JS -->
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2025 FashionToWorld. Affiliate Disclosure: We earn a commission on qualifying purchases. Brand logos and trademarks belong to their respective owners.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../public/js/admitad-api.js"></script>
+<script>
+const allBrands = [
+  { name: 'ASOS', tier: 'highstreet', products: 2400, slug: 'asos' },
+  { name: 'Balenciaga', tier: 'luxury', products: 320, slug: 'balenciaga' },
+  { name: 'Burberry', tier: 'luxury', products: 480, slug: 'burberry' },
+  { name: 'Calvin Klein', tier: 'premium', products: 680, slug: 'calvin-klein' },
+  { name: 'Coach', tier: 'premium', products: 420, slug: 'coach' },
+  { name: 'Dior', tier: 'luxury', products: 380, slug: 'dior' },
+  { name: 'Farfetch', tier: 'luxury', products: 1200, slug: 'farfetch' },
+  { name: 'Gucci', tier: 'luxury', products: 560, slug: 'gucci' },
+  { name: 'H&M', tier: 'highstreet', products: 1800, slug: 'hm' },
+  { name: 'Isabel Marant', tier: 'premium', products: 280, slug: 'isabel-marant' },
+  { name: 'J.Crew', tier: 'premium', products: 640, slug: 'jcrew' },
+  { name: 'Kate Spade', tier: 'premium', products: 360, slug: 'kate-spade' },
+  { name: 'Levi\'s', tier: 'highstreet', products: 520, slug: 'levis' },
+  { name: 'Mango', tier: 'highstreet', products: 960, slug: 'mango' },
+  { name: 'Net-a-Porter', tier: 'luxury', products: 2100, slug: 'net-a-porter' },
+  { name: 'Nike', tier: 'sport', products: 1400, slug: 'nike' },
+  { name: 'Oscar de la Renta', tier: 'luxury', products: 180, slug: 'oscar-de-la-renta' },
+  { name: 'Prada', tier: 'luxury', products: 440, slug: 'prada' },
+  { name: 'Quay Australia', tier: 'premium', products: 120, slug: 'quay' },
+  { name: 'Revolve', tier: 'premium', products: 860, slug: 'revolve' },
+  { name: 'Sandro', tier: 'premium', products: 340, slug: 'sandro' },
+  { name: 'Ted Baker', tier: 'premium', products: 420, slug: 'ted-baker' },
+  { name: 'Uniqlo', tier: 'highstreet', products: 780, slug: 'uniqlo' },
+  { name: 'Valentino', tier: 'luxury', products: 380, slug: 'valentino' },
+  { name: 'Versace', tier: 'luxury', products: 340, slug: 'versace' },
+  { name: 'Whistles', tier: 'premium', products: 260, slug: 'whistles' },
+  { name: 'Xirena', tier: 'premium', products: 90, slug: 'xirena' },
+  { name: 'Yves Saint Laurent', tier: 'luxury', products: 420, slug: 'ysl' },
+  { name: 'Zara', tier: 'highstreet', products: 1600, slug: 'zara' },
+  { name: 'Zimmermann', tier: 'luxury', products: 240, slug: 'zimmermann' },
+  { name: 'adidas', tier: 'sport', products: 1200, slug: 'adidas' },
+  { name: '& Other Stories', tier: 'highstreet', products: 480, slug: 'other-stories' },
+  { name: 'Lululemon', tier: 'sport', products: 580, slug: 'lululemon' },
+  { name: 'Alo Yoga', tier: 'sport', products: 320, slug: 'alo-yoga' },
+];
+
+let filtered = [...allBrands];
+let currentTier = 'all';
+
+function renderBrands(brands) {
+  const grid = document.getElementById('brandsDirectory');
+  document.getElementById('brandCount').textContent = brands.length;
+
+  if (!brands.length) {
+    grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:40px">No brands found.</p>';
+    return;
+  }
+
+  grid.innerHTML = brands.map(b => `
+    <a href="brand.html?name=${encodeURIComponent(b.name)}&slug=${b.slug}" class="brand-card">
+      <div class="brand-card-header">${b.name[0]}</div>
+      <div class="brand-card-body">
+        <p class="brand-card-name">${b.name}</p>
+        <p class="brand-card-meta">${b.products.toLocaleString()} products</p>
+        <span class="brand-card-tier tier-${b.tier}">${b.tier}</span>
+      </div>
+    </a>
+  `).join('');
+}
+
+function filterBrands(q) {
+  const base = currentTier === 'all' ? allBrands : allBrands.filter(b => b.tier === currentTier);
+  filtered = q ? base.filter(b => b.name.toLowerCase().includes(q.toLowerCase())) : base;
+  renderBrands(filtered);
+}
+
+function filterTier(tier, btn) {
+  document.querySelectorAll('.tier-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTier = tier;
+  const q = document.getElementById('brandSearch').value;
+  filterBrands(q);
+}
+
+// Build A-Z nav
+const alphaNav = document.getElementById('alphaNav');
+'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('').forEach(letter => {
+  const btn = document.createElement('button');
+  btn.className = 'alpha-btn';
+  btn.textContent = letter;
+  btn.onclick = () => {
+    document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (letter === '#') {
+      renderBrands(allBrands.filter(b => /^[^a-z]/i.test(b.name)));
+    } else {
+      renderBrands(allBrands.filter(b => b.name.toUpperCase().startsWith(letter)));
+    }
+  };
+  alphaNav.appendChild(btn);
+});
+
+renderBrands(allBrands);
+</script>
+<script src="../public/js/categories.js"></script>
+<script src="../public/js/i18n.js"></script>
+<script src="../public/js/site-content.js"></script>
+<script src="../public/js/footer.js"></script>
+<script src="../public/js/mobile-menu.js"></script>
+</body>
+</html>

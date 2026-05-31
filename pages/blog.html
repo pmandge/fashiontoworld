@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Style Blog — FashionToWorld</title>
+<meta name="description" content="Fashion trends, style guides, brand spotlights, and shopping tips from FashionToWorld.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../public/css/main.css">
+<style>
+.page-hero{padding:calc(var(--nav-h) + 70px) 0 50px;background:var(--cream);text-align:center}
+.page-hero h1{font-size:clamp(38px,5.5vw,68px)}
+.page-hero p{font-size:17px;color:var(--text-muted);margin-top:14px;max-width:560px;margin-left:auto;margin-right:auto}
+.content{max-width:760px;margin:0 auto;padding:56px 40px}
+.content h2{font-size:28px;margin:36px 0 12px;color:var(--black)}
+.content h2:first-child{margin-top:0}
+.content h3{font-size:20px;margin:24px 0 8px;font-family:var(--font-serif)}
+.content p,.content li{font-size:15.5px;color:#33312e;line-height:1.72;margin-bottom:15px}
+.content ul{padding-left:22px;margin-bottom:15px}
+.content li{margin-bottom:8px}
+.content a{color:var(--gold)}
+.content em{color:var(--gold);font-style:italic}
+.updated{font-size:13px;color:var(--text-muted);margin-bottom:30px}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:30px 0}
+.mini-card{background:var(--cream);border-radius:var(--radius-lg);padding:24px}
+.mini-card h3{margin-top:0}
+.mini-card p{font-size:14px;margin-bottom:0}
+.contact-box{background:var(--cream);border-radius:var(--radius-lg);padding:28px;margin:24px 0}
+.contact-box a{font-weight:500}
+.blog-card-list{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:20px}
+.bcard{cursor:pointer}
+.bcard .img{aspect-ratio:16/10;border-radius:var(--radius-lg);margin-bottom:14px}
+.bcard h3{font-size:19px;margin:4px 0 6px}
+.bcard p{font-size:14px;color:var(--text-muted)}
+.bcard .tag{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+@media(max-width:768px){.card-grid,.blog-card-list{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav" id="nav"><div class="nav-inner">
+  <a href="../index.html" class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span></a>
+  <ul class="nav-links">
+    <li><a href="women.html">Women</a></li>
+    <li><a href="men.html">Men</a></li>
+    <li><a href="women.html?cat=shoes">Shoes</a></li>
+    <li><a href="women.html?cat=bags">Bags</a></li>
+    <li><a href="women.html?cat=jewellery">Jewellery &amp; Watches</a></li>
+    <li><a href="women.html?cat=accessories">Accessories</a></li>
+    <li><a href="brands.html">Brands</a></li>
+    <li><a href="deals.html">Deals</a></li>
+  </ul>
+  <div class="nav-spacer"></div><div class="nav-actions">
+    <a href="deals.html" class="btn-nav-cta">Deals</a>
+  </div>
+</div></nav>
+<section class="page-hero">
+  <p class="section-eyebrow" style="justify-content:center;display:flex">Inspiration & Guides</p>
+  <h1>The <em>Style</em> Blog</h1>
+  <p>Trends, guides, and shopping smarts to help you build a wardrobe you love.</p>
+</section>
+<div class="content">
+<div class="blog-card-list">
+  <a href="blog-trends-2025.html" style="text-decoration:none;color:inherit"><article class="bcard"><div class="img" style="background:linear-gradient(135deg,#f5e6d3,#e8c9a0)"></div><span class="tag">Trends</span><h3>The 10 Fashion Trends Dominating 2025</h3><p>From quiet luxury to bold maximalist prints — here's what the runways say you should be wearing this year, and how to shop the look on any budget.</p></article></a>
+  <a href="blog-capsule-wardrobe.html" style="text-decoration:none;color:inherit"><article class="bcard"><div class="img" style="background:linear-gradient(135deg,#d3e8f5,#a0c9e8)"></div><span class="tag">Style Guide</span><h3>How to Build a Capsule Wardrobe on Any Budget</h3><p>A timeless wardrobe doesn't require a luxury budget. Here are the essential pieces every closet needs and how to mix and match them.</p></article></a>
+  <article class="bcard"><div class="img" style="background:linear-gradient(135deg,#e8d3f5,#c9a0e8)"></div><span class="tag">Brand Spotlight</span><h3>Inside the New Sustainable Collections</h3><p>The biggest names in fashion are making a major push toward eco-conscious design. We round up the collections actually worth your money.</p></article></a>
+  <a href="blog-spotting-deals.html" style="text-decoration:none;color:inherit"><article class="bcard"><div class="img" style="background:linear-gradient(135deg,#d3f5e0,#a0e8c0)"></div><span class="tag">Shopping Tips</span><h3>How to Spot a Genuinely Good Deal</h3><p>Not every "sale" is a saving. Learn how to read discounts, time your purchases, and use coupons to actually get the best price.</p></article>
+  <article class="bcard"><div class="img" style="background:linear-gradient(135deg,#f5d3d3,#e8a0a0)"></div><span class="tag">Accessories</span><h3>The Jewellery & Watches Edit: Everyday Luxury</h3><p>From a first fine-gold piece to the watch that lasts a lifetime — our guide to investing in accessories that never date.</p></article>
+  <article class="bcard"><div class="img" style="background:linear-gradient(135deg,#e0e0d3,#c0c0a0)"></div><span class="tag">Footwear</span><h3>Shoe Anatomy: Choosing the Right Pair for Every Occasion</h3><p>Heels, loafers, sneakers, boots — a practical breakdown of what to wear when, and which brands do each best.</p></article>
+</div>
+<p style="text-align:center;margin-top:40px;color:var(--text-muted);font-style:italic">More articles coming soon. Subscribe to be the first to read them.</p>
+</div>
+<footer class="footer"><div class="container"><div class="footer-bottom">
+  <p>© 2025 FashionToWorld. This site contains affiliate links. We may earn a commission when you purchase through our links at no extra cost to you. &nbsp;·&nbsp; <a href="about.html" style="color:rgba(255,255,255,.4)">About</a> · <a href="contact.html" style="color:rgba(255,255,255,.4)">Contact</a> · <a href="affiliate-disclosure.html" style="color:rgba(255,255,255,.4)">Affiliate Disclosure</a> · <a href="privacy.html" style="color:rgba(255,255,255,.4)">Privacy</a> · <a href="terms.html" style="color:rgba(255,255,255,.4)">Terms</a></p>
+</div></div></footer>
+<script src="../public/js/categories.js"></script>
+<script src="../public/js/i18n.js"></script>
+<script src="../public/js/site-content.js"></script>
+<script src="../public/js/footer.js"></script>
+<script src="../public/js/mobile-menu.js"></script>
+</body>
+</html>

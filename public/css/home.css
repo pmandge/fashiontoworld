@@ -1,0 +1,314 @@
+/* ============================================
+   FashionWorld — Homepage CSS
+   ============================================ */
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  padding-top: var(--nav-h);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 60px;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding-left: 40px;
+  padding-right: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.06;
+}
+.hero-shape-1 {
+  width: 600px; height: 600px;
+  background: var(--gold);
+  top: -200px; right: -100px;
+}
+.hero-shape-2 {
+  width: 400px; height: 400px;
+  background: var(--black);
+  bottom: -100px; left: 200px;
+}
+.hero-shape-3 {
+  width: 200px; height: 200px;
+  background: var(--gold);
+  top: 30%; left: 40%;
+}
+
+.hero-content { position: relative; z-index: 1; }
+
+.hero-eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 32px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.hero-title {
+  font-size: clamp(48px, 6vw, 88px);
+  line-height: 1.0;
+  color: var(--black);
+  margin-bottom: 28px;
+}
+.hero-title em {
+  color: var(--gold);
+  font-style: italic;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 420px;
+  margin-bottom: 40px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 52px;
+}
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.stat { display: flex; flex-direction: column; gap: 2px; }
+.stat-num {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: var(--black);
+  line-height: 1;
+}
+.stat-label { font-size: 12px; color: var(--text-muted); letter-spacing: 0.05em; }
+.stat-divider { width: 1px; height: 40px; background: var(--border); }
+
+/* Hero image area */
+.hero-image-area {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-image-frame {
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 3/4;
+  background: var(--cream);
+  border-radius: 200px 200px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-badge {
+  position: absolute;
+  background: var(--white);
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  white-space: nowrap;
+  z-index: 10;
+}
+.hero-badge-1 { top: 40px; left: -20px; }
+.hero-badge-2 { top: 100px; right: -20px; color: #c0392b; font-weight: 600; }
+
+.product-card-float {
+  position: absolute;
+  bottom: 40px;
+  left: -32px;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-width: 200px;
+}
+.pcf-img {
+  width: 52px;
+  height: 52px;
+  background: var(--cream);
+  border-radius: var(--radius);
+}
+.pcf-brand { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.pcf-name { font-family: var(--font-serif); font-size: 15px; color: var(--black); }
+.pcf-price { font-size: 14px; font-weight: 600; color: var(--black); margin-top: 2px; }
+
+/* ===== CATEGORIES ===== */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+@media (max-width: 900px) { .category-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 560px) { .category-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.category-card {
+  position: relative;
+  aspect-ratio: 3/4;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px 16px;
+  background: var(--cream);
+  transition: transform 0.3s;
+}
+.category-card:hover { transform: translateY(-4px); }
+.category-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%);
+}
+.category-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.4s;
+}
+.category-card:hover .category-card-bg { transform: scale(1.05); }
+.category-card-label {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: white;
+}
+.category-card-count {
+  position: relative;
+  z-index: 1;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  margin-top: 2px;
+}
+
+/* Static fallback categories */
+.cat-1 { background: linear-gradient(135deg, #e8d5c4 0%, #d4b896 100%); }
+.cat-2 { background: linear-gradient(135deg, #c4d5e8 0%, #96b4d4 100%); }
+.cat-3 { background: linear-gradient(135deg, #d5e8c4 0%, #b4d496 100%); }
+.cat-4 { background: linear-gradient(135deg, #e8c4d5 0%, #d496b4 100%); }
+.cat-5 { background: linear-gradient(135deg, #e8e4c4 0%, #d4cc96 100%); }
+.cat-6 { background: linear-gradient(135deg, #c4e8e4 0%, #96d4cc 100%); }
+
+/* ===== DEALS BANNER ===== */
+.deals-banner {
+  background: var(--black);
+  padding: 80px 0;
+}
+.deals-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.deals-eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+.deals-title {
+  font-size: clamp(36px, 4vw, 64px);
+  color: var(--white);
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+.deals-title em { color: var(--gold); }
+.deals-sub { font-size: 16px; color: rgba(255,255,255,0.5); max-width: 360px; margin-bottom: 36px; }
+.deals-banner .btn-primary {
+  border-color: var(--white);
+  background: transparent;
+  color: var(--white);
+}
+.deals-banner .btn-primary:hover { background: var(--gold); border-color: var(--gold); color: var(--black); }
+.deals-coupons .deal-coupon { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); color: var(--white); }
+.deals-coupons .deal-coupon:hover { border-color: var(--gold); }
+.deals-coupons .deal-coupon-logo { background: rgba(255,255,255,0.1); }
+.deals-coupons .deal-coupon-store { color: rgba(255,255,255,0.4); }
+.deals-coupons .deal-coupon-title { color: var(--white); }
+.deals-coupons .deal-coupon-code { background: rgba(255,255,255,0.1); color: var(--gold); }
+
+/* ===== BRANDS GRID ===== */
+.brands-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+.brand-tile {
+  aspect-ratio: 3/2;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.25s;
+  background: var(--white);
+}
+.brand-tile:hover {
+  border-color: var(--gold);
+  box-shadow: 0 4px 20px rgba(201,168,76,0.15);
+  transform: translateY(-2px);
+}
+.brand-tile-name {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--black);
+  text-align: center;
+}
+.brand-tile-products {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; min-height: auto; padding-top: calc(var(--nav-h) + 40px); padding-bottom: 60px; }
+  .hero-image-area { display: none; }
+  .deals-inner { grid-template-columns: 1fr; gap: 48px; }
+}
+
+@media (max-width: 768px) {
+  .hero-title { font-size: 52px; }
+  .hero-actions { flex-direction: column; }
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Status — FashionToWorld</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../public/css/main.css">
+<style>
+.diag{max-width:720px;margin:0 auto;padding:calc(var(--nav-h) + 50px) 40px 80px}
+.diag h1{font-size:40px;margin-bottom:8px}
+.diag .sub{color:var(--text-muted);margin-bottom:32px}
+.check{display:flex;align-items:center;gap:14px;padding:18px 20px;border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:12px;background:var(--white)}
+.check .dot{width:14px;height:14px;border-radius:50%;background:#ccc;flex-shrink:0}
+.check.ok .dot{background:#27ae60}
+.check.fail .dot{background:#c0392b}
+.check.run .dot{background:#f0a500;animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.check-body{flex:1}
+.check-title{font-weight:500;font-size:15px}
+.check-detail{font-size:13px;color:var(--text-muted);margin-top:2px;word-break:break-word}
+.btn-test{margin-top:20px}
+.result-box{margin-top:24px;background:var(--cream);border-radius:var(--radius-lg);padding:20px;font-family:monospace;font-size:12px;white-space:pre-wrap;max-height:300px;overflow:auto;display:none}
+</style>
+</head>
+<body>
+<nav class="nav" id="nav"><div class="nav-inner">
+  <a href="../index.html" class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span></a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions"><a href="../index.html" class="btn-nav-cta">Home</a></div>
+</div></nav>
+
+<div class="diag">
+  <h1>API Connection Status</h1>
+  <p class="sub">This page checks whether your affiliate networks are connected and returning fashion data. Bookmark it for quick checks after deploying.</p>
+
+  <div class="check" id="c-geo"><div class="dot"></div><div class="check-body"><div class="check-title">Geo detection (language &amp; region)</div><div class="check-detail">Not checked yet</div></div></div>
+  <div class="check" id="c-coupons"><div class="dot"></div><div class="check-body"><div class="check-title">Coupons feed (fashion only)</div><div class="check-detail">Not checked yet</div></div></div>
+  <div class="check" id="c-products"><div class="dot"></div><div class="check-body"><div class="check-title">Products feed</div><div class="check-detail">Not checked yet</div></div></div>
+  <div class="check" id="c-networks"><div class="dot"></div><div class="check-body"><div class="check-title">Active affiliate networks</div><div class="check-detail">Not checked yet</div></div></div>
+
+  <button class="btn-primary btn-test" onclick="runTests()">Run Connection Test</button>
+  <div class="result-box" id="resultBox"></div>
+</div>
+
+<script>
+function setCheck(id, state, detail){
+  var el = document.getElementById(id);
+  el.className = 'check ' + state;
+  el.querySelector('.check-detail').textContent = detail;
+}
+function log(msg){
+  var box = document.getElementById('resultBox');
+  box.style.display = 'block';
+  box.textContent += msg + '\n';
+}
+
+async function runTests(){
+  document.getElementById('resultBox').textContent = '';
+  ['c-geo','c-coupons','c-products','c-networks'].forEach(function(id){ setCheck(id,'run','Checking...'); });
+
+  // 1. Geo
+  try {
+    var g = await fetch('/api/geo').then(r=>r.json());
+    setCheck('c-geo','ok','Region: ' + (g.region||'?') + ' · Language: ' + (g.language||'?') + ' · Currency: ' + (g.currency||'?'));
+    log('GEO: ' + JSON.stringify(g));
+  } catch(e){ setCheck('c-geo','fail','Could not reach /api/geo — is the backend running?'); log('GEO error: ' + e.message); }
+
+  // 2. Coupons
+  try {
+    var c = await fetch('/api/admitad/coupons?limit=5').then(r=>r.json());
+    var n = (c.coupons||[]).length;
+    if (n > 0){
+      setCheck('c-coupons','ok', n + ' fashion coupons returned. First: "' + (c.coupons[0].name||'') + '" from ' + (c.coupons[0].advertiser_name||'?'));
+    } else if (c.demo){
+      setCheck('c-coupons','fail','Returned demo/empty — credentials not set yet, or no joined fashion programs.');
+    } else {
+      setCheck('c-coupons','fail','0 coupons. Check that you have JOINED fashion advertiser programs in Admitad.');
+    }
+    log('COUPONS: ' + JSON.stringify(c).slice(0,500));
+  } catch(e){ setCheck('c-coupons','fail','Request failed: ' + e.message); log('COUPONS error: ' + e.message); }
+
+  // 3. Products
+  try {
+    var p = await fetch('/api/admitad/products?limit=5').then(r=>r.json());
+    var pn = (p.products||[]).length;
+    if (pn > 0){ setCheck('c-products','ok', pn + ' products returned. First: "' + (p.products[0].name||'') + '"'); }
+    else { setCheck('c-products','fail','0 products — product feed may need approval or none joined yet.'); }
+    log('PRODUCTS: ' + JSON.stringify(p).slice(0,500));
+  } catch(e){ setCheck('c-products','fail','Request failed: ' + e.message); log('PRODUCTS error: ' + e.message); }
+
+  // 4. Networks
+  try {
+    var c2 = await fetch('/api/admitad/coupons?limit=1').then(r=>r.json());
+    var nets = c2.networks || [];
+    if (nets.length){ setCheck('c-networks','ok','Connected: ' + nets.join(', ') + (c2.updatedAt ? ' · last synced ' + new Date(c2.updatedAt).toLocaleString() : '')); }
+    else { setCheck('c-networks','fail','No networks active. Add API keys in your hosting environment variables.'); }
+  } catch(e){ setCheck('c-networks','fail','Could not determine networks.'); }
+
+  log('\nTest complete.');
+}
+</script>
+<script src="../public/js/categories.js"></script>
+<script src="../public/js/footer.js"></script>
+<script src="../public/js/mobile-menu.js"></script>
+</body>
+</html>

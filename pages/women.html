@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Women's Fashion — FashionToWorld</title>
+<meta name="description" content="Shop women's fashion from 200+ brands. Dresses, bags, shoes, accessories and more. Global delivery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../public/css/main.css">
+<style>
+.cat-hero {
+  padding: calc(var(--nav-h) + 40px) 0 0;
+  background: #f5f0ea;
+  overflow: hidden;
+}
+.cat-hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  gap: 0;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 40px;
+}
+.cat-hero-text { padding-bottom: 60px; }
+.cat-hero-text h1 { font-size: clamp(48px, 7vw, 96px); line-height: 0.95; }
+.cat-hero-text h1 em { color: var(--gold); }
+.cat-hero-text p { font-size: 17px; color: var(--text-muted); margin: 20px 0 32px; max-width: 380px; }
+.cat-hero-visual {
+  height: 420px;
+  background: linear-gradient(180deg, #e8d5c4 0%, #d4b896 100%);
+  border-radius: 200px 200px 0 0;
+  position: relative;
+}
+
+.shop-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 48px;
+  padding: 60px 0;
+}
+
+/* SIDEBAR FILTERS */
+.sidebar { position: sticky; top: calc(var(--nav-h) + 20px); align-self: start; }
+.filter-section { margin-bottom: 32px; }
+.filter-section h4 {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text);
+}
+.filter-option input[type=checkbox] { accent-color: var(--black); }
+.filter-option:hover { color: var(--black); }
+
+.price-range { display: flex; gap: 12px; align-items: center; }
+.price-range input {
+  width: 80px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  outline: none;
+}
+.price-range input:focus { border-color: var(--black); }
+
+.btn-apply {
+  width: 100%;
+  padding: 12px;
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: var(--radius);
+  margin-top: 20px;
+  transition: background 0.2s;
+}
+.btn-apply:hover { background: var(--gold); color: var(--black); }
+
+/* PRODUCT AREA */
+.products-area {}
+.products-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.products-count { font-size: 14px; color: var(--text-muted); }
+.sort-select {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: var(--radius);
+  outline: none;
+}
+.sort-select:focus { border-color: var(--black); }
+
+.subcats {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.subcat-btn {
+  padding: 8px 18px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  transition: all 0.2s;
+}
+.subcat-btn.active, .subcat-btn:hover {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+.load-more {
+  text-align: center;
+  margin-top: 48px;
+}
+.btn-load {
+  padding: 14px 48px;
+  border: 1.5px solid var(--black);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: all 0.2s;
+}
+.btn-load:hover { background: var(--black); color: var(--white); }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span></a>
+        <ul class="nav-links">
+      <li><a href="women.html">Women</a></li>
+      <li><a href="men.html">Men</a></li>
+      <li><a href="women.html?cat=shoes">Shoes</a></li>
+      <li><a href="women.html?cat=bags">Bags</a></li>
+      <li><a href="women.html?cat=jewellery">Jewellery &amp; Watches</a></li>
+      <li><a href="women.html?cat=accessories">Accessories</a></li>
+      <li><a href="brands.html">Brands</a></li>
+      <li><a href="deals.html">Deals</a></li>
+    </ul>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <a href="deals.html" class="btn-nav-cta">Deals</a>
+    </div>
+  </div>
+</nav>
+
+<section class="cat-hero">
+  <div class="cat-hero-inner">
+    <div class="cat-hero-text">
+      <p class="section-eyebrow">New Season</p>
+      <h1>Women's<br><em>Fashion</em></h1>
+      <p>3,200+ curated pieces from the world's best brands — delivered globally.</p>
+      <a href="#products" class="btn-primary">Shop Now</a>
+    </div>
+    <div class="cat-hero-visual"></div>
+  </div>
+</section>
+
+<section id="products" class="section" style="padding-top:0">
+  <div class="container">
+
+    <!-- Subcategories -->
+    <div class="subcats" style="padding-top:40px">
+      <button class="subcat-btn active" onclick="loadCategory('all', this)">All</button>
+      <button class="subcat-btn" onclick="loadCategory('dresses', this)">Dresses</button>
+      <button class="subcat-btn" onclick="loadCategory('tops', this)">Tops</button>
+      <button class="subcat-btn" onclick="loadCategory('jeans', this)">Jeans</button>
+      <button class="subcat-btn" onclick="loadCategory('outerwear', this)">Outerwear</button>
+      <button class="subcat-btn" onclick="loadCategory('bags', this)">Bags</button>
+      <button class="subcat-btn" onclick="loadCategory('shoes', this)">Shoes</button>
+      <button class="subcat-btn" onclick="loadCategory('accessories', this)">Accessories</button>
+      <button class="subcat-btn" onclick="loadCategory('swimwear', this)">Swimwear</button>
+      <button class="subcat-btn" onclick="loadCategory('sale', this)">Sale 🔥</button>
+    </div>
+
+    <div class="shop-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="filter-section">
+          <h4>Price</h4>
+          <div class="price-range">
+            <input type="number" placeholder="Min $" id="priceMin">
+            <span>—</span>
+            <input type="number" placeholder="Max $" id="priceMax">
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <h4>Brand</h4>
+          <label class="filter-option"><input type="checkbox"> Zara</label>
+          <label class="filter-option"><input type="checkbox"> H&M</label>
+          <label class="filter-option"><input type="checkbox"> Mango</label>
+          <label class="filter-option"><input type="checkbox"> ASOS</label>
+          <label class="filter-option"><input type="checkbox"> & Other Stories</label>
+          <label class="filter-option"><input type="checkbox"> Revolve</label>
+          <label class="filter-option"><input type="checkbox"> Net-a-Porter</label>
+        </div>
+
+        <div class="filter-section">
+          <h4>Size</h4>
+          <label class="filter-option"><input type="checkbox"> XS</label>
+          <label class="filter-option"><input type="checkbox"> S</label>
+          <label class="filter-option"><input type="checkbox"> M</label>
+          <label class="filter-option"><input type="checkbox"> L</label>
+          <label class="filter-option"><input type="checkbox"> XL</label>
+          <label class="filter-option"><input type="checkbox"> Plus Size</label>
+        </div>
+
+        <div class="filter-section">
+          <h4>Sort</h4>
+          <label class="filter-option"><input type="radio" name="sort" value="popularity" checked> Most Popular</label>
+          <label class="filter-option"><input type="radio" name="sort" value="price_asc"> Price: Low → High</label>
+          <label class="filter-option"><input type="radio" name="sort" value="price_desc"> Price: High → Low</label>
+          <label class="filter-option"><input type="radio" name="sort" value="new"> Newest First</label>
+          <label class="filter-option"><input type="radio" name="sort" value="discount"> Biggest Discount</label>
+        </div>
+
+        <button class="btn-apply" onclick="applyFilters()">Apply Filters</button>
+      </aside>
+
+      <!-- Products -->
+      <main>
+        <div class="products-toolbar">
+          <span class="products-count" id="productsCount">Loading...</span>
+          <select class="sort-select" onchange="sortProducts(this.value)">
+            <option value="popularity">Most Popular</option>
+            <option value="new">New Arrivals</option>
+            <option value="price_asc">Price: Low → High</option>
+            <option value="price_desc">Price: High → Low</option>
+            <option value="discount">Biggest Discount</option>
+          </select>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+        </div>
+
+        <div class="load-more" id="loadMoreBtn">
+          <button class="btn-load" onclick="loadMore()">Load More Products</button>
+        </div>
+      </main>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2025 FashionToWorld. Affiliate Disclosure: We earn a commission on qualifying purchases at no extra cost to you.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../public/js/admitad-api.js"></script>
+<script>
+let currentPage = 1;
+let currentCategory = 'women';
+let currentSort = 'popularity';
+
+async function loadProducts(page = 1, reset = true) {
+  const grid = document.getElementById('productsGrid');
+  if (reset) {
+    grid.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8);
+    currentPage = 1;
+  }
+
+  const data = await AdmitadAPI.getProducts({
+    category: currentCategory,
+    page,
+    limit: 24,
+    sort: currentSort,
+  });
+
+  const products = data?.products || [];
+  const total = data?.total || products.length;
+
+  document.getElementById('productsCount').textContent = `${total.toLocaleString()} products`;
+
+  if (reset) {
+    grid.innerHTML = products.map(AdmitadAPI.renderProductCard).join('');
+  } else {
+    grid.insertAdjacentHTML('beforeend', products.map(AdmitadAPI.renderProductCard).join(''));
+  }
+
+  if (!data?.products?.length) {
+    grid.innerHTML = AdmitadAPI.getProducts ? '' : '';
+    // Use demo data
+    grid.innerHTML = getDemoProducts().map(AdmitadAPI.renderProductCard).join('');
+    document.getElementById('productsCount').textContent = '3,200+ products';
+  }
+
+  document.getElementById('loadMoreBtn').style.display = products.length < 24 ? 'none' : 'block';
+}
+
+function loadCategory(cat, btn) {
+  document.querySelectorAll('.subcat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentCategory = cat === 'all' ? 'women' : `women-${cat}`;
+  loadProducts(1, true);
+}
+
+function sortProducts(sort) {
+  currentSort = sort;
+  loadProducts(1, true);
+}
+
+function loadMore() {
+  currentPage++;
+  loadProducts(currentPage, false);
+}
+
+function applyFilters() {
+  loadProducts(1, true);
+}
+
+function getDemoProducts() {
+  const names = [
+    ['Floral Midi Dress', 'Zara', 89, 129, '1595777457583-95e059d581b8'], ['Silk Blouse', 'Mango', 59, null, '1564257631407-4deb1f99d992'],
+    ['High-Waist Jeans', 'ASOS', 55, 75, '1541099649105-f69ad21f3246'], ['Blazer Set', 'H&M', 79, null, '1591047139829-d91aecb6caea'],
+    ['Wrap Dress', '& Other Stories', 95, null, '1572804013309-59a88b7e92f1'], ['Cashmere Sweater', 'Revolve', 145, 195, '1576566588028-4147f3842f27'],
+    ['Mini Skirt', 'Zara', 45, 65, '1583496661160-fb5886a0aaaa'], ['Trench Coat', 'Mango', 199, null, '1591047139829-d91aecb6caea'],
+    ['Linen Pants', 'H&M', 35, null, '1594633312681-425c7b97ccd1'], ['Evening Gown', 'ASOS', 89, 120, '1566174053879-31528523f8ae'],
+    ['Denim Jacket', 'Levi\'s', 95, null, '1576871337622-98d48d1cf531'], ['Ankle Boots', 'Steve Madden', 120, 155, '1543163521-1bf539c55dd2'],
+  ];
+  return names.map(([name, brand, price, price_old, imgId], i) => ({
+    id: String(i + 100),
+    name, brand,
+    advertiser_name: brand,
+    price,
+    price_old,
+    currency: 'USD',
+    image_url: `https://images.unsplash.com/photo-${imgId}?w=400&q=80`,
+    url: 'deals.html',
+    affiliate_url: 'deals.html',
+    is_new: i < 3,
+  }));
+}
+
+loadProducts();
+</script>
+<script src="../public/js/categories.js"></script>
+<script src="../public/js/i18n.js"></script>
+<script src="../public/js/site-content.js"></script>
+<script src="../public/js/footer.js"></script>
+<script src="../public/js/mobile-menu.js"></script>
+</body>
+</html>
