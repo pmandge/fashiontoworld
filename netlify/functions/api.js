@@ -36,18 +36,39 @@ let fashionCatCache = { ids: null, at: 0 };
 
 async function getToken() {
   if (tokenCache.token && Date.now() < tokenCache.exp - 60000) return tokenCache.token;
-  const body = new URLSearchParams({
-    grant_type: 'client_credentials',
-    client_id: process.env.ADMITAD_CLIENT_ID,
-    client_secret: process.env.ADMITAD_CLIENT_SECRET,
-    scope: 'coupons products advcampaigns deeplink_generator websites public_data',
-  });
+
+  // Admitad requires HTTP Basic auth: Authorization: Basic base64(client_id:client_secret)
+  // You can either provide ADMITAD_BASE64_HEADER directly (from the credentials page),
+  // or we build it from client_id + client_secret.
+  let basic = process.env.ADMITAD_BASE64_HEADER;
+  if (!basic) {
+    basic = Buffer.from(
+      process.env.ADMITAD_CLIENT_ID + ':' + process.env.ADMITAD_CLIENT_SECRET
+    ).toString('base64');
+  }
+
+  // Scopes must be SPACE-separated and limited to what the account has.
+  // These are the standard publisher scope names per Admitad docs.
+  const scope = process.env.ADMITAD_SCOPE ||
+    'public_data coupons advcampaigns websites banners';
+
+  const body = new URLSearchParams();
+  body.set('grant_type', 'client_credentials');
+  body.set('client_id', process.env.ADMITAD_CLIENT_ID);
+  body.set('scope', scope);
+
   const r = await fetch(`${API_BASE}/token/`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: {
+      'Authorization': 'Basic ' + basic,
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+    },
     body,
   });
-  if (!r.ok) throw new Error(`token ${r.status}`);
+  if (!r.ok) {
+    const txt = await r.text().catch(() => '');
+    throw new Error(`token ${r.status} ${txt.slice(0, 200)}`);
+  }
   const d = await r.json();
   tokenCache = { token: d.access_token, exp: Date.now() + d.expires_in * 1000 };
   return tokenCache.token;
@@ -56,14 +77,17 @@ async function getToken() {
 async function adGet(endpoint, params = {}) {
   const token = await getToken();
   const url = new URL(API_BASE + endpoint);
-  url.searchParams.set('website', process.env.ADMITAD_WEBSITE_ID);
+  if (process.env.ADMITAD_WEBSITE_ID) url.searchParams.set('website', process.env.ADMITAD_WEBSITE_ID);
   for (const [k, v] of Object.entries(params)) {
     if (v === undefined || v === null || v === '') continue;
     if (Array.isArray(v)) v.forEach(i => url.searchParams.append(k, i));
     else url.searchParams.set(k, v);
   }
   const r = await fetch(url.toString(), { headers: { Authorization: `Bearer ${token}` } });
-  if (!r.ok) throw new Error(`admitad ${endpoint} ${r.status}`);
+  if (!r.ok) {
+    const txt = await r.text().catch(() => '');
+    throw new Error(`admitad ${endpoint} ${r.status} ${txt.slice(0, 150)}`);
+  }
   return r.json();
 }
 
