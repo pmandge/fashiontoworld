@@ -118,11 +118,34 @@ async function fashionCategoryIds() {
 }
 
 function normCoupon(c) {
+  // Admitad regions: array of {region: 'XX'} that the coupon APPLIES to.
+  // Some feeds also carry exclude info in the description text.
+  const regionList = (c.regions || []).map(r => (typeof r === 'string' ? r : r.region)).filter(Boolean);
+
+  // Build a clean, short description: strip long "Not available: .." country
+  // dumps and giant region lists that clutter the card.
+  let desc = (c.description || '').trim();
+  // Remove "Not available: <long list>" style clutter
+  desc = desc.replace(/not available[:\-].*/i, '').trim();
+  // If description is just a country code dump, drop it
+  if (/^([A-Z]{2}[,\s]*){3,}$/.test(desc)) desc = '';
+
+  // Store logo: Admitad puts the advertiser logo in campaign.image (often //cdn...)
+  const rawLogo = c.campaign?.image || c.image || '';
+  const logo = rawLogo
+    ? (rawLogo.startsWith('//') ? 'https:' + rawLogo : rawLogo)
+    : '';
+
   return {
-    id: c.id, name: c.name, description: c.description || '',
+    id: c.id, name: c.name, description: desc,
     advertiser_name: c.campaign?.name || '', advertiser_id: c.campaign?.id || '',
+    advertiser_url: c.campaign?.site_url || '',
+    logo: logo,
     promocode: c.promocode || '', discount: c.discount || '', status: c.status,
-    rating: parseFloat(c.rating || 0), regions: c.regions || [], language: c.language || 'en',
+    rating: parseFloat(c.rating || 0),
+    regions: regionList,
+    exclude_regions: (c.exclude_regions || []).map(r => (typeof r === 'string' ? r : r.region)).filter(Boolean),
+    language: c.language || 'en',
     types: (c.types || []).map(t => t.name), categories: (c.categories || []).map(x => x.name),
     image: c.image ? (c.image.startsWith('//') ? 'https:' + c.image : c.image) : '',
     url: c.goto_link || '', date_end: c.date_end || null,
@@ -156,6 +179,51 @@ exports.handler = async (event) => {
   const geo = detectGeo(event);
 
   try {
+    // /admitad/feedcheck — Phase 1 diagnostic: which joined programs offer
+    // product feeds, and whether the product-feeds endpoint is reachable.
+    if (path.includes('feedcheck')) {
+      try {
+        // 1. Which of your joined programs support product links/feeds
+        const camps = await adGet(`/advcampaigns/website/${process.env.ADMITAD_WEBSITE_ID}/`, { limit: 100 });
+        const programs = (camps.results || []).map(p => ({
+          name: p.name,
+          status: p.connection_status || p.status,
+          products_available: p.show_products_links === true,
+        }));
+        const withProducts = programs.filter(p => p.products_available);
+
+        // 2. Try the product-feeds list endpoint
+        let feedsEndpoint = 'unknown';
+        let feedCount = 0;
+        let feedSample = [];
+        try {
+          const feeds = await adGet('/products/', { limit: 5 });
+          feedsEndpoint = 'reachable';
+          feedSample = (feeds.results || []).slice(0, 3);
+          feedCount = feeds._meta?.count || feedSample.length;
+        } catch (e1) {
+          try {
+            const feeds2 = await adGet(`/products/feeds/`, { limit: 5 });
+            feedsEndpoint = 'feeds-list-reachable';
+            feedCount = feeds2._meta?.count || (feeds2.results || []).length;
+          } catch (e2) {
+            feedsEndpoint = 'not-available: ' + e1.message.slice(0, 80);
+          }
+        }
+
+        return { statusCode: 200, headers, body: JSON.stringify({
+          total_programs: programs.length,
+          programs_supporting_products: withProducts.length,
+          which: withProducts.map(p => p.name + ' (' + p.status + ')'),
+          all_programs: programs.map(p => p.name + ': products=' + p.products_available + ', ' + p.status),
+          product_endpoint: feedsEndpoint,
+          product_count_if_any: feedCount,
+        }, null, 2) };
+      } catch (e) {
+        return { statusCode: 200, headers, body: JSON.stringify({ error: e.message }) };
+      }
+    }
+
     // /admitad/rawcoupons — diagnostic: shows what Admitad returns BEFORE filtering
     if (path.includes('rawcoupons')) {
       try {
@@ -235,6 +303,29 @@ exports.handler = async (event) => {
         }
         return true; // relaxed: show all active coupons from your joined programs
       });
+
+      // Region awareness: prefer coupons valid in the visitor's region.
+      // Admitad's "regions" list + description sometimes indicate where a code
+      // does NOT work. We rank region-appropriate coupons first, and (when
+      // REGION_FILTER!=off) drop ones explicitly excluded for this region.
+      const visitorRegion = (q.region || geo.region || '').toUpperCase();
+      const regionFilterOff = process.env.REGION_FILTER === 'off';
+      if (visitorRegion && !regionFilterOff) {
+        coupons = coupons.filter(c => {
+          // If the coupon explicitly excludes this region, drop it
+          if (c.exclude_regions && c.exclude_regions.map(r => r.toUpperCase()).includes(visitorRegion)) return false;
+          // If a description still mentions "not available" + this region, drop it
+          // (belt-and-braces; description is already cleaned, but raw names can carry it)
+          return true;
+        });
+        // Rank: coupons that list the visitor region as valid come first
+        coupons.sort((a, b) => {
+          const aOk = a.regions.map(r => r.toUpperCase()).includes(visitorRegion) ? 1 : 0;
+          const bOk = b.regions.map(r => r.toUpperCase()).includes(visitorRegion) ? 1 : 0;
+          return bOk - aOk;
+        });
+      }
+
       return { statusCode: 200, headers, body: JSON.stringify({ coupons, total: coupons.length, region: geo.region, language: geo.language, mode: strict ? 'strict' : 'relaxed' }) };
     }
 
