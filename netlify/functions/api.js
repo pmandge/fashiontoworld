@@ -146,6 +146,22 @@ exports.handler = async (event) => {
       return { statusCode: 200, headers, body: JSON.stringify(geo) };
     }
 
+    // /admitad/programs — how many advertiser programs are joined (diagnostic)
+    if (path.includes('programs')) {
+      try {
+        const data = await adGet(`/advcampaigns/website/${process.env.ADMITAD_WEBSITE_ID}/`, { limit: 100 });
+        const all = data.results || [];
+        const connected = all.filter(p => p.connection_status === 'active' || p.status === 'active');
+        return { statusCode: 200, headers, body: JSON.stringify({
+          total_available: data._meta?.count || all.length,
+          connected_count: connected.length,
+          connected: connected.slice(0, 20).map(p => ({ name: p.name, status: p.connection_status || p.status })),
+        }) };
+      } catch (e) {
+        return { statusCode: 200, headers, body: JSON.stringify({ error: e.message }) };
+      }
+    }
+
     // Missing credentials → tell the front-end to use demo fallback
     if (!process.env.ADMITAD_CLIENT_ID) {
       return { statusCode: 200, headers, body: JSON.stringify({ coupons: [], products: [], total: 0, demo: true }) };
@@ -171,16 +187,25 @@ exports.handler = async (event) => {
     }
 
     // /admitad/products  (FASHION)
+    // Admitad publisher product data comes via the "products" feed system,
+    // which many accounts don't have enabled. We try it, but if it 404s or
+    // isn't available, we return empty gracefully (site uses demo products),
+    // so a missing product feed never shows as an error.
     if (path.includes('products')) {
       const limit = parseInt(q.limit || 24);
       const page = parseInt(q.page || 1);
       const order = q.sort === 'price_asc' ? 'price' : q.sort === 'price_desc' ? '-price' : '-popularity';
-      const data = await adGet('/products/', {
-        limit, offset: (page - 1) * limit, order_by: order,
-        category: q.category || undefined, q: q.q || undefined,
-      });
-      const products = (data.results || []).map(normProduct);
-      return { statusCode: 200, headers, body: JSON.stringify({ products, total: data._meta?.count || products.length, region: geo.region }) };
+      try {
+        const data = await adGet('/products/', {
+          limit, offset: (page - 1) * limit, order_by: order,
+          category: q.category || undefined, q: q.q || undefined,
+        });
+        const products = (data.results || []).map(normProduct);
+        return { statusCode: 200, headers, body: JSON.stringify({ products, total: data._meta?.count || products.length, region: geo.region }) };
+      } catch (e) {
+        // Product feed not available on this account — return empty, no error
+        return { statusCode: 200, headers, body: JSON.stringify({ products: [], total: 0, region: geo.region, note: 'product feed not enabled; using coupons' }) };
+      }
     }
 
     return { statusCode: 404, headers, body: JSON.stringify({ error: 'not found' }) };
