@@ -191,12 +191,12 @@
         <ul class="nav-links">
       <li><a href="women.html">Women</a></li>
       <li><a href="men.html">Men</a></li>
-      <li><a href="women.html?cat=shoes">Shoes</a></li>
-      <li><a href="women.html?cat=bags">Bags</a></li>
-      <li><a href="women.html?cat=jewellery">Jewellery &amp; Watches</a></li>
-      <li><a href="women.html?cat=accessories">Accessories</a></li>
+      <li><a href="shoes.html">Shoes</a></li>
+      <li><a href="bags.html">Bags</a></li>
+      <li><a href="jewellery.html">Jewellery &amp; Watches</a></li>
+      <li><a href="accessories.html">Accessories</a></li>
       <li><a href="brands.html">Brands</a></li>
-      <li><a href="deals.html">Deals</a></li>
+      
     </ul>
     <div class="nav-spacer"></div>
     <div class="nav-actions">
@@ -304,9 +304,9 @@ async function loadDeals(filter = 'all') {
            </div>`
         : `<p class="no-code-note">✓ No code needed — discount applied automatically</p>`
       }
-      <a href="${c.url || '#'}" class="deal-action" target="_blank" rel="noopener sponsored">
-        Get Deal
-      </a>
+      ${/^https?:/i.test(c.url || '')
+        ? `<a href="${c.url}" class="deal-action" target="_blank" rel="noopener sponsored nofollow">Get Deal ›</a>`
+        : `<span class="deal-action" style="opacity:.55;cursor:default">Deal Unavailable</span>`}
     </div>
   `; }).join('');
 }

@@ -19,15 +19,34 @@ const CATEGORY_RULES = [
 
 const CLOTHING_HINT = ['dress','jean','trouser','pant','skirt','top','blouse','shirt','jacket','coat','blazer','sweater','hoodie','sweatshirt','cardigan','jumper','knit','t-shirt','tee','legging','short','suit','vest','poncho','bodysuit','lingerie','bra','panties','underwear','swimwear','swimsuit','bikini','pajama','nightgown','jumpsuit','co-ord','tracksuit','turtleneck','polo','parka','bomber','windbreaker','trench','fur','sheepskin','down jacket','raincoat','tights','socks','stockings'];
 
-function mapCategory(categoryName, gender) {
+// Detect men's items even when the feed gender field is missing, by
+// scanning the category/name text for clear masculine signals.
+const MEN_SIGNALS = /\b(men|men's|mens|man's|male|gentlemen|guys|boys?|boy's)\b/i;
+const WOMEN_SIGNALS = /\b(women|women's|womens|woman's|female|ladies|lady's|girls?|girl's)\b/i;
+
+function detectGender(text, feedGender) {
+  const g = (feedGender || '').toLowerCase();
+  if (g === 'male' || g === 'men' || g === 'm') return 'men';
+  if (g === 'female' || g === 'women' || g === 'w' || g === 'f') return 'women';
+  const t = text || '';
+  // Women signals take priority if both appear (e.g. "men's & women's")
+  if (WOMEN_SIGNALS.test(t)) return 'women';
+  if (MEN_SIGNALS.test(t)) return 'men';
+  return '';
+}
+
+function mapCategory(categoryName, genderHint, genderText) {
   const n = (categoryName || '').toLowerCase();
   for (const rule of CATEGORY_RULES) {
     if (rule.kw.some(k => n.includes(k))) return rule.cat;
   }
+  // Detect gender from the explicit gender field, the category text,
+  // and any extra text (e.g. the product name) passed in.
+  const g = detectGender(`${categoryName || ''} ${genderText || ''}`, genderHint);
   if (CLOTHING_HINT.some(k => n.includes(k))) {
-    return (gender === 'male' || gender === 'men') ? 'men' : 'women';
+    return g === 'men' ? 'men' : 'women';
   }
-  return (gender === 'male' || gender === 'men') ? 'men' : 'women';
+  return g === 'men' ? 'men' : 'women';
 }
 
 const SUBCATEGORY_RULES = [
@@ -65,6 +84,8 @@ function mapSubcategory(categoryName) {
 function buildProduct(raw, opts) {
   const gender = (raw.gender || '').toLowerCase();
   const catName = raw.feed_category || '';
+  const genderText = `${catName} ${raw.name || ''}`;
+  const detectedGender = detectGender(genderText, gender);
   return {
     id: `${opts.network}-${opts.advertiser || 'feed'}-${raw.id}`,
     name: (raw.name || '').trim(),
@@ -78,10 +99,10 @@ function buildProduct(raw, opts) {
     images: raw.images || (raw.image_url ? [raw.image_url] : []),
     url: (raw.url || '').trim(),
     affiliate_url: (raw.url || '').trim(),
-    category: mapCategory(catName || raw.name, gender),
+    category: mapCategory(catName || raw.name, gender, raw.name),
     subcategory: mapSubcategory(catName || raw.name),
     feed_category: catName,
-    gender: gender || 'unisex',
+    gender: detectedGender || 'unisex',
     color: (raw.color || '').trim(),
     size: (raw.size || '').trim(),
     material: (raw.material || '').trim(),

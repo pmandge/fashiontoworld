@@ -344,15 +344,19 @@ const AdmitadAPI = (() => {
     if (!coupons.length) { if (section) section.style.display = 'none'; return; }
     if (section) section.style.display = '';
     container.innerHTML = coupons.slice(0, limit).map(c => {
-      const link = c.affiliate_url || c.url || c.goto_link || '';
-      const isReal = /^https?:/i.test(link);
+      const direct = c.affiliate_url || c.url || c.goto_link || '';
+      const isReal = /^https?:/i.test(direct);
+      // Always clickable: use the store's outbound link if present,
+      // otherwise send to the deals page (never a dead card).
+      const href = isReal ? direct : '/pages/deals.html';
+      const target = isReal ? ' target="_blank" rel="noopener sponsored nofollow"' : '';
       const badge = c.promocode ? `<span class="dotd-badge code">Code: ${c.promocode}</span>` : `<span class="dotd-badge">Deal</span>`;
       const title = (c.name || 'Special Offer').slice(0, 70);
-      return `<a class="dotd-card" ${isReal ? `href="${link}" target="_blank" rel="noopener sponsored nofollow"` : ''}>
+      return `<a class="dotd-card" href="${href}"${target}>
         ${badge}
         <p class="dotd-store">${c.advertiser_name || ''}</p>
         <h3 class="dotd-title">${title}</h3>
-        <div class="dotd-action">Grab This Deal ›</div>
+        <div class="dotd-action">${isReal ? 'Grab This Deal ›' : 'View Deal ›'}</div>
       </a>`;
     }).join('');
   }
@@ -369,21 +373,41 @@ const AdmitadAPI = (() => {
     container.innerHTML = prods.map(renderProductCard).join('');
   }
 
-  // Featured stores: worldwide-shipping partners
-  function populateFeaturedStores(containerId = 'storesGrid') {
+  // Featured stores: worldwide-shipping partners. Each card links OUT to the
+  // retailer using a real affiliate URL (pulled from one of the store's products).
+  async function populateFeaturedStores(containerId = 'storesGrid') {
     const container = document.getElementById(containerId);
     if (!container) return;
     const stores = [
       'Symbol Fashion', 'The Luxury Closet', 'Noracora', 'Stylewe', 'Justfashionnow',
       'Wayrates', 'Italo Jewelry', 'Glasseslit', 'ChicMe', 'AliExpress'
     ];
-    container.innerHTML = stores.map(name =>
-      `<a class="store-card" href="/pages/women.html?brand=${encodeURIComponent(name)}">
+    // Render immediately with a safe fallback (internal filtered page),
+    // then upgrade each card to a direct outbound affiliate link if we find one.
+    container.innerHTML = stores.map((name, i) =>
+      `<a class="store-card" id="storecard-${i}" href="/pages/women.html?brand=${encodeURIComponent(name)}">
         <span class="store-logo">${name[0]}</span>
         <span class="store-name">${name}</span>
         <span class="store-go">Visit Store ›</span>
       </a>`
     ).join('');
+
+    // Upgrade links: fetch one product per store to get its outbound affiliate URL
+    stores.forEach(async (name, i) => {
+      try {
+        const data = await getProducts({ brand: name, limit: 1 });
+        const p = data?.products?.[0];
+        const link = p && (p.affiliate_url || p.url);
+        if (link && /^https?:/i.test(link)) {
+          const card = document.getElementById(`storecard-${i}`);
+          if (card) {
+            card.setAttribute('href', link);
+            card.setAttribute('target', '_blank');
+            card.setAttribute('rel', 'noopener sponsored nofollow');
+          }
+        }
+      } catch (e) {}
+    });
   }
 
   // Deals ticker: scrolling strip of live deal text
