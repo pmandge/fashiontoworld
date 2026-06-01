@@ -228,13 +228,12 @@ exports.handler = async (event) => {
       });
       let coupons = (data.results || []).map(normCoupon).filter(c => {
         if (c.status && c.status !== 'active') return false;
-        const hay = `${c.categories.join(' ')} ${c.name} ${c.advertiser_name}`.toLowerCase();
-        // Always block clearly non-fashion verticals
-        if (EXCLUDE.some(p => hay.includes(p))) return false;
         if (strict) {
+          const hay = `${c.categories.join(' ')} ${c.name} ${c.advertiser_name}`.toLowerCase();
+          if (EXCLUDE.some(p => hay.includes(p))) return false;
           return FASHION_PATTERNS.some(p => hay.includes(p)) || FASHION_BRANDS.some(b => hay.includes(b)) || c.categories.length === 0;
         }
-        return true; // relaxed: allow everything not excluded
+        return true; // relaxed: show all active coupons from your joined programs
       });
       return { statusCode: 200, headers, body: JSON.stringify({ coupons, total: coupons.length, region: geo.region, language: geo.language, mode: strict ? 'strict' : 'relaxed' }) };
     }
