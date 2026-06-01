@@ -137,6 +137,20 @@
   </div>
 </section>
 
+<!-- YOU MAY ALSO LIKE -->
+<section class="section recommend-section" id="recommendSection" style="background:var(--warm-ivory,#faf6ef)">
+  <div class="container">
+    <div class="section-header center" style="text-align:center;display:flex;flex-direction:column;align-items:center;margin-bottom:32px">
+      <p class="section-eyebrow" style="color:var(--gold)">Handpicked For You</p>
+      <h2 class="section-title">You May Also Like</h2>
+    </div>
+    <div class="products-grid" id="recommendGrid">
+      <div class="loading-skeleton"></div><div class="loading-skeleton"></div>
+      <div class="loading-skeleton"></div><div class="loading-skeleton"></div>
+    </div>
+  </div>
+</section>
+
 <footer class="footer" id="footer"></footer>
 
 <script src="../public/js/api-config.js"></script>
@@ -218,6 +232,13 @@ async function loadBrands() {
 
 loadProducts();
 loadBrands();
+
+// "You May Also Like" — popular picks (different framing than the main grid)
+if (window.AdmitadAPI && AdmitadAPI.populateRecommendations) {
+  AdmitadAPI.populateRecommendations('recommendGrid', {
+    category: CATEGORY, limit: 4, sectionId: 'recommendSection'
+  });
+}
 </script>
 <script src="../public/js/categories.js"></script>
 <script src="../public/js/i18n.js"></script>

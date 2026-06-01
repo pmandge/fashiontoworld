@@ -87,6 +87,10 @@
         '<button id="mmClose" aria-label="Close menu" style="background:none;border:none;font-size:24px;cursor:pointer;color:#1a1a1a;line-height:1">&times;</button>' +
       '</div>' +
       '<div style="padding:8px 20px 20px">' +
+        '<div style="display:flex;border:1.5px solid #0f0f0f;border-radius:6px;overflow:hidden;margin-bottom:14px">' +
+          '<input id="mmSearch" type="text" placeholder="Search products & brands…" style="flex:1;border:none;padding:11px 14px;font-size:14px;outline:none;font-family:inherit">' +
+          '<button id="mmSearchBtn" aria-label="Search" style="background:#0f0f0f;color:#fff;border:none;padding:0 16px;cursor:pointer;font-size:15px">⌕</button>' +
+        '</div>' +
         '<a href="' + root + 'deals.html" style="display:block;background:#c9a84c;color:#0f0f0f;text-align:center;padding:12px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;margin-bottom:8px">Shop Deals</a>' +
         '<button onclick="FTWSubscribe.open()" style="width:100%;background:#0f0f0f;color:#fafaf8;border:none;padding:12px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;margin-bottom:16px">Subscribe</button>' +
         cats +
@@ -97,6 +101,32 @@
     document.body.appendChild(overlay);
     document.body.appendChild(drawer);
     drawer.querySelector('#mmClose').addEventListener('click', close);
+
+    // ---- Floating "Shop Deals" CTA (appears after scrolling) ----
+    if (!document.getElementById('floatCta')) {
+      var fc = document.createElement('a');
+      fc.id = 'floatCta';
+      fc.className = 'float-cta';
+      fc.href = root + 'deals.html';
+      fc.innerHTML = '<span class="fc-ico">🔥</span> Shop Deals';
+      document.body.appendChild(fc);
+      var onScroll = function () {
+        if (window.scrollY > 600) fc.classList.add('visible');
+        else fc.classList.remove('visible');
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+
+    // Search box → search results page
+    var mmSearch = drawer.querySelector('#mmSearch');
+    var mmSearchBtn = drawer.querySelector('#mmSearchBtn');
+    function goSearch() {
+      var q = (mmSearch.value || '').trim();
+      if (q) window.location.href = root + 'search.html?q=' + encodeURIComponent(q);
+    }
+    if (mmSearchBtn) mmSearchBtn.addEventListener('click', goSearch);
+    if (mmSearch) mmSearch.addEventListener('keyup', function (e) { if (e.key === 'Enter') goSearch(); });
 
     // ---- Ensure a burger exists in every nav ----
     document.querySelectorAll('.nav-inner').forEach(function (navInner) {

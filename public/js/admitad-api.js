@@ -373,6 +373,37 @@ const AdmitadAPI = (() => {
     container.innerHTML = prods.map(renderProductCard).join('');
   }
 
+  // ─── RECOMMENDATIONS ("You May Also Like") ───────────────────
+  // Shows related products to keep shoppers browsing & clicking out.
+  async function populateRecommendations(containerId, opts = {}) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const limit = opts.limit || 4;
+    try {
+      const data = await getProducts({
+        category: opts.category || '',
+        sort: 'popularity',
+        limit: limit * 2,
+      });
+      let prods = (data?.products || []).filter(p =>
+        p.image_url && /^https?:/i.test(p.affiliate_url || p.url || '')
+      );
+      if (opts.excludeIds && opts.excludeIds.length) {
+        prods = prods.filter(p => !opts.excludeIds.includes(p.id));
+      }
+      prods = prods.slice(0, limit);
+      if (!prods.length) {
+        const sec = opts.sectionId && document.getElementById(opts.sectionId);
+        if (sec) sec.style.display = 'none';
+        return;
+      }
+      container.innerHTML = prods.map(renderProductCard).join('');
+    } catch (e) {
+      const sec = opts.sectionId && document.getElementById(opts.sectionId);
+      if (sec) sec.style.display = 'none';
+    }
+  }
+
   // Featured stores: worldwide-shipping partners. Each card links OUT to the
   // retailer using a real affiliate URL (pulled from one of the store's products).
   async function populateFeaturedStores(containerId = 'storesGrid') {
@@ -600,6 +631,7 @@ const AdmitadAPI = (() => {
     populateOnSale,
     populateFeaturedStores,
     populateDealsTicker,
+    populateRecommendations,
     animateTrustBar,
     initDatafeed,
   };

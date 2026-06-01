@@ -694,3 +694,97 @@ em { font-style: italic; }
   .blog-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
 }
+
+/* ===== STICKY FLOATING CTA (affiliate conversion) ===== */
+.float-cta {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  z-index: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--deal, #c0492f);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 14px 22px;
+  border-radius: 40px;
+  box-shadow: 0 8px 28px rgba(192,73,47,0.35);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s, background 0.2s;
+}
+.float-cta.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.float-cta:hover { background: var(--deal-dark, #9e3a24); }
+.float-cta .fc-ico { font-size: 16px; line-height: 1; }
+@media (max-width: 600px) {
+  .float-cta { bottom: 16px; right: 16px; padding: 12px 18px; font-size: 13px; }
+}
+
+/* ============================================================ */
+/* ===== MOBILE OPTIMIZATION PASS ============================ */
+/* ============================================================ */
+
+/* Tablet & below */
+@media (max-width: 768px) {
+  /* Product grid: 2 columns on mobile (not 1) for better density */
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .product-body { padding: 12px; }
+  .product-brand { font-size: 11px; }
+  .product-name { font-size: 13px; }
+
+  /* Touch targets: 44px minimum for all buttons/links */
+  .btn-product, .btn-cta-gold, .btn-cta-outline, .btn-cta-dark,
+  .btn-nav-cta, .btn-primary, .btn-secondary, .dotd-action, .deal-action,
+  .subcat-btn, .btn-apply, .btn-load { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+
+  /* Section spacing tighter on mobile */
+  .section { padding: 44px 0; }
+  .section-title { font-size: 28px; }
+  .container { padding: 0 18px; }
+}
+
+/* Phones */
+@media (max-width: 600px) {
+  /* Prevent any horizontal overflow */
+  html, body { overflow-x: hidden; }
+
+  /* Hero text scales down */
+  .hero-v2-title { font-size: clamp(40px, 12vw, 56px); }
+  .hero-v2-sub { font-size: 15px; }
+  .hero-v2-actions { flex-direction: column; align-items: stretch; }
+  .hero-v2-actions a { text-align: center; }
+
+  /* Trust cards: 2x2 grid */
+  .trust-v2-inner { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .trust-v2-num { font-size: 30px; }
+
+  /* Deal of the day & stores stack nicely */
+  .dotd-grid { grid-template-columns: 1fr; }
+  .stores-grid { grid-template-columns: repeat(2, 1fr); }
+  .price-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Readable body text, no tiny fonts */
+  body { font-size: 15px; }
+
+  /* Deals ticker text a touch smaller */
+  .dt-item { font-size: 13px; padding: 0 18px; }
+
+  /* Category hero on subpages */
+  .cat-hero-text h1 { font-size: clamp(36px, 11vw, 56px); }
+
+  /* Footer columns stack */
+  .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 28px; }
+}
+
+/* Small phones */
+@media (max-width: 380px) {
+  .products-grid { gap: 10px; }
+  .trust-v2-inner { gap: 8px; }
+}
