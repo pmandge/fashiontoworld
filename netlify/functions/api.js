@@ -156,6 +156,32 @@ exports.handler = async (event) => {
   const geo = detectGeo(event);
 
   try {
+    // /admitad/rawcoupons — diagnostic: shows what Admitad returns BEFORE filtering
+    if (path.includes('rawcoupons')) {
+      try {
+        const withRegion = await adGet('/coupons/', { limit: 10, region: q.region || geo.region });
+        const noRegion = await adGet('/coupons/', { limit: 10 });
+        return { statusCode: 200, headers, body: JSON.stringify({
+          with_region_AE: {
+            total: withRegion._meta?.count ?? 'unknown',
+            returned: (withRegion.results || []).length,
+          },
+          without_region: {
+            total: noRegion._meta?.count ?? 'unknown',
+            returned: (noRegion.results || []).length,
+            sample: (noRegion.results || []).slice(0, 5).map(c => ({
+              name: c.name,
+              advertiser: c.campaign?.name,
+              status: c.status,
+              promocode: c.promocode || '(none)',
+            })),
+          },
+        }) };
+      } catch (e) {
+        return { statusCode: 200, headers, body: JSON.stringify({ error: e.message }) };
+      }
+    }
+
     // /geo
     if (path.endsWith('/geo')) {
       return { statusCode: 200, headers, body: JSON.stringify(geo) };
