@@ -62,14 +62,14 @@ async function runTests(){
 
   // 1. Geo
   try {
-    var g = await fetch('/api/geo').then(r=>r.json());
+    var g = await fetch((window.API_BASE||'') + '/api/geo').then(r=>r.json());
     setCheck('c-geo','ok','Region: ' + (g.region||'?') + ' · Language: ' + (g.language||'?') + ' · Currency: ' + (g.currency||'?'));
     log('GEO: ' + JSON.stringify(g));
   } catch(e){ setCheck('c-geo','fail','Could not reach /api/geo — is the backend running?'); log('GEO error: ' + e.message); }
 
   // 1b. Programs
   try {
-    var pr = await fetch('/api/admitad/programs').then(r=>r.json());
+    var pr = await fetch((window.API_BASE||'') + '/api/admitad/programs').then(r=>r.json());
     if (pr.error){
       setCheck('c-programs','fail','Could not read programs: ' + pr.error);
     } else if (pr.connected_count > 0){
@@ -82,7 +82,7 @@ async function runTests(){
 
   // 2. Coupons
   try {
-    var c = await fetch('/api/admitad/coupons?limit=5').then(r=>r.json());
+    var c = await fetch((window.API_BASE||'') + '/api/admitad/coupons?limit=5').then(r=>r.json());
     var n = (c.coupons||[]).length;
     if (n > 0){
       setCheck('c-coupons','ok', n + ' fashion coupons returned. First: "' + (c.coupons[0].name||'') + '" from ' + (c.coupons[0].advertiser_name||'?'));
@@ -96,7 +96,7 @@ async function runTests(){
 
   // 3. Products
   try {
-    var p = await fetch('/api/admitad/products?limit=5').then(r=>r.json());
+    var p = await fetch((window.API_BASE||'') + '/api/admitad/products?limit=5').then(r=>r.json());
     var pn = (p.products||[]).length;
     if (pn > 0){ setCheck('c-products','ok', pn + ' products returned. First: "' + (p.products[0].name||'') + '"'); }
     else { setCheck('c-products','fail','0 products — product feed may need approval or none joined yet.'); }
@@ -105,7 +105,7 @@ async function runTests(){
 
   // 4. Networks
   try {
-    var c2 = await fetch('/api/admitad/coupons?limit=1').then(r=>r.json());
+    var c2 = await fetch((window.API_BASE||'') + '/api/admitad/coupons?limit=1').then(r=>r.json());
     var nets = c2.networks || [];
     if (nets.length){ setCheck('c-networks','ok','Connected: ' + nets.join(', ') + (c2.updatedAt ? ' · last synced ' + new Date(c2.updatedAt).toLocaleString() : '')); }
     else { setCheck('c-networks','fail','No networks active. Add API keys in your hosting environment variables.'); }
@@ -114,7 +114,8 @@ async function runTests(){
   log('\nTest complete.');
 }
 </script>
-<script src="../public/js/categories.js"></script>
+<script src="../public/js/api-config.js"></script>
+  <script src="../public/js/categories.js"></script>
 <script src="../public/js/footer.js"></script>
 <script src="../public/js/mobile-menu.js"></script>
 </body>

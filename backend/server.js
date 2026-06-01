@@ -51,16 +51,31 @@ async function getAccessToken() {
     return tokenCache.access_token;
   }
 
-  const params = new URLSearchParams({
-    grant_type: 'client_credentials',
-    client_id: CONFIG.ADMITAD_CLIENT_ID,
-    client_secret: CONFIG.ADMITAD_CLIENT_SECRET,
-    scope: 'advcampaigns banners coupons feeds products deeplink_generator statistics website',
-  });
+  // Admitad requires HTTP Basic auth: Authorization: Basic base64(client_id:client_secret)
+  // (same working method as the live Netlify function). client_secret goes in
+  // the header, NOT the body. Scopes use the *_for_website publisher names and
+  // are overridable via ADMITAD_SCOPE so you never need a code change to adjust.
+  let basic = process.env.ADMITAD_BASE64_HEADER;
+  if (!basic) {
+    basic = Buffer.from(
+      CONFIG.ADMITAD_CLIENT_ID + ':' + CONFIG.ADMITAD_CLIENT_SECRET
+    ).toString('base64');
+  }
+
+  const scope = process.env.ADMITAD_SCOPE ||
+    'public_data coupons advcampaigns_for_website banners_for_website websites deeplink_generator';
+
+  const params = new URLSearchParams();
+  params.set('grant_type', 'client_credentials');
+  params.set('client_id', CONFIG.ADMITAD_CLIENT_ID);
+  params.set('scope', scope);
 
   const res = await fetch(`${CONFIG.ADMITAD_API_BASE}/token/`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: {
+      'Authorization': 'Basic ' + basic,
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+    },
     body: params,
   });
 
@@ -83,23 +98,22 @@ async function getAccessToken() {
 async function admitadGet(endpoint, params = {}) {
   const token = await getAccessToken();
   const url = new URL(CONFIG.ADMITAD_API_BASE + endpoint);
-  url.searchParams.set('website', CONFIG.ADMITAD_WEBSITE_ID);
+  if (CONFIG.ADMITAD_WEBSITE_ID) url.searchParams.set('website', CONFIG.ADMITAD_WEBSITE_ID);
 
-  // Serialize params; arrays become repeated keys (e.g. category=1&category=2)
   Object.entries(params).forEach(([k, v]) => {
     if (v === undefined || v === null || v === '') return;
-    if (Array.isArray(v)) {
-      v.forEach(item => url.searchParams.append(k, item));
-    } else {
-      url.searchParams.set(k, v);
-    }
+    if (Array.isArray(v)) v.forEach(item => url.searchParams.append(k, item));
+    else url.searchParams.set(k, v);
   });
 
   const res = await fetch(url.toString(), {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  if (!res.ok) throw new Error(`Admitad API error: ${res.status}`);
+  if (!res.ok) {
+    const txt = await res.text().catch(() => '');
+    throw new Error(`Admitad ${endpoint} ${res.status} ${txt.slice(0, 150)}`);
+  }
   return res.json();
 }
 
@@ -137,52 +151,118 @@ function cached(key, fn) {
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok', ts: new Date().toISOString() }));
 
-// Coupons — ALL NETWORKS merged, FASHION ONLY, geo-aware
+// Coupons — FASHION, geo-aware. Uses the SAME proven logic as the live
+// Netlify function (Basic-auth token, no language filter, relaxed mode,
+// region ranking) so behaviour matches exactly after the move.
+const FASHION_EXCLUDE = ['electronics','laptop','smartphone','gadget','flight','hotel','grocery','finance','bank','crypto','casino','betting','pharma','furniture','appliance','vpn','hosting'];
+const { shipsWorldwide } = require('./config/worldwide-stores');
+
 app.get('/api/admitad/coupons', async (req, res) => {
   try {
-    const { page = 1, limit = 24, type } = req.query;
-    const region = req.query.region || req.geo.region;
+    const page = parseInt(req.query.page || 1);
+    const limit = parseInt(req.query.limit || 24);
+    const type = req.query.type;
+    const region = (req.query.region || req.geo.region || '').toUpperCase();
     const language = req.query.lang || req.geo.language;
+    const strict = process.env.FASHION_STRICT === 'true';
+    const regionFilterOff = process.env.REGION_FILTER === 'off';
 
-    // Serve from the auto-synced multi-network cache first (fast + always fresh)
-    const cache = readCache();
-    if (cache.coupons && cache.coupons.length) {
-      let coupons = cache.coupons;
-      if (region) coupons = coupons.filter(c => !c.regions?.length || c.regions.includes(region.toUpperCase()));
-      if (type) coupons = coupons.filter(c => (c.types || []).some(t => t.toLowerCase().includes(type.toLowerCase())));
-      const start = (parseInt(page) - 1) * parseInt(limit);
-      return res.json({
-        coupons: coupons.slice(start, start + parseInt(limit)),
-        total: coupons.length, region, language,
-        networks: cache.networks, updatedAt: cache.updatedAt,
+    // Pull from Admitad /coupons/ (website param added by admitadGet).
+    // No language/order_by params — those returned zero in testing.
+    const data = await admitadGet('/coupons/', {
+      limit, offset: (page - 1) * limit,
+      region: region || undefined,
+    });
+
+    let coupons = (data.results || []).map(c => {
+      const regionList = (c.regions || []).map(r => (typeof r === 'string' ? r : r.region)).filter(Boolean);
+      let desc = (c.description || '').replace(/not available[:\-].*/i, '').trim();
+      if (/^([A-Z]{2}[,\s]*){3,}$/.test(desc)) desc = '';
+      const rawLogo = c.campaign?.image || c.image || '';
+      return {
+        id: c.id, name: c.name, description: desc,
+        advertiser_name: c.campaign?.name || '',
+        logo: rawLogo ? (rawLogo.startsWith('//') ? 'https:' + rawLogo : rawLogo) : '',
+        promocode: c.promocode || '', discount: c.discount || '', status: c.status,
+        rating: parseFloat(c.rating || 0), regions: regionList,
+        types: (c.types || []).map(t => t.name),
+        categories: (c.categories || []).map(x => x.name),
+        url: c.goto_link || '', date_end: c.date_end || null,
+      };
+    }).filter(c => {
+      if (c.status && c.status !== 'active') return false;
+      // Only worldwide-shipping stores
+      if (!shipsWorldwide(c.advertiser_name)) return false;
+      if (strict) {
+        const hay = `${c.categories.join(' ')} ${c.name} ${c.advertiser_name}`.toLowerCase();
+        if (FASHION_EXCLUDE.some(p => hay.includes(p))) return false;
+      }
+      return true;
+    });
+
+    if (type) coupons = coupons.filter(c => (c.types || []).some(t => t.toLowerCase().includes(type.toLowerCase())));
+
+    if (region && !regionFilterOff) {
+      coupons.sort((a, b) => {
+        const aOk = a.regions.map(r => r.toUpperCase()).includes(region) ? 1 : 0;
+        const bOk = b.regions.map(r => r.toUpperCase()).includes(region) ? 1 : 0;
+        return bOk - aOk;
       });
     }
 
-    // Cache empty (first run) → pull live from all networks
-    const data = await aggregator.getCoupons({ region, language, limit: parseInt(limit), page: parseInt(page), type });
-    res.json({ ...data, region, language });
+    res.json({ coupons, total: coupons.length, region, language, mode: strict ? 'strict' : 'relaxed' });
   } catch (err) {
     console.error('[API/coupons]', err.message);
-    res.status(500).json({ error: err.message });
+    res.json({ coupons: [], total: 0, error: err.message, demo: true });
   }
 });
 
-// Fashion products — geo-aware
+// Real fashion products — served from the feed database
+const productDb = require('./services/product-db');
+const { startProductSync, getStatus, syncAllFeeds } = require('./services/product-sync');
+const currency = require('./services/currency');
+
 app.get('/api/admitad/products', async (req, res) => {
   try {
-    const { category, page = 1, limit = 24, sort = 'popularity', q } = req.query;
-    const region = req.query.region || req.geo.region;
-
-    const data = await cached('fashion-products', (params) =>
-      fashionFeed.getFashionProducts(params)
-    )({ subcategory: category, region, page: parseInt(page), limit: parseInt(limit), sort, q });
-
-    res.json({ ...data, region });
+    const { category, subcategory, gender, brand, sale, page = 1, limit = 24, sort, q } = req.query;
+    const result = await productDb.query({
+      category, subcategory, gender, brand, onSale: sale === 'true',
+      q, sort, page: parseInt(page), limit: parseInt(limit),
+    });
+    if (result.total === 0) {
+      return res.json({ products: [], total: 0, demo: true, note: 'product feeds syncing or none populated yet' });
+    }
+    // Convert prices to the visitor's currency (best-effort; keeps original if not possible)
+    const toCur = (req.query.currency || req.geo.currency || 'USD').toUpperCase();
+    for (const p of result.products) {
+      const conv = await currency.convert(p.price, (p.currency || 'EUR').toUpperCase(), toCur);
+      p.price_display = conv.formatted;
+      p.price_converted = conv.amount;
+      p.display_currency = conv.currency;
+      if (p.price_old) {
+        const convOld = await currency.convert(p.price_old, (p.currency || 'EUR').toUpperCase(), toCur);
+        p.price_old_display = convOld.formatted;
+      }
+    }
+    res.json({ ...result, region: req.geo.region, currency: toCur });
   } catch (err) {
     console.error('[API/products]', err.message);
     res.status(500).json({ error: err.message });
   }
 });
+
+// Product sync status + manual trigger (handy for first import)
+app.get('/api/products/status', async (req, res) => {
+  try { res.json(await getStatus()); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.get('/api/products/sync-now', async (req, res) => {
+  res.json({ started: true, note: 'Sync running in background; check /api/products/status' });
+  syncAllFeeds().catch(e => console.error('[sync-now]', e.message));
+});
+
+// Start the automatic daily product sync
+startProductSync();
 
 // Geo info — lets the frontend know detected country/language/currency
 app.get('/api/geo', (req, res) => {

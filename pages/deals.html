@@ -76,6 +76,19 @@
   margin-bottom: 16px;
 }
 .deal-store { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+.deal-store-row { display: flex; align-items: center; gap: 10px; }
+.deal-logo {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  background: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); font-size: 18px; font-weight: 600;
+  color: var(--black);
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.deal-logo-img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
 .deal-type {
   font-size: 11px;
   font-weight: 500;
@@ -249,7 +262,8 @@
   </div>
 </footer>
 
-<script src="../public/js/admitad-api.js"></script>
+<script src="../public/js/api-config.js"></script>
+  <script src="../public/js/admitad-api.js"></script>
 <script>
 async function loadDeals(filter = 'all') {
   const grid = document.getElementById('dealsGrid');
@@ -260,13 +274,22 @@ async function loadDeals(filter = 'all') {
 
   document.getElementById('stat-deals').textContent = data?.total || coupons.length + '+';
 
-  grid.innerHTML = coupons.map(c => `
+  grid.innerHTML = coupons.map(c => {
+    const title = (c.name || '').length > 90 ? c.name.slice(0, 88) + '…' : c.name;
+    const initial = (c.advertiser_name || '?').trim().charAt(0).toUpperCase();
+    const logoHtml = c.logo
+      ? `<img src="${c.logo}" alt="${c.advertiser_name}" class="deal-logo-img" loading="lazy" onerror="this.parentNode.innerHTML='${initial}'">`
+      : initial;
+    return `
     <div class="deal-card" data-type="${c.type || 'code'}">
       <div class="deal-card-head">
-        <span class="deal-store">${c.advertiser_name}</span>
+        <div class="deal-store-row">
+          <span class="deal-logo">${logoHtml}</span>
+          <span class="deal-store">${c.advertiser_name}</span>
+        </div>
         <span class="deal-type ${c.type || 'code'}">${c.type === 'sale' ? 'Sale' : c.promocode ? 'Code' : 'Deal'}</span>
       </div>
-      <h3 class="deal-title">${c.name}</h3>
+      <h3 class="deal-title">${title}</h3>
       <p class="deal-desc">${c.description || 'Limited time offer. Shop and save now.'}</p>
       ${c.expires_at ? `<p class="deal-expires">Expires: <span>${formatDate(c.expires_at)}</span></p>` : ''}
       ${c.promocode
@@ -280,7 +303,7 @@ async function loadDeals(filter = 'all') {
         Get Deal
       </a>
     </div>
-  `).join('');
+  `; }).join('');
 }
 
 function filterDeals(type, btn) {

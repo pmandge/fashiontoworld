@@ -138,7 +138,7 @@ const I18N = (() => {
   async function detectCountry() {
     // 1. Try our own backend (reads CDN country header — fastest, no 3rd party)
     try {
-      const r = await fetch('/api/geo');
+      const r = await fetch((window.API_BASE || '') + '/api/geo');
       if (r.ok) {
         const g = await r.json();
         if (g.region) return { region: g.region, language: g.language };

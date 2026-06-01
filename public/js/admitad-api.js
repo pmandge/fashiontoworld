@@ -23,7 +23,9 @@ const AdmitadAPI = (() => {
   const CONFIG = {
     // For client-side use, these come from your backend proxy
     // NEVER expose client_secret in frontend JS
-    baseUrl: '/api/admitad',         // Your backend proxy endpoint
+    // baseUrl respects window.API_BASE (set in api-config.js), so you can
+    // point the whole site at Netlify ('') or DigitalOcean (full URL).
+    baseUrl: ((window.API_BASE || '') + '/api/admitad'),
     cacheTimeout: 30 * 60 * 1000,   // 30 minutes cache
     defaultLocale: 'en',
     currency: 'USD',

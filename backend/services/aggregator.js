@@ -54,23 +54,32 @@ async function getAuthHeaders(net) {
     const cred = Buffer.from(env(a.username) + ':' + env(a.password)).toString('base64');
     return { Authorization: 'Basic ' + cred };
   }
-  if (a.type === 'oauth2') {
+  if (a.type === 'oauth2' || a.type === 'oauth2_basic') {
     const key = net.label;
     if (tokenCache[key] && Date.now() < tokenCache[key].exp - 60000) {
       return { Authorization: 'Bearer ' + tokenCache[key].token };
     }
-    const body = new URLSearchParams({
-      grant_type: 'client_credentials',
-      client_id: env(a.clientId),
-      client_secret: env(a.clientSecret),
-    });
+    const headers = { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' };
+    const body = new URLSearchParams();
+    body.set('grant_type', 'client_credentials');
+    body.set('client_id', env(a.clientId));
     if (a.scope) body.set('scope', a.scope);
-    const r = await fetch(a.tokenUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body,
-    });
-    if (!r.ok) throw new Error(net.label + ' token ' + r.status);
+
+    if (a.type === 'oauth2_basic') {
+      // Admitad-style: HTTP Basic auth header, secret NOT in body
+      let basic = a.base64Header ? env(a.base64Header) : null;
+      if (!basic) basic = Buffer.from(env(a.clientId) + ':' + env(a.clientSecret)).toString('base64');
+      headers['Authorization'] = 'Basic ' + basic;
+    } else {
+      // generic: secret in body
+      body.set('client_secret', env(a.clientSecret));
+    }
+
+    const r = await fetch(a.tokenUrl, { method: 'POST', headers, body });
+    if (!r.ok) {
+      const txt = await r.text().catch(() => '');
+      throw new Error(net.label + ' token ' + r.status + ' ' + txt.slice(0, 150));
+    }
     const d = await r.json();
     tokenCache[key] = { token: d.access_token, exp: Date.now() + (d.expires_in || 3600) * 1000 };
     return { Authorization: 'Bearer ' + d.access_token };

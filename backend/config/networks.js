@@ -29,11 +29,12 @@ module.exports = {
     label: 'Admitad',
     enabledIf: ['ADMITAD_CLIENT_ID', 'ADMITAD_CLIENT_SECRET'],
     auth: {
-      type: 'oauth2',
+      type: 'oauth2_basic',
       tokenUrl: 'https://api.admitad.com/token/',
       clientId: 'ADMITAD_CLIENT_ID',
       clientSecret: 'ADMITAD_CLIENT_SECRET',
-      scope: 'coupons products advcampaigns deeplink_generator public_data',
+      base64Header: 'ADMITAD_BASE64_HEADER',
+      scope: 'public_data coupons advcampaigns websites banners',
     },
     coupons: {
       url: 'https://api.admitad.com/coupons/',
