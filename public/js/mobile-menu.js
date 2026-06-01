@@ -18,11 +18,10 @@
   const home = inPages ? '../index.html' : 'index.html';
 
   function catUrl(slug) {
-    // Map top-level slugs to their landing pages (women/men exist; others reuse women.html with ?cat=)
-    if (slug === 'women') return root + 'women.html';
-    if (slug === 'men') return root + 'men.html';
-    if (slug === 'deals') return root + 'deals.html';
-    if (slug === 'brands') return root + 'brands.html';
+    // Every top-level category now has its own real page.
+    const pages = ['women','men','shoes','bags','jewellery','accessories','beauty','kids','deals','brands'];
+    if (pages.includes(slug)) return root + slug + '.html';
+    // Subcategories fall back to women.html with a filter
     return root + 'women.html?cat=' + encodeURIComponent(slug);
   }
 

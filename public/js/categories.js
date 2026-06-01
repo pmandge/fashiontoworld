@@ -102,21 +102,6 @@ const FASHION_TAXONOMY = {
     },
   },
 
-  luxury: {
-    label: 'Luxury', slug: 'luxury', icon: 'ti-crown',
-    subcategories: {
-      designer: { label: 'Designer', items: ['Designer Bags', 'Designer Shoes', 'Designer Clothing', 'Fine Jewellery', 'Luxury Watches', 'Designer Sunglasses'] },
-      preowned: { label: 'Pre-Owned & Vintage', items: ['Vintage Bags', 'Pre-Owned Watches', 'Vintage Clothing', 'Archive Pieces'] },
-    },
-  },
-
-  sustainable: {
-    label: 'Sustainable', slug: 'sustainable', icon: 'ti-leaf',
-    subcategories: {
-      eco: { label: 'Eco-Conscious', items: ['Organic Cotton', 'Recycled Materials', 'Vegan Fashion', 'Ethically Made', 'Resale & Second-Hand'] },
-    },
-  },
-
 };
 
 function flattenTaxonomy(tax) {

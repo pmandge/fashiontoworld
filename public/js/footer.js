@@ -33,10 +33,10 @@
           '<ul>' +
             '<li><a href="' + P + 'women.html">Women</a></li>' +
             '<li><a href="' + P + 'men.html">Men</a></li>' +
-            '<li><a href="' + P + 'women.html?cat=shoes">Shoes</a></li>' +
-            '<li><a href="' + P + 'women.html?cat=bags">Bags</a></li>' +
-            '<li><a href="' + P + 'women.html?cat=jewellery">Jewellery &amp; Watches</a></li>' +
-            '<li><a href="' + P + 'women.html?cat=accessories">Accessories</a></li>' +
+            '<li><a href="' + P + 'shoes.html">Shoes</a></li>' +
+            '<li><a href="' + P + 'bags.html">Bags</a></li>' +
+            '<li><a href="' + P + 'jewellery.html">Jewellery &amp; Watches</a></li>' +
+            '<li><a href="' + P + 'accessories.html">Accessories</a></li>' +
             '<li><a href="' + P + 'deals.html">Sales &amp; Deals</a></li>' +
           '</ul>' +
         '</div>' +

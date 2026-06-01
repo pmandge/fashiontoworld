@@ -270,9 +270,14 @@ async function loadDeals(filter = 'all') {
   grid.innerHTML = '<div class="loading-skeleton" style="height:200px"></div>'.repeat(6);
 
   const data = await AdmitadAPI.getCoupons({ limit: 24, type: filter === 'all' ? '' : filter });
-  const coupons = (data?.coupons?.length ? data.coupons : getDemoDeals());
+  const coupons = data?.coupons || [];
 
-  document.getElementById('stat-deals').textContent = data?.total || coupons.length + '+';
+  document.getElementById('stat-deals').textContent = (data?.total || coupons.length) + '';
+
+  if (!coupons.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:60px;text-align:center;color:#888"><p>No deals available right now. Please check back soon — we update deals daily.</p></div>';
+    return;
+  }
 
   grid.innerHTML = coupons.map(c => {
     const title = (c.name || '').length > 90 ? c.name.slice(0, 88) + '…' : c.name;
@@ -325,18 +330,6 @@ function formatDate(d) {
   return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-function getDemoDeals() {
-  return [
-    { advertiser_name: 'ASOS', name: '20% Off Your Order', description: 'Use code at checkout for 20% off everything sitewide. No minimum spend required.', promocode: 'FASHION20', type: 'code', url: '#' },
-    { advertiser_name: 'Zara', name: 'End of Season Sale — Up to 50% Off', description: 'Major discounts across Women\'s, Men\'s, and Kids collections. Auto-applied at checkout.', promocode: '', type: 'sale', url: '#' },
-    { advertiser_name: 'Net-a-Porter', name: '15% Off New Arrivals', description: 'Exclusive discount on the latest season arrivals from top luxury designers.', promocode: 'NEW15', type: 'code', url: '#' },
-    { advertiser_name: 'Mango', name: 'Free Shipping on Orders Over $50', description: 'Get free standard delivery to 180+ countries on qualifying orders.', promocode: '', type: 'freeship', url: '#' },
-    { advertiser_name: 'H&M', name: 'Members Get 10% Extra Off Sale', description: 'H&M members receive an additional 10% discount on all sale items this week.', promocode: 'MEMBER10', type: 'code', url: '#' },
-    { advertiser_name: 'Farfetch', name: 'Up to 40% Off Luxury Brands', description: 'Save on Gucci, Prada, Balenciaga and more. Selected items only.', promocode: '', type: 'sale', url: '#' },
-    { advertiser_name: 'Revolve', name: '$25 Off First Order', description: 'New customers get $25 off their first order. Minimum spend $150.', promocode: 'WELCOME25', type: 'code', url: '#' },
-    { advertiser_name: 'Nordstrom', name: 'Anniversary Sale — Extra 30% Off', description: 'Annual event with the biggest discounts of the year across all categories.', promocode: '', type: 'sale', url: '#' },
-  ];
-}
 
 loadDeals();
 </script>

@@ -116,7 +116,8 @@ function loadAdmitadPixel(websiteId) {
 // ─── INIT ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initLazyImages();
-  // loadAdmitadPixel('YOUR_WEBSITE_ID'); // Uncomment after setup
+  // Homepage sections (hero collage, trending, deals, on-sale, stores) are
+  // populated by AdmitadAPI.initDatafeed().
 });
 
 // ─── APPLY EDITABLE SITE CONTENT ─────────────────────────────

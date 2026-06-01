@@ -211,42 +211,21 @@
 <script src="../public/js/api-config.js"></script>
   <script src="../public/js/admitad-api.js"></script>
 <script>
-const allBrands = [
-  { name: 'ASOS', tier: 'highstreet', products: 2400, slug: 'asos' },
-  { name: 'Balenciaga', tier: 'luxury', products: 320, slug: 'balenciaga' },
-  { name: 'Burberry', tier: 'luxury', products: 480, slug: 'burberry' },
-  { name: 'Calvin Klein', tier: 'premium', products: 680, slug: 'calvin-klein' },
-  { name: 'Coach', tier: 'premium', products: 420, slug: 'coach' },
-  { name: 'Dior', tier: 'luxury', products: 380, slug: 'dior' },
-  { name: 'Farfetch', tier: 'luxury', products: 1200, slug: 'farfetch' },
-  { name: 'Gucci', tier: 'luxury', products: 560, slug: 'gucci' },
-  { name: 'H&M', tier: 'highstreet', products: 1800, slug: 'hm' },
-  { name: 'Isabel Marant', tier: 'premium', products: 280, slug: 'isabel-marant' },
-  { name: 'J.Crew', tier: 'premium', products: 640, slug: 'jcrew' },
-  { name: 'Kate Spade', tier: 'premium', products: 360, slug: 'kate-spade' },
-  { name: 'Levi\'s', tier: 'highstreet', products: 520, slug: 'levis' },
-  { name: 'Mango', tier: 'highstreet', products: 960, slug: 'mango' },
-  { name: 'Net-a-Porter', tier: 'luxury', products: 2100, slug: 'net-a-porter' },
-  { name: 'Nike', tier: 'sport', products: 1400, slug: 'nike' },
-  { name: 'Oscar de la Renta', tier: 'luxury', products: 180, slug: 'oscar-de-la-renta' },
-  { name: 'Prada', tier: 'luxury', products: 440, slug: 'prada' },
-  { name: 'Quay Australia', tier: 'premium', products: 120, slug: 'quay' },
-  { name: 'Revolve', tier: 'premium', products: 860, slug: 'revolve' },
-  { name: 'Sandro', tier: 'premium', products: 340, slug: 'sandro' },
-  { name: 'Ted Baker', tier: 'premium', products: 420, slug: 'ted-baker' },
-  { name: 'Uniqlo', tier: 'highstreet', products: 780, slug: 'uniqlo' },
-  { name: 'Valentino', tier: 'luxury', products: 380, slug: 'valentino' },
-  { name: 'Versace', tier: 'luxury', products: 340, slug: 'versace' },
-  { name: 'Whistles', tier: 'premium', products: 260, slug: 'whistles' },
-  { name: 'Xirena', tier: 'premium', products: 90, slug: 'xirena' },
-  { name: 'Yves Saint Laurent', tier: 'luxury', products: 420, slug: 'ysl' },
-  { name: 'Zara', tier: 'highstreet', products: 1600, slug: 'zara' },
-  { name: 'Zimmermann', tier: 'luxury', products: 240, slug: 'zimmermann' },
-  { name: 'adidas', tier: 'sport', products: 1200, slug: 'adidas' },
-  { name: '& Other Stories', tier: 'highstreet', products: 480, slug: 'other-stories' },
-  { name: 'Lululemon', tier: 'sport', products: 580, slug: 'lululemon' },
-  { name: 'Alo Yoga', tier: 'sport', products: 320, slug: 'alo-yoga' },
+// Real worldwide-shipping stores on FashionToWorld. These link to the
+// category pages filtered to that store's products.
+const STORE_BRANDS = [
+  { name: 'Symbol Fashion', tier: 'luxury', slug: 'symbol' },
+  { name: 'The Luxury Closet', tier: 'luxury', slug: 'luxury-closet' },
+  { name: 'Noracora', tier: 'highstreet', slug: 'noracora' },
+  { name: 'Justfashionnow', tier: 'highstreet', slug: 'justfashionnow' },
+  { name: 'Stylewe', tier: 'premium', slug: 'stylewe' },
+  { name: 'Wayrates', tier: 'highstreet', slug: 'wayrates' },
+  { name: 'Italo Jewelry', tier: 'premium', slug: 'italo' },
+  { name: 'Glasseslit', tier: 'highstreet', slug: 'glasseslit' },
+  { name: 'ChicMe', tier: 'highstreet', slug: 'chicme' },
+  { name: 'AliExpress', tier: 'highstreet', slug: 'aliexpress' },
 ];
+let allBrands = [...STORE_BRANDS];
 
 let filtered = [...allBrands];
 let currentTier = 'all';
@@ -261,11 +240,11 @@ function renderBrands(brands) {
   }
 
   grid.innerHTML = brands.map(b => `
-    <a href="brand.html?name=${encodeURIComponent(b.name)}&slug=${b.slug}" class="brand-card">
+    <a href="women.html?brand=${encodeURIComponent(b.name)}" class="brand-card">
       <div class="brand-card-header">${b.name[0]}</div>
       <div class="brand-card-body">
         <p class="brand-card-name">${b.name}</p>
-        <p class="brand-card-meta">${b.products.toLocaleString()} products</p>
+        <p class="brand-card-meta">Ships worldwide</p>
         <span class="brand-card-tier tier-${b.tier}">${b.tier}</span>
       </div>
     </a>

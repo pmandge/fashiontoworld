@@ -18,7 +18,7 @@
  * the API must also be https. Use the subdomain option for production.
  * ============================================================
  */
-window.API_BASE = 'https://api.fashiontoworld.co';
+window.API_BASE = '';
 
 // Helper: build a full API URL from a path like '/api/admitad/coupons'
 window.apiUrl = function (path) {

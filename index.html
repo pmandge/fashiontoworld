@@ -13,6 +13,8 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://images.unsplash.com">
+<link rel="dns-prefetch" href="https://api.fashiontoworld.co">
 <link rel="stylesheet" href="public/css/main.css">
 <link rel="stylesheet" href="public/css/home.css">
 </head>
@@ -27,11 +29,10 @@
     <ul class="nav-links">
       <li><a href="pages/women.html">Women</a></li>
       <li><a href="pages/men.html">Men</a></li>
-      <li><a href="pages/women.html?cat=shoes">Shoes</a></li>
-      <li><a href="pages/women.html?cat=bags">Bags</a></li>
-      <li><a href="pages/women.html?cat=jewellery">Jewellery &amp; Watches</a></li>
-      <li><a href="pages/women.html?cat=accessories">Accessories</a></li>
-      <li><a href="pages/brands.html">Brands</a></li>
+      <li><a href="pages/shoes.html">Shoes</a></li>
+      <li><a href="pages/bags.html">Bags</a></li>
+      <li><a href="pages/jewellery.html">Jewellery</a></li>
+      <li><a href="pages/accessories.html">Accessories</a></li>
       <li><a href="pages/deals.html">Deals</a></li>
     </ul>
     <div class="nav-spacer"></div>
@@ -42,7 +43,8 @@
       <a href="pages/deals.html" class="btn-nav-cta">Shop Deals</a>
     </div>
     <button class="nav-burger" onclick="toggleMenu()" aria-label="Menu">
-      <span></span><span></span><span></span>
+      <span class="burger-lines"><span></span><span></span><span></span></span>
+      <span class="burger-label">Menu</span>
     </button>
   </div>
   <div class="search-bar" id="searchBar">
@@ -52,139 +54,182 @@
 </nav>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-bg">
-    <div class="hero-shape hero-shape-1"></div>
-    <div class="hero-shape hero-shape-2"></div>
-    <div class="hero-shape hero-shape-3"></div>
-  </div>
-  <div class="hero-content">
-    <p class="hero-eyebrow">New Season · Global Delivery</p>
-    <h1 class="hero-title">
-      The World's<br>
-      <em>Best Fashion</em><br>
-      In One Place
-    </h1>
-    <p class="hero-subtitle">10,000+ products from 200+ premium brands. Curated collections, real-time deals, and worldwide shipping.</p>
-    <div class="hero-actions">
-      <a href="pages/women.html" class="btn-primary">Shop Women</a>
-      <a href="pages/men.html" class="btn-secondary">Shop Men</a>
+<section class="hero-v2">
+  <div class="hero-v2-bg" id="heroBg"></div>
+  <div class="hero-v2-overlay"></div>
+  <div class="container hero-v2-inner">
+    <div class="hero-v2-text">
+      <p class="hero-v2-eyebrow">New Season · Ships Worldwide</p>
+      <h1 class="hero-v2-title">Fashion the<br>World <em>Loves</em></h1>
+      <p class="hero-v2-sub">160,000+ pieces from worldwide-shipping brands. Real prices, verified deals, updated daily.</p>
+      <div class="hero-v2-actions">
+        <a href="pages/women.html" class="btn-cta-gold">Shop Now</a>
+        <a href="pages/deals.html" class="btn-cta-outline">Today's Deals</a>
+      </div>
     </div>
-    <div class="hero-stats">
-      <div class="stat"><span class="stat-num">200+</span><span class="stat-label">Brands</span></div>
-      <div class="stat-divider"></div>
-      <div class="stat"><span class="stat-num">10K+</span><span class="stat-label">Products</span></div>
-      <div class="stat-divider"></div>
-      <div class="stat"><span class="stat-num">180+</span><span class="stat-label">Countries</span></div>
+    <div class="hero-v2-collage" id="heroCollage">
+      <div class="hcol hcol-big loading-shimmer"></div>
+      <div class="hcol hcol-sm loading-shimmer"></div>
+      <div class="hcol hcol-sm loading-shimmer"></div>
     </div>
   </div>
-  <div class="hero-image-area">
-    <div class="hero-image-frame">
-      <div class="hero-badge hero-badge-1">
-        <span>✦</span> New In
-      </div>
-      <div class="hero-badge hero-badge-2">
-        Up to 60% Off
-      </div>
-      <div class="product-card-float">
-        <div class="pcf-img"></div>
-        <div class="pcf-info">
-          <p class="pcf-brand">Gucci</p>
-          <p class="pcf-name">Marmont Bag</p>
-          <p class="pcf-price">$1,250</p>
-        </div>
-      </div>
+  <div class="hero-scroll-cue"><span></span></div>
+</section>
+
+<!-- DEALS TICKER -->
+<a href="pages/deals.html" class="deals-ticker" id="dealsTicker" aria-label="Browse all deals">
+  <span class="dt-flag">🔥 Live Deals</span>
+  <div class="dt-viewport">
+    <div class="dt-track" id="dtTrack">
+      <span class="dt-item">Loading the latest worldwide deals…</span>
+    </div>
+  </div>
+  <span class="dt-cta">View All ›</span>
+</a>
+
+<!-- TRUST BAR -->
+<section class="trust-bar-v2">
+  <div class="container trust-v2-inner">
+    <div class="trust-v2-item">
+      <span class="trust-v2-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg></span>
+      <span class="trust-v2-num" data-count="180" data-suffix="+">0</span>
+      <span class="trust-v2-label">Countries Shipped</span>
+    </div>
+    <div class="trust-v2-item">
+      <span class="trust-v2-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L3 13V3h10l7.59 7.59a2 2 0 0 1 0 2.82z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor"/></svg></span>
+      <span class="trust-v2-num" data-count="168" data-suffix="K+">0</span>
+      <span class="trust-v2-label">Products Curated</span>
+    </div>
+    <div class="trust-v2-item">
+      <span class="trust-v2-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg></span>
+      <span class="trust-v2-num" data-count="13" data-suffix="">0</span>
+      <span class="trust-v2-label">Worldwide Stores</span>
+    </div>
+    <div class="trust-v2-item">
+      <span class="trust-v2-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <span class="trust-v2-num trust-v2-text">Daily</span>
+      <span class="trust-v2-label">Deals Updated</span>
     </div>
   </div>
 </section>
-
-<!-- MARQUEE BRANDS -->
-<div class="brands-ticker">
-  <div class="ticker-track">
-    <span>Gucci</span><span>•</span>
-    <span>Zara</span><span>•</span>
-    <span>H&M</span><span>•</span>
-    <span>Prada</span><span>•</span>
-    <span>ASOS</span><span>•</span>
-    <span>Mango</span><span>•</span>
-    <span>Versace</span><span>•</span>
-    <span>Balenciaga</span><span>•</span>
-    <span>Net-a-Porter</span><span>•</span>
-    <span>Farfetch</span><span>•</span>
-    <span>Valentino</span><span>•</span>
-    <span>Burberry</span><span>•</span>
-    <span>Gucci</span><span>•</span>
-    <span>Zara</span><span>•</span>
-    <span>H&M</span><span>•</span>
-    <span>Prada</span><span>•</span>
-    <span>ASOS</span><span>•</span>
-    <span>Mango</span><span>•</span>
-    <span>Versace</span><span>•</span>
-    <span>Balenciaga</span><span>•</span>
-  </div>
-</div>
 
 <!-- CATEGORY GRID -->
 <section class="section categories-section">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header center">
       <p class="section-eyebrow">Shop by Category</p>
       <h2 class="section-title">Find Your Style</h2>
     </div>
-    <div class="category-grid" id="categoryGrid">
-      <!-- Populated by JS / API -->
+    <div class="category-grid" id="categoryGrid"></div>
+  </div>
+</section>
+
+<!-- DEAL OF THE DAY -->
+<section class="section dotd-section" id="dotdSection" style="display:none">
+  <div class="container">
+    <div class="section-header center">
+      <p class="section-eyebrow gold">Limited Time</p>
+      <h2 class="section-title">Today's Top Deals</h2>
+      <p class="section-desc">Verified discounts from worldwide-shipping stores. Grab them before they're gone.</p>
     </div>
+    <div class="dotd-grid" id="dotdGrid"></div>
+    <div class="section-cta"><a href="pages/deals.html" class="btn-cta-dark">See All Deals ›</a></div>
   </div>
 </section>
 
 <!-- TRENDING PRODUCTS -->
-<section class="section trending-section">
+<section class="section trending-section" id="trendingSection">
   <div class="container">
     <div class="section-header">
-      <p class="section-eyebrow">What's Hot Right Now</p>
-      <h2 class="section-title">Trending This Week</h2>
-      <a href="pages/products.html" class="section-link">View All →</a>
+      <div>
+        <p class="section-eyebrow">What's Hot Right Now</p>
+        <h2 class="section-title">Trending This Week</h2>
+      </div>
+      <a href="pages/women.html" class="section-link">View All →</a>
     </div>
     <div class="products-grid" id="trendingProducts">
-      <!-- Populated via Admitad API -->
-      <div class="loading-skeleton"></div>
-      <div class="loading-skeleton"></div>
-      <div class="loading-skeleton"></div>
-      <div class="loading-skeleton"></div>
-      <div class="loading-skeleton"></div>
-      <div class="loading-skeleton"></div>
+      <div class="loading-skeleton"></div><div class="loading-skeleton"></div>
+      <div class="loading-skeleton"></div><div class="loading-skeleton"></div>
     </div>
   </div>
 </section>
 
-<!-- DEALS BANNER -->
+<!-- DUAL PROMO BANNERS -->
+<section class="section promo-section">
+  <div class="container">
+    <div class="promo-grid">
+      <a href="pages/women.html?sale=true" class="promo-card promo-women">
+        <div class="promo-content">
+          <span class="promo-eyebrow">Women's Edit</span>
+          <h3 class="promo-title">Up to 70%<br>Off Dresses</h3>
+          <span class="promo-cta">Shop Women ›</span>
+        </div>
+      </a>
+      <a href="pages/men.html?sale=true" class="promo-card promo-men">
+        <div class="promo-content">
+          <span class="promo-eyebrow">Men's Edit</span>
+          <h3 class="promo-title">New Season<br>Essentials</h3>
+          <span class="promo-cta">Shop Men ›</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP BY PRICE -->
+<section class="section price-section">
+  <div class="container">
+    <div class="section-header center">
+      <p class="section-eyebrow">Shop Your Budget</p>
+      <h2 class="section-title">Shop by Price</h2>
+    </div>
+    <div class="price-grid">
+      <a href="pages/women.html?maxprice=25" class="price-tile pt-1"><span class="pt-label">Under</span><span class="pt-amt">$25</span><span class="pt-go">Shop ›</span></a>
+      <a href="pages/women.html?maxprice=50" class="price-tile pt-2"><span class="pt-label">Under</span><span class="pt-amt">$50</span><span class="pt-go">Shop ›</span></a>
+      <a href="pages/women.html?maxprice=100" class="price-tile pt-3"><span class="pt-label">Under</span><span class="pt-amt">$100</span><span class="pt-go">Shop ›</span></a>
+      <a href="pages/women.html?minprice=300" class="price-tile pt-lux"><span class="pt-label">Premium</span><span class="pt-amt">Luxury</span><span class="pt-go">Shop ›</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ON SALE NOW -->
+<section class="section sale-section" id="saleSection" style="display:none">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <p class="section-eyebrow red">Markdowns</p>
+        <h2 class="section-title">On Sale Now</h2>
+      </div>
+      <a href="pages/women.html?sale=true" class="section-link">All Sale →</a>
+    </div>
+    <div class="products-grid" id="saleProducts"></div>
+  </div>
+</section>
+
+<!-- DEALS BANNER (kept, restyled) -->
 <section class="deals-banner">
   <div class="container">
     <div class="deals-inner">
       <div class="deals-text">
-        <p class="deals-eyebrow">Limited Time</p>
-        <h2 class="deals-title">Up to 60% Off<br><em>Top Brands</em></h2>
-        <p class="deals-sub">Exclusive deals updated daily. Don't miss out on the season's biggest discounts.</p>
-        <a href="pages/deals.html" class="btn-primary">See All Deals</a>
+        <p class="deals-eyebrow">Don't Miss Out</p>
+        <h2 class="deals-title">New Deals<br><em>Every Day</em></h2>
+        <p class="deals-sub">Verified coupons and discounts from stores that ship worldwide. Updated daily so you never miss a markdown.</p>
+        <a href="pages/deals.html" class="btn-cta-gold">Browse All Deals</a>
       </div>
-      <div class="deals-coupons" id="dealsPreview">
-        <!-- Populated by API -->
-      </div>
+      <div class="deals-coupons" id="dealsPreview"></div>
     </div>
   </div>
 </section>
 
-<!-- FEATURED BRANDS -->
-<section class="section brands-section">
+<!-- FEATURED STORES -->
+<section class="section stores-section">
   <div class="container">
-    <div class="section-header">
-      <p class="section-eyebrow">Partner Brands</p>
-      <h2 class="section-title">Shop Top Brands</h2>
-      <a href="pages/brands.html" class="section-link">All Brands →</a>
+    <div class="section-header center">
+      <p class="section-eyebrow">Worldwide Partners</p>
+      <h2 class="section-title">Featured Stores</h2>
+      <p class="section-desc">Shop trusted brands that deliver across the globe.</p>
     </div>
-    <div class="brands-grid" id="brandsGrid">
-      <!-- Populated via Admitad API -->
-    </div>
+    <div class="stores-grid" id="storesGrid"></div>
   </div>
 </section>
 
@@ -192,8 +237,10 @@
 <section class="section blog-section">
   <div class="container">
     <div class="section-header">
-      <p class="section-eyebrow">Inspiration & Guides</p>
-      <h2 class="section-title">From the Style Blog</h2>
+      <div>
+        <p class="section-eyebrow">Inspiration & Guides</p>
+        <h2 class="section-title">From the Style Blog</h2>
+      </div>
       <a href="pages/blog.html" class="section-link">All Articles →</a>
     </div>
     <div class="blog-grid" id="blogGrid">
@@ -201,27 +248,27 @@
         <div class="blog-img blog-img-1"></div>
         <div class="blog-body">
           <span class="blog-tag">Trends</span>
-          <h3><a href="pages/blog-post.html">The 10 Fashion Trends Dominating 2025</a></h3>
+          <h3><a href="pages/blog-trends-2025.html">The 10 Fashion Trends Dominating 2025</a></h3>
           <p>From quiet luxury to maximalist prints — here's what the runways say you should be wearing.</p>
-          <span class="blog-date">May 28, 2025</span>
+          <span class="blog-date">2025</span>
         </div>
       </article>
       <article class="blog-card">
         <div class="blog-img blog-img-2"></div>
         <div class="blog-body">
           <span class="blog-tag">Style Guide</span>
-          <h3><a href="pages/blog-post.html">How to Build a Capsule Wardrobe on Any Budget</a></h3>
+          <h3><a href="pages/blog-capsule-wardrobe.html">How to Build a Capsule Wardrobe on Any Budget</a></h3>
           <p>A timeless wardrobe doesn't require a luxury budget. Here's how to shop smart.</p>
-          <span class="blog-date">May 22, 2025</span>
+          <span class="blog-date">2025</span>
         </div>
       </article>
       <article class="blog-card">
         <div class="blog-img blog-img-3"></div>
         <div class="blog-body">
-          <span class="blog-tag">Brand Spotlight</span>
-          <h3><a href="pages/blog-post.html">Inside Zara's New Sustainable Collection</a></h3>
-          <p>The fast-fashion giant makes a major push toward eco-conscious design this season.</p>
-          <span class="blog-date">May 15, 2025</span>
+          <span class="blog-tag">Smart Shopping</span>
+          <h3><a href="pages/blog-spotting-deals.html">How to Spot a Genuine Fashion Deal</a></h3>
+          <p>Not every discount is a bargain. Here's how to tell real savings from clever marketing.</p>
+          <span class="blog-date">2025</span>
         </div>
       </article>
     </div>

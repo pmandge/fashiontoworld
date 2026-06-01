@@ -5,13 +5,21 @@
 
 :root {
   --black: #0a0a0a;
+  --ink: #1a1410;
   --white: #fafaf8;
   --cream: #f5f2ec;
   --gold: #c9a84c;
   --gold-light: #e8d5a3;
+  --deal: #c0492f;
+  --deal-dark: #9e3a24;
+  --deal-tint: #fbf1ec;
+  --deal-tint-2: #fbeae4;
+  --warm-ivory: #faf6ef;
+  --soft-sage: #f3f4ee;
   --text: #1a1a1a;
   --text-muted: #6b6b6b;
   --border: rgba(0,0,0,0.1);
+  --line: rgba(0,0,0,0.1);
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'DM Sans', system-ui, sans-serif;
   --nav-h: 72px;
@@ -104,11 +112,11 @@ em { font-style: italic; }
 .nav-inner {
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 0 32px;
   height: var(--nav-h);
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 18px;
 }
 .nav-spacer { flex: 1; }
 
@@ -139,7 +147,7 @@ em { font-style: italic; }
 
 .nav-links {
   display: flex;
-  gap: 22px;
+  gap: 18px;
 }
 .nav-links > li { position: relative; }
 .nav-links a {
@@ -249,13 +257,13 @@ em { font-style: italic; }
 .btn-nav-cta:hover { background: var(--black); color: var(--white); }
 
 .nav-burger {
-  display: inline-flex;
+  display: inline-flex; /* shown on all screen sizes now */
   align-items: center;
   gap: 8px;
   background: none;
   border: 1px solid var(--border);
   cursor: pointer;
-  padding: 8px 14px 8px 12px;
+  padding: 9px 16px;
   margin-left: 4px;
   border-radius: var(--radius);
   transition: all 0.2s;

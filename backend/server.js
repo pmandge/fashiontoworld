@@ -224,9 +224,11 @@ const currency = require('./services/currency');
 
 app.get('/api/admitad/products', async (req, res) => {
   try {
-    const { category, subcategory, gender, brand, sale, page = 1, limit = 24, sort, q } = req.query;
+    const { category, subcategory, gender, brand, sale, minprice, maxprice, page = 1, limit = 24, sort, q } = req.query;
     const result = await productDb.query({
       category, subcategory, gender, brand, onSale: sale === 'true',
+      minprice: minprice ? parseFloat(minprice) : null,
+      maxprice: maxprice ? parseFloat(maxprice) : null,
       q, sort, page: parseInt(page), limit: parseInt(limit),
     });
     if (result.total === 0) {

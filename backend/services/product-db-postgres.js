@@ -65,19 +65,22 @@ async function pruneOld(runStamp) {
   return r.rowCount;
 }
 
-async function query({ category, subcategory, gender, brand, onSale, q, sort, limit = 24, page = 1 } = {}) {
+async function query({ category, subcategory, gender, brand, onSale, minprice, maxprice, q, sort, limit = 24, page = 1 } = {}) {
   const where = []; const vals = []; let i = 1;
   if (category)    { where.push(`category = $${i++}`); vals.push(category); }
   if (subcategory) { where.push(`subcategory = $${i++}`); vals.push(subcategory); }
   if (gender)      { where.push(`gender = $${i++}`); vals.push(gender); }
   if (brand)       { where.push(`brand = $${i++}`); vals.push(brand); }
   if (onSale)      { where.push(`on_sale = true`); }
+  if (minprice != null) { where.push(`price >= $${i++}`); vals.push(minprice); }
+  if (maxprice != null) { where.push(`price <= $${i++}`); vals.push(maxprice); }
   if (q)           { where.push(`(name ILIKE $${i} OR brand ILIKE $${i})`); vals.push(`%${q}%`); i++; }
   const w = where.length ? 'WHERE ' + where.join(' AND ') : '';
   let order = 'updated_at DESC';
   if (sort === 'price_asc') order = 'price ASC';
   else if (sort === 'price_desc') order = 'price DESC';
   else if (sort === 'sale') order = 'on_sale DESC, price ASC';
+  else if (sort === 'discount') order = 'on_sale DESC, (CASE WHEN price_old > 0 THEN (price_old - price) / price_old ELSE 0 END) DESC';
   const lim = Math.min(parseInt(limit) || 24, 100);
   const off = ((parseInt(page) || 1) - 1) * lim;
   const totalR = await pool.query(`SELECT COUNT(*)::int n FROM products ${w}`, vals);

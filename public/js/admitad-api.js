@@ -78,7 +78,12 @@ const AdmitadAPI = (() => {
   async function getProducts(opts = {}) {
     return request('/products', {
       category: opts.category || '',
+      subcategory: opts.subcategory || '',
+      gender: opts.gender || '',
       brand: opts.brand || '',
+      sale: opts.sale || '',
+      minprice: opts.minprice || '',
+      maxprice: opts.maxprice || '',
       page: opts.page || 1,
       limit: opts.limit || CONFIG.pageSize,
       sort: opts.sort || 'popularity',
@@ -153,6 +158,9 @@ const AdmitadAPI = (() => {
     const discount = hasDiscount
       ? Math.round((1 - product.price / product.price_old) * 100)
       : 0;
+    // Only use a real outbound affiliate link. Never fall back to an internal page.
+    const link = product.affiliate_url || product.url || '';
+    const isRealLink = /^https?:\/\//i.test(link);
 
     return `
       <article class="product-card">
@@ -160,7 +168,8 @@ const AdmitadAPI = (() => {
           <img src="${product.image_url || '/public/images/placeholder.jpg'}"
                alt="${product.name}"
                loading="lazy"
-               onerror="this.src='/public/images/placeholder.jpg'">
+               decoding="async"
+               onerror="this.onerror=null;this.src='/public/images/placeholder.jpg'">
           ${hasDiscount ? `<span class="product-badge sale">-${discount}%</span>` : ''}
           ${product.is_new ? `<span class="product-badge">New</span>` : ''}
         </div>
@@ -168,20 +177,20 @@ const AdmitadAPI = (() => {
           <p class="product-brand">${product.brand || product.advertiser_name}</p>
           <h3 class="product-name">${product.name}</h3>
           <div class="product-price-row">
-            <span class="product-price">${formatPrice(product.price, product.currency)}</span>
-            ${hasDiscount ? `<span class="product-original">${formatPrice(product.price_old, product.currency)}</span>` : ''}
+            <span class="product-price">${product.price_display || formatPrice(product.price, product.currency)}</span>
+            ${hasDiscount ? `<span class="product-original">${product.price_old_display || formatPrice(product.price_old, product.currency)}</span>` : ''}
             ${discount ? `<span class="product-discount">-${discount}%</span>` : ''}
           </div>
         </div>
         <div class="product-footer">
-          <a href="${product.affiliate_url || product.url}"
+          ${isRealLink ? `<a href="${link}"
              class="btn-product"
              target="_blank"
-             rel="noopener sponsored"
+             rel="noopener sponsored nofollow"
              data-product-id="${product.id}"
              onclick="trackClick('${product.id}', '${product.advertiser_name}')">
             Shop Now
-          </a>
+          </a>` : `<span class="btn-product btn-disabled">Unavailable</span>`}
         </div>
       </article>
     `;
@@ -204,10 +213,10 @@ const AdmitadAPI = (() => {
 
   function renderBrandTile(brand) {
     return `
-      <a href="/pages/brand.html?id=${brand.id}&name=${encodeURIComponent(brand.name)}"
+      <a href="/pages/women.html?brand=${encodeURIComponent(brand.name)}"
          class="brand-tile">
         <span class="brand-tile-name">${brand.name}</span>
-        <span class="brand-tile-products">${brand.products_count || ''} Products</span>
+        <span class="brand-tile-products">${brand.products_count ? brand.products_count + ' Products' : 'Ships worldwide'}</span>
       </a>
     `;
   }
@@ -289,6 +298,145 @@ const AdmitadAPI = (() => {
     container.innerHTML = data.brands.map(renderBrandTile).join('');
   }
 
+  // ─── HOMEPAGE V2 SECTIONS ────────────────────────────────────
+
+  // Hero collage: 1 big + 2 small real product images, each links to store
+  async function populateHeroCollage() {
+    const collage = document.getElementById('heroCollage');
+    const bg = document.getElementById('heroBg');
+    if (!collage) return;
+    try {
+      const data = await getProducts({ sort: 'popularity', limit: 8 });
+      const prods = (data?.products || []).filter(p => p.image_url && /^https?:/i.test(p.affiliate_url || p.url || ''));
+      if (prods.length < 3) { collage.style.display = 'none'; return; }
+
+      const pick = prods.slice(0, 3);
+      const classes = ['hcol-big', 'hcol-sm', 'hcol-sm'];
+      collage.innerHTML = pick.map((p, i) => {
+        const link = p.affiliate_url || p.url;
+        const disc = (p.price_old && p.price_old > p.price)
+          ? Math.round((1 - p.price / p.price_old) * 100) : 0;
+        return `<a class="hcol ${classes[i]}" href="${link}" target="_blank" rel="noopener sponsored nofollow"
+                   style="background-image:url('${p.image_url}')"
+                   onclick="trackClick('${p.id}','${(p.advertiser_name||'').replace(/'/g,'')}')">
+          ${disc ? `<span class="hcol-tag">-${disc}%</span>` : ''}
+          <span class="hcol-info">
+            <span class="hci-name">${(p.name||'').slice(0,28)}</span>
+            <span class="hci-price">${p.price_display || ''}</span>
+          </span>
+        </a>`;
+      }).join('');
+
+      // Use the largest product image softly behind the hero text too
+      if (bg && pick[0]?.image_url) {
+        bg.style.backgroundImage = `url('${pick[0].image_url}')`;
+      }
+    } catch (e) { collage.style.display = 'none'; }
+  }
+
+  // Deal of the Day: top coupons with bold CTA
+  async function populateDealOfDay(containerId = 'dotdGrid', limit = 3) {
+    const container = document.getElementById(containerId);
+    const section = document.getElementById('dotdSection');
+    if (!container) return;
+    const data = await getCoupons({ limit });
+    const coupons = data?.coupons || [];
+    if (!coupons.length) { if (section) section.style.display = 'none'; return; }
+    if (section) section.style.display = '';
+    container.innerHTML = coupons.slice(0, limit).map(c => {
+      const link = c.affiliate_url || c.url || c.goto_link || '';
+      const isReal = /^https?:/i.test(link);
+      const badge = c.promocode ? `<span class="dotd-badge code">Code: ${c.promocode}</span>` : `<span class="dotd-badge">Deal</span>`;
+      const title = (c.name || 'Special Offer').slice(0, 70);
+      return `<a class="dotd-card" ${isReal ? `href="${link}" target="_blank" rel="noopener sponsored nofollow"` : ''}>
+        ${badge}
+        <p class="dotd-store">${c.advertiser_name || ''}</p>
+        <h3 class="dotd-title">${title}</h3>
+        <div class="dotd-action">Grab This Deal ›</div>
+      </a>`;
+    }).join('');
+  }
+
+  // On Sale: products with a discount
+  async function populateOnSale(containerId = 'saleProducts', limit = 4) {
+    const container = document.getElementById(containerId);
+    const section = document.getElementById('saleSection');
+    if (!container) return;
+    const data = await getProducts({ sale: 'true', sort: 'discount', limit });
+    const prods = data?.products || [];
+    if (!prods.length) { if (section) section.style.display = 'none'; return; }
+    if (section) section.style.display = '';
+    container.innerHTML = prods.map(renderProductCard).join('');
+  }
+
+  // Featured stores: worldwide-shipping partners
+  function populateFeaturedStores(containerId = 'storesGrid') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const stores = [
+      'Symbol Fashion', 'The Luxury Closet', 'Noracora', 'Stylewe', 'Justfashionnow',
+      'Wayrates', 'Italo Jewelry', 'Glasseslit', 'ChicMe', 'AliExpress'
+    ];
+    container.innerHTML = stores.map(name =>
+      `<a class="store-card" href="/pages/women.html?brand=${encodeURIComponent(name)}">
+        <span class="store-logo">${name[0]}</span>
+        <span class="store-name">${name}</span>
+        <span class="store-go">Visit Store ›</span>
+      </a>`
+    ).join('');
+  }
+
+  // Deals ticker: scrolling strip of live deal text
+  async function populateDealsTicker(trackId = 'dtTrack') {
+    const track = document.getElementById(trackId);
+    if (!track) return;
+    try {
+      const data = await getCoupons({ limit: 12 });
+      const coupons = data?.coupons || [];
+      if (!coupons.length) {
+        const t = document.getElementById('dealsTicker');
+        if (t) t.style.display = 'none';
+        return;
+      }
+      const items = coupons.map(c => {
+        const store = c.advertiser_name || 'Store';
+        const offer = (c.name || 'Special offer').slice(0, 50);
+        return `<span class="dt-item">${offer} at ${store}</span>`;
+      });
+      // Duplicate the set so the scroll loops seamlessly
+      track.innerHTML = items.join('') + items.join('');
+    } catch (e) {
+      const t = document.getElementById('dealsTicker');
+      if (t) t.style.display = 'none';
+    }
+  }
+
+  // Trust bar count-up animation
+  function animateTrustBar() {
+    const nums = document.querySelectorAll('.trust-v2-num[data-count]');
+    if (!nums.length) return;
+    const run = (el) => {
+      const target = parseInt(el.getAttribute('data-count'), 10);
+      const suffix = el.getAttribute('data-suffix') || '';
+      const dur = 1400; const start = performance.now();
+      const step = (now) => {
+        const p = Math.min((now - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { run(e.target); io.unobserve(e.target); } });
+      }, { threshold: 0.4 });
+      nums.forEach(n => io.observe(n));
+    } else {
+      nums.forEach(run);
+    }
+  }
+
   async function populateCategories(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -307,16 +455,17 @@ const AdmitadAPI = (() => {
       sustainable: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500&q=80',
     };
 
+    const REAL_PAGES = ['women','men','shoes','bags','jewellery','accessories','beauty','kids'];
     const tax = window.FASHION_TAXONOMY;
     let tiles;
     if (tax) {
       tiles = Object.values(tax).map((c) => ({
         name: c.label,
         img: IMG[c.slug] || '',
-        url: (c.slug === 'women' || c.slug === 'men') ? `/pages/${c.slug}.html` : `/pages/women.html?cat=${c.slug}`,
+        url: REAL_PAGES.includes(c.slug) ? `/pages/${c.slug}.html` : `/pages/women.html?cat=${c.slug}`,
       }));
     } else {
-      tiles = Object.keys(IMG).map(k => ({ name: k, img: IMG[k], url: `/pages/women.html?cat=${k}` }));
+      tiles = Object.keys(IMG).map(k => ({ name: k, img: IMG[k], url: REAL_PAGES.includes(k) ? `/pages/${k}.html` : `/pages/women.html?cat=${k}` }));
     }
 
     container.innerHTML = tiles.map(cat => `
@@ -367,45 +516,39 @@ const AdmitadAPI = (() => {
     } catch (e) { /* keep static badge */ }
   }
 
-  // ─── FALLBACKS (when API is not yet configured) ───────────────
-
+  // ─── FALLBACKS (when API returns nothing) ───────────────
+  // No fake products — show an honest empty state instead, so we never
+  // display items that link to the wrong place.
   function renderFallbackProducts() {
-    const demoProducts = [
-      { name: 'Silk Midi Dress', brand: 'Zara', price: 89, price_old: 129, currency: 'USD', image_url: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&q=80', id: '1', advertiser_name: 'Zara', url: 'pages/deals.html', affiliate_url: 'pages/deals.html' },
-      { name: 'Classic Leather Bag', brand: 'Mango', price: 149, price_old: null, currency: 'USD', image_url: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&q=80', id: '2', advertiser_name: 'Mango', url: 'pages/deals.html', affiliate_url: 'pages/deals.html' },
-      { name: 'Tailored Blazer', brand: 'ASOS', price: 65, price_old: 95, currency: 'USD', image_url: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&q=80', id: '3', advertiser_name: 'ASOS', url: 'pages/deals.html', affiliate_url: 'pages/deals.html' },
-      { name: 'Floral Maxi Skirt', brand: 'H&M', price: 39, price_old: null, currency: 'USD', image_url: 'https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?w=400&q=80', id: '4', advertiser_name: 'H&M', url: 'pages/deals.html', affiliate_url: 'pages/deals.html' },
-      { name: 'White Sneakers', brand: 'Nike', price: 110, price_old: 130, currency: 'USD', image_url: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&q=80', id: '5', advertiser_name: 'Nike', url: 'pages/deals.html', affiliate_url: 'pages/deals.html' },
-      { name: 'Gold Hoop Earrings', brand: 'Mejuri', price: 45, price_old: null, currency: 'USD', image_url: 'https://images.unsplash.com/photo-1635767798638-3e25273a8236?w=400&q=80', id: '6', advertiser_name: 'Mejuri', url: 'pages/deals.html', affiliate_url: 'pages/deals.html' },
-    ];
-    return demoProducts.map(renderProductCard).join('');
+    return '<div class="empty-state"><p>Products are loading. Please refresh in a moment.</p></div>';
   }
 
   function renderFallbackCoupons() {
-    return [
-      { advertiser_name: 'ASOS', name: '20% Off Everything', promocode: 'FASHION20' },
-      { advertiser_name: 'Zara', name: 'Free Shipping on Orders $50+', promocode: '' },
-      { advertiser_name: 'Net-a-Porter', name: '15% Off New Arrivals', promocode: 'NEW15' },
-    ].map(renderCouponCard).join('');
+    return '<div class="empty-state"><p>Loading the latest deals…</p></div>';
   }
 
   function renderFallbackBrands() {
+    // Real worldwide-shipping stores (shown only if the live brand list is unavailable)
     return [
-      'Gucci', 'Zara', 'ASOS', 'Prada', 'Mango', 'H&M',
-      'Burberry', 'Versace', 'Net-a-Porter', 'Farfetch', 'Valentino', 'Balenciaga'
-    ].map((name, i) => renderBrandTile({ id: i + 1, name, products_count: Math.floor(Math.random() * 500) + 50 })).join('');
+      'Symbol Fashion', 'The Luxury Closet', 'Noracora', 'Justfashionnow',
+      'Stylewe', 'Wayrates', 'Italo Jewelry', 'Glasseslit', 'ChicMe', 'AliExpress'
+    ].map((name, i) => renderBrandTile({ id: i + 1, name, products_count: null })).join('');
   }
 
   // ─── DATAFEED SYNC MANAGER ───────────────────────────────────
   // This runs on page load to pre-warm the cache
 
   async function initDatafeed() {
+    animateTrustBar();
     await Promise.allSettled([
       populateCategories('categoryGrid'),
-      populateHeroBanner(),
-      populateTrending('trendingProducts'),
+      populateHeroCollage(),
+      populateDealsTicker('dtTrack'),
+      populateTrending('trendingProducts', { limit: 4 }),
+      populateDealOfDay('dotdGrid', 3),
+      populateOnSale('saleProducts', 4),
       populateCoupons('dealsPreview', 3),
-      populateBrands('brandsGrid', 12),
+      populateFeaturedStores('storesGrid'),
     ]);
   }
 
@@ -428,6 +571,12 @@ const AdmitadAPI = (() => {
     populateBrands,
     populateCategories,
     populateHeroBanner,
+    populateHeroCollage,
+    populateDealOfDay,
+    populateOnSale,
+    populateFeaturedStores,
+    populateDealsTicker,
+    animateTrustBar,
     initDatafeed,
   };
 })();
