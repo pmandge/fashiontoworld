@@ -221,8 +221,8 @@ exports.handler = async (event) => {
 
       const catIds = strict ? await fashionCategoryIds() : [];
       const data = await adGet('/coupons/', {
-        limit, offset: (page - 1) * limit, order_by: '-rating',
-        language: geo.language,
+        limit,
+        offset: (page - 1) * limit,
         category: (strict && catIds.length) ? catIds : undefined,
         region: q.region || geo.region,
       });
