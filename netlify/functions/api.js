@@ -47,10 +47,18 @@ async function getToken() {
     ).toString('base64');
   }
 
-  // Scopes must be SPACE-separated and limited to what the account has.
-  // These are the standard publisher scope names per Admitad docs.
-  const scope = process.env.ADMITAD_SCOPE ||
-    'public_data coupons advcampaigns websites banners';
+  // Scopes must be SPACE-separated. Admitad publisher data uses *_for_website
+  // variants. The 403 errors tell us the exact name needed if one is wrong.
+  // You can override via the ADMITAD_SCOPE env var without code changes.
+  const scope = process.env.ADMITAD_SCOPE || [
+    'public_data',
+    'coupons_for_website',
+    'advcampaigns_for_website',
+    'banners_for_website',
+    'websites',
+    'deeplink_generator',
+    'manage_advcampaigns',
+  ].join(' ');
 
   const body = new URLSearchParams();
   body.set('grant_type', 'client_credentials');
@@ -94,12 +102,19 @@ async function adGet(endpoint, params = {}) {
 async function fashionCategoryIds() {
   const DAY = 86400000;
   if (fashionCatCache.ids && Date.now() - fashionCatCache.at < DAY) return fashionCatCache.ids;
-  const d = await adGet('/coupons/categories/', { limit: 500 });
-  const ids = (d.results || [])
-    .filter(c => FASHION_PATTERNS.some(p => (c.name || '').toLowerCase().includes(p)))
-    .map(c => c.id);
-  fashionCatCache = { ids, at: Date.now() };
-  return ids;
+  try {
+    const d = await adGet('/coupons/categories/', { limit: 500 });
+    const ids = (d.results || [])
+      .filter(c => FASHION_PATTERNS.some(p => (c.name || '').toLowerCase().includes(p)))
+      .map(c => c.id);
+    fashionCatCache = { ids, at: Date.now() };
+    return ids;
+  } catch (e) {
+    // If categories aren't accessible, skip category filtering (we still
+    // filter fashion client-side by name/brand). Don't break the coupons call.
+    fashionCatCache = { ids: [], at: Date.now() };
+    return [];
+  }
 }
 
 function normCoupon(c) {
