@@ -186,19 +186,31 @@ exports.handler = async (event) => {
     if (path.includes('coupons')) {
       const limit = parseInt(q.limit || 24);
       const page = parseInt(q.page || 1);
-      const catIds = await fashionCategoryIds();
+
+      // RELAXED MODE: when FASHION_STRICT is not 'true', we show deals from all
+      // your joined programs (useful while marketplace programs are active and
+      // dedicated fashion brands are still pending). We still block clearly
+      // non-fashion verticals (gambling, finance, etc.) via EXCLUDE.
+      const strict = process.env.FASHION_STRICT === 'true';
+
+      const catIds = strict ? await fashionCategoryIds() : [];
       const data = await adGet('/coupons/', {
         limit, offset: (page - 1) * limit, order_by: '-rating',
-        language: geo.language, category: catIds.length ? catIds : undefined,
+        language: geo.language,
+        category: (strict && catIds.length) ? catIds : undefined,
         region: q.region || geo.region,
       });
       let coupons = (data.results || []).map(normCoupon).filter(c => {
-        if (c.status !== 'active') return false;
+        if (c.status && c.status !== 'active') return false;
         const hay = `${c.categories.join(' ')} ${c.name} ${c.advertiser_name}`.toLowerCase();
+        // Always block clearly non-fashion verticals
         if (EXCLUDE.some(p => hay.includes(p))) return false;
-        return FASHION_PATTERNS.some(p => hay.includes(p)) || FASHION_BRANDS.some(b => hay.includes(b)) || c.categories.length === 0;
+        if (strict) {
+          return FASHION_PATTERNS.some(p => hay.includes(p)) || FASHION_BRANDS.some(b => hay.includes(b)) || c.categories.length === 0;
+        }
+        return true; // relaxed: allow everything not excluded
       });
-      return { statusCode: 200, headers, body: JSON.stringify({ coupons, total: coupons.length, region: geo.region, language: geo.language }) };
+      return { statusCode: 200, headers, body: JSON.stringify({ coupons, total: coupons.length, region: geo.region, language: geo.language, mode: strict ? 'strict' : 'relaxed' }) };
     }
 
     // /admitad/products  (FASHION)
