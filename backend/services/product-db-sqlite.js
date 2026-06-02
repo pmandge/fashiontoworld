@@ -59,12 +59,13 @@ async function pruneOld(runStamp) {
   return db.prepare('DELETE FROM products WHERE updated_at < ?').run(runStamp).changes;
 }
 
-async function query({ category, subcategory, gender, brand, onSale, minprice, maxprice, q, sort, limit = 24, page = 1 } = {}) {
+async function query({ category, subcategory, gender, brand, advertiser, onSale, minprice, maxprice, q, sort, limit = 24, page = 1 } = {}) {
   const where = []; const params = {};
   if (category)    { where.push('category = @category'); params.category = category; }
   if (subcategory) { where.push('subcategory = @subcategory'); params.subcategory = subcategory; }
   if (gender)      { where.push('gender = @gender'); params.gender = gender; }
   if (brand)       { where.push('brand = @brand'); params.brand = brand; }
+  if (advertiser)  { where.push('advertiser LIKE @advertiser'); params.advertiser = `%${advertiser}%`; }
   if (onSale)      { where.push('on_sale = 1'); }
   if (minprice != null) { where.push('price >= @minprice'); params.minprice = minprice; }
   if (maxprice != null) { where.push('price <= @maxprice'); params.maxprice = maxprice; }
