@@ -81,6 +81,7 @@ const AdmitadAPI = (() => {
       subcategory: opts.subcategory || '',
       gender: opts.gender || '',
       brand: opts.brand || '',
+      advertiser: opts.advertiser || '',
       sale: opts.sale || '',
       minprice: opts.minprice || '',
       maxprice: opts.maxprice || '',
@@ -213,7 +214,7 @@ const AdmitadAPI = (() => {
 
   function renderBrandTile(brand) {
     return `
-      <a href="/pages/women.html?brand=${encodeURIComponent(brand.name)}"
+      <a href="/pages/search.html?advertiser=${encodeURIComponent(brand.name)}"
          class="brand-tile">
         <span class="brand-tile-name">${brand.name}</span>
         <span class="brand-tile-products">${brand.products_count ? brand.products_count + ' Products' : 'Ships worldwide'}</span>
@@ -441,7 +442,7 @@ const AdmitadAPI = (() => {
     // Render immediately with a safe fallback (internal filtered page),
     // then upgrade each card to a direct outbound affiliate link if we find one.
     container.innerHTML = stores.map((name, i) =>
-      `<a class="store-card" id="storecard-${i}" href="/pages/women.html?brand=${encodeURIComponent(name)}">
+      `<a class="store-card" id="storecard-${i}" href="/pages/search.html?advertiser=${encodeURIComponent(name)}">
         <span class="store-logo">${name[0]}</span>
         <span class="store-name">${name}</span>
         <span class="store-go">Visit Store ›</span>
@@ -451,7 +452,7 @@ const AdmitadAPI = (() => {
     // Upgrade links: fetch one product per store to get its outbound affiliate URL
     stores.forEach(async (name, i) => {
       try {
-        const data = await getProducts({ brand: name, limit: 1 });
+        const data = await getProducts({ advertiser: name, limit: 1 });
         const p = data?.products?.[0];
         const link = p && (p.affiliate_url || p.url);
         if (link && /^https?:/i.test(link)) {
