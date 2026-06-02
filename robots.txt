@@ -1,0 +1,9 @@
+# FashionToWorld robots.txt
+User-agent: *
+Allow: /
+
+# Utility pages we don't need indexed
+Disallow: /pages/api-status.html
+
+# Sitemap location
+Sitemap: https://fashiontoworld.co/sitemap.xml

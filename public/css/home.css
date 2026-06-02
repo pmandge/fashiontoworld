@@ -543,7 +543,7 @@
 .dt-viewport { flex: 1; overflow: hidden; height: 100%; display: flex; align-items: center; }
 .dt-track {
   display: inline-flex; white-space: nowrap;
-  animation: tickerScroll 40s linear infinite; will-change: transform;
+  animation: tickerScroll 90s linear infinite; will-change: transform;
 }
 .deals-ticker:hover .dt-track { animation-play-state: paused; }
 .dt-item {
@@ -670,3 +670,63 @@
 
 /* Section titles use the warm ink tone */
 .section-title { color: var(--ink); }
+
+/* ===== HERO V3 — SIMPLE, CENTERED, ATTRACTIVE, FAST ===== */
+.hero-v3 {
+  position: relative;
+  min-height: 86vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: calc(var(--nav-h) + 40px) 0 60px;
+  overflow: hidden;
+}
+.hero-v3-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background-image: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1920&q=85');
+  background-size: cover;
+  background-position: center 30%;
+  animation: heroZoom 24s ease-in-out infinite alternate;
+}
+.hero-v3-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg, rgba(20,16,12,0.45) 0%, rgba(20,16,12,0.30) 40%, rgba(20,16,12,0.55) 100%);
+}
+.hero-v3-inner {
+  position: relative; z-index: 2;
+  max-width: 760px;
+}
+.hero-v3-eyebrow {
+  font-family: var(--font-sans); font-size: 13px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; color: #f0e2c0;
+  margin-bottom: 22px;
+}
+.hero-v3-title {
+  font-family: var(--font-serif); font-size: clamp(52px, 8vw, 96px);
+  line-height: 0.98; color: #fff; font-weight: 600; margin-bottom: 24px;
+  text-shadow: 0 2px 30px rgba(0,0,0,0.3);
+}
+.hero-v3-title em { color: var(--gold-light, #e8d5a3); font-style: italic; }
+.hero-v3-sub {
+  font-family: var(--font-sans); font-size: 18px; line-height: 1.6;
+  color: rgba(255,255,255,0.92); margin-bottom: 36px;
+}
+.hero-v3-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.btn-cta-light {
+  background: rgba(255,255,255,0.96); color: var(--ink, #1a1410);
+  font-family: var(--font-sans); font-size: 14px; font-weight: 500;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 15px 32px; border-radius: 6px; text-decoration: none;
+  transition: all 0.2s; display: inline-block;
+}
+.btn-cta-light:hover { background: #fff; transform: translateY(-2px); }
+.hero-v3 .hero-scroll-cue { border-color: rgba(255,255,255,0.5); }
+.hero-v3 .hero-scroll-cue span { background: var(--gold-light, #e8d5a3); }
+
+@media (max-width: 600px) {
+  .hero-v3 { min-height: 78vh; }
+  .hero-v3-sub { font-size: 15px; }
+  .hero-v3-actions { flex-direction: column; align-items: center; }
+  .hero-v3-actions a { width: 100%; max-width: 280px; text-align: center; }
+}

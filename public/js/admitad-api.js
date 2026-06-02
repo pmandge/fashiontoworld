@@ -263,13 +263,27 @@ const AdmitadAPI = (() => {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const data = await getProducts({ sort: 'popularity', limit: 6, ...opts });
-    if (!data?.products?.length) {
+    const want = opts.limit || 6;
+    // For variety, over-fetch a larger pool then randomly pick `want` items
+    // (the API has no true popularity metric, so this keeps the row fresh).
+    const fetchLimit = opts.random ? Math.max(want * 6, 48) : want;
+    const data = await getProducts({ sort: opts.sort || 'popularity', limit: fetchLimit });
+    let prods = (data?.products || []).filter(p =>
+      p.image_url && /^https?:/i.test(p.affiliate_url || p.url || '')
+    );
+    if (!prods.length) {
       container.innerHTML = renderFallbackProducts();
       return;
     }
-
-    container.innerHTML = data.products.map(renderProductCard).join('');
+    if (opts.random) {
+      // Fisher–Yates shuffle for a varied, fresh-looking selection each load
+      for (let i = prods.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [prods[i], prods[j]] = [prods[j], prods[i]];
+      }
+    }
+    prods = prods.slice(0, want);
+    container.innerHTML = prods.map(renderProductCard).join('');
   }
 
   async function populateCoupons(containerId, limit = 3) {
@@ -366,11 +380,22 @@ const AdmitadAPI = (() => {
     const container = document.getElementById(containerId);
     const section = document.getElementById('saleSection');
     if (!container) return;
-    const data = await getProducts({ sale: 'true', sort: 'discount', limit });
-    const prods = data?.products || [];
+    // Pull a pool and keep only items with a genuine markdown (price_old > price)
+    const data = await getProducts({ sale: 'true', sort: 'discount', limit: 48 });
+    let prods = (data?.products || []).filter(p =>
+      p.image_url && /^https?:/i.test(p.affiliate_url || p.url || '') &&
+      p.price_old && Number(p.price_old) > Number(p.price)
+    );
+    // If the catalogue genuinely has no discounted items, hide the section
+    // rather than showing the same products as Trending.
     if (!prods.length) { if (section) section.style.display = 'none'; return; }
     if (section) section.style.display = '';
-    container.innerHTML = prods.map(renderProductCard).join('');
+    // Shuffle for variety, then take `limit`
+    for (let i = prods.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [prods[i], prods[j]] = [prods[j], prods[i]];
+    }
+    container.innerHTML = prods.slice(0, limit).map(renderProductCard).join('');
   }
 
   // ─── RECOMMENDATIONS ("You May Also Like") ───────────────────
@@ -523,6 +548,18 @@ const AdmitadAPI = (() => {
       tiles = Object.keys(IMG).map(k => ({ name: k, img: IMG[k], url: REAL_PAGES.includes(k) ? `/pages/${k}.html` : `/pages/women.html?cat=${k}` }));
     }
 
+    // Two extra tiles to round out the grid (10 total): Deals + On Sale
+    tiles.push({
+      name: 'Deals',
+      img: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=500&q=80',
+      url: '/pages/deals.html',
+    });
+    tiles.push({
+      name: 'On Sale',
+      img: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=500&q=80',
+      url: '/pages/women.html?sale=true',
+    });
+
     container.innerHTML = tiles.map(cat => `
       <a href="${cat.url}" class="category-card">
         <div class="category-card-bg" style="background-image:url('${cat.img}');background-size:cover;background-position:center"></div>
@@ -597,9 +634,8 @@ const AdmitadAPI = (() => {
     animateTrustBar();
     await Promise.allSettled([
       populateCategories('categoryGrid'),
-      populateHeroCollage(),
       populateDealsTicker('dtTrack'),
-      populateTrending('trendingProducts', { limit: 4 }),
+      populateTrending('trendingProducts', { limit: 8, random: true }),
       populateDealOfDay('dotdGrid', 3),
       populateOnSale('saleProducts', 4),
       populateCoupons('dealsPreview', 3),

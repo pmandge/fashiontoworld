@@ -269,13 +269,28 @@ async function loadDeals(filter = 'all') {
   const grid = document.getElementById('dealsGrid');
   grid.innerHTML = '<div class="loading-skeleton" style="height:200px"></div>'.repeat(6);
 
-  const data = await AdmitadAPI.getCoupons({ limit: 24, type: filter === 'all' ? '' : filter });
-  const coupons = data?.coupons || [];
+  // Fetch all deals once; filter client-side so the buttons always work.
+  const data = await AdmitadAPI.getCoupons({ limit: 60 });
+  let coupons = data?.coupons || [];
 
-  document.getElementById('stat-deals').textContent = (data?.total || coupons.length) + '';
+  // Client-side filtering by type
+  if (filter !== 'all') {
+    coupons = coupons.filter(c => {
+      const name = (c.name || '').toLowerCase();
+      const type = (c.type || '').toLowerCase();
+      if (filter === 'code') return !!c.promocode;
+      if (filter === 'sale') return type === 'sale' || /sale|off|%|discount/.test(name);
+      if (filter === 'freeship') return /free ship|free deliver|shipping/.test(name);
+      if (filter === 'luxury') return /luxury|designer|premium/.test(name) || /luxury closet|symbol|italo/.test((c.advertiser_name||'').toLowerCase());
+      if (filter === 'highstreet') return !/luxury|designer/.test(name);
+      return true;
+    });
+  }
+
+  document.getElementById('stat-deals').textContent = (data?.total || (data?.coupons||[]).length) + '';
 
   if (!coupons.length) {
-    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:60px;text-align:center;color:#888"><p>No deals available right now. Please check back soon — we update deals daily.</p></div>';
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:60px;text-align:center;color:#888"><p>No deals in this category right now. Try another filter — we update deals daily.</p></div>';
     return;
   }
 
