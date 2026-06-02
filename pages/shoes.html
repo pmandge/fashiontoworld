@@ -74,7 +74,7 @@
       <p>Footwear for every occasion from worldwide-shipping brands.</p>
       <a href="#products" class="btn-primary">Shop Now</a>
     </div>
-    <div class="cat-hero-visual"></div>
+    <div class="cat-hero-visual" style="background:#e8d5c4 url('https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=900&q=80') center/cover no-repeat"></div>
   </div>
 </section>
 
@@ -94,28 +94,7 @@
     </div>
 
     <div class="shop-layout">
-      <aside class="sidebar">
-        <div class="filter-section">
-          <h4>Price</h4>
-          <div class="price-range">
-            <input type="number" placeholder="Min" id="priceMin">
-            <span>—</span>
-            <input type="number" placeholder="Max" id="priceMax">
-          </div>
-        </div>
-        <div class="filter-section">
-          <h4>Brand</h4>
-          <div id="brandFilters"><p style="font-size:13px;color:var(--text-muted)">Loading brands…</p></div>
-        </div>
-        <div class="filter-section">
-          <h4>Sort</h4>
-          <label class="filter-option"><input type="radio" name="sort" value="popularity" checked onchange="setSort('popularity')"> Most Popular</label>
-          <label class="filter-option"><input type="radio" name="sort" value="price_asc" onchange="setSort('price_asc')"> Price: Low → High</label>
-          <label class="filter-option"><input type="radio" name="sort" value="price_desc" onchange="setSort('price_desc')"> Price: High → Low</label>
-          <label class="filter-option"><input type="radio" name="sort" value="sale" onchange="setSort('sale')"> Biggest Discount</label>
-        </div>
-        <button class="btn-apply" onclick="applyFilters()">Apply Filters</button>
-      </aside>
+      <aside class="sidebar mf-sidebar" id="filterSidebar"></aside>
 
       <main>
         <div class="products-toolbar">
@@ -151,100 +130,29 @@
   </div>
 </section>
 
+<!-- SEO CONTENT -->
+<section class="cat-seo">
+  <div class="cat-seo-inner">
+    <h2>Shoes for Every Occasion, Shipped Worldwide</h2>
+    <div class="cat-seo-cols">
+      <div><p>Find <b>shoes</b> from worldwide-shipping brands &#8212; <b>sneakers</b>, <b>boots</b>, <b>heels</b>, <b>sandals</b>, <b>loafers</b> and <b>flats</b> for women and men. From everyday trainers to designer footwear, all curated together and refreshed daily.</p></div>
+      <div><p>Compare verified deals across stores like <b>The Luxury Closet</b> and <b>AliExpress</b>, then check out on the retailer&#8217;s own site. Prices are shown in your local currency and updated every day.</p></div>
+    </div>
+  </div>
+</section>
+
 <footer class="footer" id="footer"></footer>
 
 <script src="../public/js/api-config.js"></script>
 <script src="../public/js/admitad-api.js"></script>
-<script>
-const CATEGORY = "shoes";
-const GENDER = "";
-let currentPage = 1, currentSub = '', currentSort = 'popularity', currentSale = false, currentBrand = '';
-let priceMin = '', priceMax = '';
-
-// Honor ?brand=, ?cat=, ?sale=, ?minprice=, ?maxprice= URL params
-(function(){
-  const q = new URLSearchParams(location.search);
-  if (q.get('brand')) currentBrand = q.get('brand');
-  if (q.get('cat')) currentSub = q.get('cat');
-  if (q.get('sale')) currentSale = true;
-  if (q.get('minprice')) priceMin = q.get('minprice');
-  if (q.get('maxprice')) priceMax = q.get('maxprice');
-})();
-
-async function loadProducts(page = 1, reset = true) {
-  const grid = document.getElementById('productsGrid');
-  if (reset) { grid.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8); currentPage = 1; }
-
-  const data = await AdmitadAPI.getProducts({
-    category: CATEGORY, gender: GENDER, subcategory: currentSub,
-    brand: currentBrand, sale: currentSale ? 'true' : '',
-    minprice: priceMin, maxprice: priceMax,
-    page, limit: 24, sort: currentSort,
-  });
-
-  const products = data?.products || [];
-  const total = data?.total || 0;
-  document.getElementById('productsCount').textContent = total.toLocaleString() + ' products';
-
-  if (!products.length) {
-    grid.innerHTML = '<div class="empty-state"><p>No products found here right now. Please check back soon or browse another category.</p></div>';
-    document.getElementById('loadMoreBtn').style.display = 'none';
-    return;
-  }
-  if (reset) grid.innerHTML = products.map(AdmitadAPI.renderProductCard).join('');
-  else grid.insertAdjacentHTML('beforeend', products.map(AdmitadAPI.renderProductCard).join(''));
-  document.getElementById('loadMoreBtn').style.display = products.length < 24 ? 'none' : 'block';
-}
-
-function loadSub(sub, btn) {
-  document.querySelectorAll('.subcat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentSub = sub; currentSale = false;
-  loadProducts(1, true);
-}
-function loadSale(btn) {
-  document.querySelectorAll('.subcat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentSale = true; currentSub = '';
-  loadProducts(1, true);
-}
-function setSort(s) { currentSort = s; loadProducts(1, true); }
-function loadMore() { currentPage++; loadProducts(currentPage, false); }
-function applyFilters() {
-  const mn = document.getElementById('priceMin'), mx = document.getElementById('priceMax');
-  priceMin = mn && mn.value ? mn.value : '';
-  priceMax = mx && mx.value ? mx.value : '';
-  loadProducts(1, true);
-}
-
-// Load real brands for this category into the sidebar
-async function loadBrands() {
-  try {
-    const data = await AdmitadAPI.getProducts({ category: CATEGORY, gender: GENDER, limit: 100, sort: 'popularity' });
-    const brands = [...new Set((data?.products || []).map(p => p.brand).filter(Boolean))].slice(0, 10);
-    const box = document.getElementById('brandFilters');
-    if (!brands.length) { box.innerHTML = '<p style="font-size:13px;color:var(--text-muted)">—</p>'; return; }
-    box.innerHTML = brands.map(b =>
-      '<label class="filter-option"><input type="radio" name="brand" value="' + b.replace(/"/g,'&quot;') + '" onchange="currentBrand=this.value"> ' + b + '</label>'
-    ).join('') + '<label class="filter-option"><input type="radio" name="brand" value="" checked onchange="currentBrand=\'\'"> All brands</label>';
-  } catch (e) {}
-}
-
-loadProducts();
-loadBrands();
-
-// "You May Also Like" — popular picks (different framing than the main grid)
-if (window.AdmitadAPI && AdmitadAPI.populateRecommendations) {
-  AdmitadAPI.populateRecommendations('recommendGrid', {
-    category: CATEGORY, limit: 4, sectionId: 'recommendSection'
-  });
-}
-</script>
+<script>window.FILTER_CONFIG={category:"shoes",gender:""};</script>
+<script src="../public/js/product-filter.js"></script>
 <script src="../public/js/categories.js"></script>
 <script src="../public/js/i18n.js"></script>
 <script src="../public/js/site-content.js"></script>
 <script src="../public/js/footer.js"></script>
 <script src="../public/js/main.js"></script>
 <script src="../public/js/mobile-menu.js"></script>
+  <script src="/public/js/cookie-consent.js" defer></script>
 </body>
 </html>
