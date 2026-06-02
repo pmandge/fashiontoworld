@@ -94,286 +94,219 @@
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero-v3">
-  <div class="hero-v3-bg"></div>
-  <div class="hero-v3-overlay"></div>
-  <div class="container hero-v3-inner">
-    <p class="hero-v3-eyebrow">New Season · Ships Worldwide</p>
-    <h1 class="hero-v3-title">Fashion the World <em>Loves</em></h1>
-    <p class="hero-v3-sub">160,000+ pieces from worldwide-shipping brands.<br>Real prices, verified deals, updated daily.</p>
-    <div class="hero-v3-actions">
-      <a href="pages/women.html" class="btn-cta-gold">Shop Now</a>
-      <a href="pages/deals.html" class="btn-cta-light">Today's Deals</a>
+<section class="hero">
+  <div class="hero-slides" id="heroSlides"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-inner">
+    <p class="eyebrow">New Season · Ships Worldwide</p>
+    <h1>Fashion the World <em>Loves</em></h1>
+    <p class="hero-sub">Verified deals on <b><span id="cnt">0</span>+</b> pieces from 13 worldwide-shipping stores — compared, priced in your currency, and updated daily.</p>
+    <div class="hero-search">
+      <input type="text" placeholder="Search dresses, sneakers, watches, brands…">
+      <button><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>Search</span></button>
     </div>
-  </div>
-  <div class="hero-scroll-cue"><span></span></div>
-</section>
-
-<!-- DEALS TICKER -->
-<a href="pages/deals.html" class="deals-ticker" id="dealsTicker" aria-label="Browse all deals">
-  <span class="dt-flag">🔥 Live Deals</span>
-  <div class="dt-viewport">
-    <div class="dt-track" id="dtTrack">
-      <span class="dt-item">Loading the latest worldwide deals…</span>
+    <div class="hero-chips">
+      <span class="hero-chip">Summer dresses</span><span class="hero-chip">White sneakers</span>
+      <span class="hero-chip">Luxury watches</span><span class="hero-chip">Under $50</span><span class="hero-chip">Designer bags</span>
     </div>
-  </div>
-  <span class="dt-cta">View All ›</span>
-</a>
-
-<!-- TRUST BAR -->
-<section class="trust-bar-v2">
-  <div class="container trust-v2-inner">
-    <div class="trust-v2-item">
-      <span class="trust-v2-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg></span>
-      <span class="trust-v2-num" data-count="180" data-suffix="+">0</span>
-      <span class="trust-v2-label">Countries Shipped</span>
+    <div class="hero-cats">
+      <a class="hero-cat" href="#"><span class="ic">👗</span>Women</a>
+      <a class="hero-cat" href="#"><span class="ic">👔</span>Men</a>
+      <a class="hero-cat" href="#"><span class="ic">👟</span>Shoes</a>
+      <a class="hero-cat" href="#"><span class="ic">👜</span>Bags</a>
+      <a class="hero-cat" href="#"><span class="ic">⌚</span>Watches</a>
+      <a class="hero-cat" href="#"><span class="ic">💍</span>Jewellery</a>
     </div>
-    <div class="trust-v2-item">
-      <span class="trust-v2-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L3 13V3h10l7.59 7.59a2 2 0 0 1 0 2.82z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor"/></svg></span>
-      <span class="trust-v2-num" data-count="168" data-suffix="K+">0</span>
-      <span class="trust-v2-label">Products Curated</span>
-    </div>
-    <div class="trust-v2-item">
-      <span class="trust-v2-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg></span>
-      <span class="trust-v2-num" data-count="13" data-suffix="">0</span>
-      <span class="trust-v2-label">Worldwide Stores</span>
-    </div>
-    <div class="trust-v2-item">
-      <span class="trust-v2-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 6 9 17l-5-5"/></svg></span>
-      <span class="trust-v2-num trust-v2-text">Daily</span>
-      <span class="trust-v2-label">Deals Updated</span>
-    </div>
+    <a class="hero-dealhook" href="#deals">🔥 See today's top deals →</a>
   </div>
 </section>
 
-<!-- CATEGORY GRID -->
-<section class="section categories-section">
+<!-- TRUST + DISCLOSURE -->
+<section class="trust">
+  <div class="trust-inner">
+    <div class="trust-item"><span class="trust-num">180+</span><span class="trust-label">Countries shipped</span></div>
+    <div class="trust-item"><span class="trust-num">169K+</span><span class="trust-label">Products curated</span></div>
+    <div class="trust-item"><span class="trust-num">13</span><span class="trust-label">Worldwide stores</span></div>
+    <div class="trust-item"><span class="trust-num">Daily</span><span class="trust-label">Prices verified</span></div>
+  </div>
+</section>
+<div class="disclosure">We don't sell anything ourselves — we send you to the retailer to checkout. <b>We may earn a commission, at no extra cost to you.</b></div>
+
+<!-- LIVE DEALS TICKER (stays up top) -->
+<section class="ticker-strip"><div class="container">
+  <div class="ticker">
+    <span class="ticker-flag">🔥 Live Deals</span>
+    <div class="ticker-vp"><div class="ticker-track" id="tick"></div></div>
+    <span class="ticker-cta">View all &#8250;</span>
+  </div>
+</div></section>
+
+<!-- TRENDING (real outbound products) -->
+<section class="section">
   <div class="container">
-    <div class="section-header center">
-      <p class="section-eyebrow">Shop by Category</p>
-      <h2 class="section-title">Find Your Style</h2>
+    <div class="sec-head row">
+      <div><p class="eyebrow">Up to 60% off</p><h2>Trending This Week</h2></div>
+      <a href="#" class="link-more">See more ›</a>
     </div>
-    <div class="category-grid" id="categoryGrid"></div>
+    <div class="prod-grid" id="prods"></div>
   </div>
 </section>
 
-<!-- DEAL OF THE DAY -->
-<section class="section dotd-section" id="dotdSection" style="display:none">
+<!-- CATEGORY GRID (Watches split from Jewellery) -->
+<section class="section" style="background:var(--cream)">
   <div class="container">
-    <div class="section-header center">
-      <p class="section-eyebrow gold">Limited Time</p>
-      <h2 class="section-title">Today's Top Deals</h2>
-      <p class="section-desc">Verified discounts from worldwide-shipping stores. Grab them before they're gone.</p>
-    </div>
-    <div class="dotd-grid" id="dotdGrid"></div>
-    <div class="section-cta"><a href="pages/deals.html" class="btn-cta-dark">See All Deals ›</a></div>
+    <div class="sec-head"><p class="eyebrow">Browse</p><h2>Find Your Style</h2><p class="sec-sub">Shop women’s, men’s and kids’ fashion, shoes, bags, watches and jewellery from worldwide-shipping stores — curated and refreshed daily.</p></div>
+    <div class="cat-grid" id="cats"></div>
   </div>
 </section>
 
-<!-- TRENDING PRODUCTS -->
-<section class="section trending-section" id="trendingSection">
+<!-- FEATURED STORES (compact, clickable, with counts) -->
+<section class="section" style="background:var(--cream)">
   <div class="container">
-    <div class="section-header">
-      <div>
-        <p class="section-eyebrow">What's Hot Right Now</p>
-        <h2 class="section-title">Trending This Week</h2>
+    <div class="sec-head row">
+      <div><p class="eyebrow">Worldwide partners</p><h2>Featured Stores</h2></div>
+      <a href="#" class="link-more">All stores ›</a>
+    </div>
+    <div class="store-chips" id="schips">
+      <button class="schip on" data-c="all">All</button>
+      <button class="schip" data-c="market">Marketplaces</button>
+      <button class="schip" data-c="luxury">Luxury</button>
+      <button class="schip" data-c="women">Women</button>
+      <button class="schip" data-c="eyewear">Eyewear</button>
+    </div>
+    <div class="rail" id="rail"></div>
+  </div>
+</section>
+
+<!-- SHOP THE EDIT (occasion-led, drives filtered listings) -->
+<section class="section edit-band">
+  <div class="container">
+    <div class="sec-head"><p class="eyebrow" style="color:var(--gold-light)">Curated for you</p><h2 style="color:#fff">Shop the Edit</h2><p class="sec-sub" style="color:rgba(255,255,255,.7)">Outfits for every occasion — vacation, weddings, workwear and more, sourced from stores that ship worldwide.</p></div>
+    <div class="edit-grid" id="edits"></div>
+  </div>
+</section>
+
+<!-- NEW IN THIS WEEK (freshness + more outbound clicks) -->
+<section class="section">
+  <div class="container">
+    <div class="sec-head row"><div><p class="eyebrow">Just landed</p><h2>New In This Week</h2></div><a href="#" class="link-more">See all new &#8250;</a></div>
+    <div class="prod-grid" id="prods2"></div>
+  </div>
+</section>
+
+<!-- POPULAR BRANDS (text wordmarks) -->
+<section class="section brands">
+  <div class="container" style="text-align:center">
+    <div class="sec-head"><p class="eyebrow">As featured</p><h2>Popular Brands</h2><p class="sec-sub">From Valentino and Prada to Max Mara and Bottega Veneta — discover designer labels available to ship worldwide.</p></div>
+    <div class="brand-row">
+      <span class="brand-word" style="font-weight:600">VALENTINO</span>
+      <span class="brand-word" style="font-style:italic">Max Mara</span>
+      <span class="brand-word" style="letter-spacing:.18em;font-size:22px">BALENCIAGA</span>
+      <span class="brand-word" style="font-weight:600">PRADA</span>
+      <span class="brand-word">Bottega Veneta</span>
+      <span class="brand-word" style="letter-spacing:.14em">JIMMY CHOO</span>
+      <span class="brand-word" style="font-weight:600">BALMAIN</span>
+      <span class="brand-word">Dolce &amp; Gabbana</span>
+    </div>
+    <a href="#" class="btn-outline">All brands →</a>
+  </div>
+</section>
+
+<!-- BIGGEST DISCOUNTS (two rows, by %) -->
+<section class="section">
+  <div class="container">
+    <div class="sec-head"><p class="eyebrow">Clearance</p><h2>Biggest Discounts</h2><p class="sec-sub">The steepest verified markdowns across our worldwide-shipping stores &#8212; sorted by percentage off and refreshed every day.</p></div>
+    <div class="prod-grid" id="prodsBig"></div>
+  </div>
+</section>
+
+<!-- TODAYS TOP DEALS (compact, more cards) -->
+<section class="section deals-hub" id="deals">
+  <div class="container">
+    <div class="sec-head row"><div><p class="eyebrow">Limited time</p><h2>Today's Top Deals</h2></div><a href="#" class="link-more">All deals &#8250;</a></div>
+    <div class="deal-grid" id="todaysDeals"></div>
+  </div>
+</section>
+
+<!-- SHOP BY PRICE (compact strip) -->
+<section class="price-strip">
+  <div class="container price-strip-inner">
+    <div class="ps-label"><span class="eyebrow" style="color:var(--gold-light)">Shop your budget</span><span class="ps-h">Pieces at every price</span></div>
+    <div class="ps-chips">
+      <a href="#" class="ps-chip">Under $10</a>
+      <a href="#" class="ps-chip">Under $25</a>
+      <a href="#" class="ps-chip">Under $50</a>
+      <a href="#" class="ps-chip">Under $100</a>
+      <a href="#" class="ps-chip">Luxury $300+</a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS (affiliate trust) -->
+<section class="section" style="background:var(--cream)">
+  <div class="container">
+    <div class="sec-head"><p class="eyebrow">Simple &amp; transparent</p><h2>How Fashion to World Works</h2></div>
+    <div class="how-grid">
+      <div class="how-step"><span class="how-n">1</span><h3>Discover &amp; compare</h3><p>Browse 169,000+ pieces and verified deals from 13 worldwide-shipping stores, all in one place.</p></div>
+      <div class="how-step"><span class="how-n">2</span><h3>Click through</h3><p>Tap any item to go straight to the retailer &#8212; prices shown in your local currency.</p></div>
+      <div class="how-step"><span class="how-n">3</span><h3>Shop on the store</h3><p>You check out securely on the retailer&#39;s own site. We may earn a commission, at no extra cost to you.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SEO CONTENT -->
+<section class="section seo-block">
+  <div class="container">
+    <h2 class="seo-h">Worldwide Fashion &amp; Verified Deals, All in One Place</h2>
+    <div class="seo-cols">
+      <div class="seo-col">
+        <p><b>Fashion to World</b> brings together 169,000+ fashion products from retailers that ship to over 180 countries. Browse <b>women's</b>, <b>men's</b> and <b>kids'</b> clothing, plus <b>shoes</b>, <b>bags</b>, <b>watches</b>, <b>jewellery</b>, <b>accessories</b> and <b>beauty</b> &#8212; all in one place.</p>
+        <p>Prices are shown in your local currency and every deal is verified and refreshed daily, so you can shop seasonal sales, promo codes and clearance markdowns of up to 70% off with confidence.</p>
       </div>
-      <a href="pages/women.html" class="section-link">View All →</a>
-    </div>
-    <div class="products-grid" id="trendingProducts">
-      <div class="loading-skeleton"></div><div class="loading-skeleton"></div>
-      <div class="loading-skeleton"></div><div class="loading-skeleton"></div>
-    </div>
-  </div>
-</section>
-
-<!-- DUAL PROMO BANNERS -->
-<section class="section promo-section">
-  <div class="container">
-    <div class="promo-grid">
-      <a href="pages/women.html?sale=true" class="promo-card promo-women">
-        <div class="promo-content">
-          <span class="promo-eyebrow">Women's Edit</span>
-          <h3 class="promo-title">Up to 70%<br>Off Dresses</h3>
-          <span class="promo-cta">Shop Women ›</span>
-        </div>
-      </a>
-      <a href="pages/men.html?sale=true" class="promo-card promo-men">
-        <div class="promo-content">
-          <span class="promo-eyebrow">Men's Edit</span>
-          <h3 class="promo-title">New Season<br>Essentials</h3>
-          <span class="promo-cta">Shop Men ›</span>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- SHOP BY PRICE -->
-<section class="section price-section">
-  <div class="container">
-    <div class="section-header center">
-      <p class="section-eyebrow">Shop Your Budget</p>
-      <h2 class="section-title">Shop by Price</h2>
-    </div>
-    <div class="price-grid">
-      <a href="pages/women.html?maxprice=25" class="price-tile pt-1"><span class="pt-label">Under</span><span class="pt-amt">$25</span><span class="pt-go">Shop ›</span></a>
-      <a href="pages/women.html?maxprice=50" class="price-tile pt-2"><span class="pt-label">Under</span><span class="pt-amt">$50</span><span class="pt-go">Shop ›</span></a>
-      <a href="pages/women.html?maxprice=100" class="price-tile pt-3"><span class="pt-label">Under</span><span class="pt-amt">$100</span><span class="pt-go">Shop ›</span></a>
-      <a href="pages/women.html?minprice=300" class="price-tile pt-lux"><span class="pt-label">Premium</span><span class="pt-amt">Luxury</span><span class="pt-go">Shop ›</span></a>
-    </div>
-  </div>
-</section>
-
-<!-- ON SALE NOW -->
-<section class="section sale-section" id="saleSection" style="display:none">
-  <div class="container">
-    <div class="section-header">
-      <div>
-        <p class="section-eyebrow red">Markdowns</p>
-        <h2 class="section-title">On Sale Now</h2>
+      <div class="seo-col">
+        <p>Discover trusted worldwide-shipping stores including <b>The Luxury Closet</b>, <b>Stylewe</b>, <b>Noracora</b>, <b>AliExpress</b>, <b>Glasseslit</b> and <b>Justfashionnow</b>, alongside designer labels such as <b>Valentino</b>, <b>Prada</b> and <b>Bottega Veneta</b>.</p>
+        <p>We compare and curate so you can find the styles you love, then click through to buy securely on each retailer's own site &#8212; we may earn a commission, at no extra cost to you.</p>
       </div>
-      <a href="pages/women.html?sale=true" class="section-link">All Sale →</a>
-    </div>
-    <div class="products-grid" id="saleProducts"></div>
-  </div>
-</section>
-
-<!-- DEALS BANNER (kept, restyled) -->
-<section class="deals-banner">
-  <div class="container">
-    <div class="deals-inner">
-      <div class="deals-text">
-        <p class="deals-eyebrow">Don't Miss Out</p>
-        <h2 class="deals-title">New Deals<br><em>Every Day</em></h2>
-        <p class="deals-sub">Verified coupons and discounts from stores that ship worldwide. Updated daily so you never miss a markdown.</p>
-        <a href="pages/deals.html" class="btn-cta-gold">Browse All Deals</a>
-      </div>
-      <div class="deals-coupons" id="dealsPreview"></div>
     </div>
   </div>
 </section>
 
-<!-- FEATURED STORES -->
-<section class="section stores-section">
+<!-- BLOG -->
+<section class="section">
   <div class="container">
-    <div class="section-header center">
-      <p class="section-eyebrow">Worldwide Partners</p>
-      <h2 class="section-title">Featured Stores</h2>
-      <p class="section-desc">Shop trusted brands that deliver across the globe.</p>
+    <div class="sec-head row">
+      <div><p class="eyebrow">Style notes</p><h2>From the Style Blog</h2></div>
+      <a href="#" class="link-more">Read all ›</a>
     </div>
-    <div class="stores-grid" id="storesGrid"></div>
-  </div>
-</section>
-
-<!-- STYLE BLOG PREVIEW -->
-<section class="section blog-section">
-  <div class="container">
-    <div class="section-header">
-      <div>
-        <p class="section-eyebrow">Inspiration & Guides</p>
-        <h2 class="section-title">From the Style Blog</h2>
-      </div>
-      <a href="pages/blog.html" class="section-link">All Articles →</a>
-    </div>
-    <div class="blog-grid" id="blogGrid">
-      <article class="blog-card">
-        <div class="blog-img blog-img-1"></div>
-        <div class="blog-body">
-          <span class="blog-tag">Trends</span>
-          <h3><a href="pages/blog-trends-2025.html">The 10 Fashion Trends Dominating 2025</a></h3>
-          <p>From quiet luxury to maximalist prints — here's what the runways say you should be wearing.</p>
-          <span class="blog-date">2025</span>
-        </div>
-      </article>
-      <article class="blog-card">
-        <div class="blog-img blog-img-2"></div>
-        <div class="blog-body">
-          <span class="blog-tag">Style Guide</span>
-          <h3><a href="pages/blog-capsule-wardrobe.html">How to Build a Capsule Wardrobe on Any Budget</a></h3>
-          <p>A timeless wardrobe doesn't require a luxury budget. Here's how to shop smart.</p>
-          <span class="blog-date">2025</span>
-        </div>
-      </article>
-      <article class="blog-card">
-        <div class="blog-img blog-img-3"></div>
-        <div class="blog-body">
-          <span class="blog-tag">Smart Shopping</span>
-          <h3><a href="pages/blog-spotting-deals.html">How to Spot a Genuine Fashion Deal</a></h3>
-          <p>Not every discount is a bargain. Here's how to tell real savings from clever marketing.</p>
-          <span class="blog-date">2025</span>
-        </div>
-      </article>
-    </div>
+    <div class="blog-grid" id="blog"></div>
   </div>
 </section>
 
 <!-- NEWSLETTER -->
-<section class="newsletter-section">
+<section class="section news">
   <div class="container">
-    <div class="newsletter-inner">
-      <div class="nl-text">
-        <h2>Get Exclusive Deals<br><em>First</em></h2>
-        <p>Join 50,000+ fashion lovers. Weekly curated deals, new arrivals, and style inspiration delivered to your inbox.</p>
-      </div>
-      <form class="nl-form" onsubmit="handleNewsletter(event)">
-        <input type="email" placeholder="Your email address" required>
-        <button type="submit">Subscribe</button>
-      </form>
-    </div>
+    <h2>Get Deal Alerts <em>First</em></h2>
+    <p>New verified deals from worldwide-shipping stores, straight to your inbox.</p>
+    <div class="news-form"><input type="email" placeholder="your@email.com"><button>Subscribe</button></div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- FOOTER (mega: direct store/brand/category links for SEO + outbound) -->
 <footer class="footer">
   <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="/" class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span></a>
-        <p>Your global destination for fashion discovery. We connect you with the world's best brands and exclusive deals.</p>
-        <div class="footer-social">
-          <a href="#" aria-label="Instagram">IG</a>
-          <a href="#" aria-label="Pinterest">PT</a>
-          <a href="#" aria-label="TikTok">TK</a>
-          <a href="#" aria-label="YouTube">YT</a>
-        </div>
+    <div class="mega-foot">
+      <div class="foot-col brand-col">
+        <a href="#" class="logo" style="color:#fff">Fashion <span class="to">to</span> World</a>
+        <p>Curated, worldwide-shipping fashion from trusted stores &#8212; verified deals, updated daily, priced in your currency.</p>
       </div>
-      <div class="footer-col">
-        <h4>Shop</h4>
-        <ul>
-          <li><a href="pages/women.html">Women</a></li>
-          <li><a href="pages/men.html">Men</a></li>
-          <li><a href="pages/kids.html">Kids</a></li>
-          <li><a href="pages/accessories.html">Accessories</a></li>
-          <li><a href="pages/beauty.html">Beauty</a></li>
-          <li><a href="pages/deals.html">Sales & Deals</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Brands</h4>
-        <ul>
-          <li><a href="pages/brands.html">All Brands</a></li>
-          <li><a href="pages/brands.html?tier=luxury">Luxury</a></li>
-          <li><a href="pages/brands.html?tier=premium">Premium</a></li>
-          <li><a href="pages/brands.html?tier=highstreet">High Street</a></li>
-          <li><a href="pages/brands.html?tier=sport">Sport & Active</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <ul>
-          <li><a href="pages/about.html">About Us</a></li>
-          <li><a href="pages/blog.html">Style Blog</a></li>
-          <li><a href="pages/contact.html">Contact</a></li>
-          <li><a href="pages/affiliate-disclosure.html">Affiliate Disclosure</a></li>
-          <li><a href="pages/privacy.html">Privacy Policy</a></li>
-          <li><a href="pages/terms.html">Terms of Use</a></li>
-        </ul>
-      </div>
+      <div class="foot-col"><h4>Shop</h4><a href="#">Women</a><a href="#">Men</a><a href="#">Kids</a><a href="#">Shoes</a><a href="#">Bags</a><a href="#">Watches</a><a href="#">Jewellery</a><a href="#">Accessories</a><a href="#">Beauty</a></div>
+      <div class="foot-col"><h4>Featured Stores</h4><a href="#">The Luxury Closet</a><a href="#">Stylewe</a><a href="#">AliExpress</a><a href="#">Noracora</a><a href="#">Justfashionnow</a><a href="#">ChicMe</a><a href="#">Glasseslit</a><a href="#">Italo Jewelry</a><a href="#">Wayrates</a><a href="#">Symbol Fashion</a><a href="#">Alibaba</a><a href="#">Hacoo</a></div>
+      <div class="foot-col"><h4>Popular Brands</h4><a href="#">Valentino</a><a href="#">Prada</a><a href="#">Balenciaga</a><a href="#">Max Mara</a><a href="#">Bottega Veneta</a><a href="#">Jimmy Choo</a><a href="#">Balmain</a><a href="#">Dolce &amp; Gabbana</a><a href="#">The Row</a><a href="#">Brunello Cucinelli</a></div>
+      <div class="foot-col"><h4>Shop the Edit</h4><a href="#">Vacation</a><a href="#">Wedding Guest</a><a href="#">Workwear</a><a href="#">Date Night</a><a href="#">Athleisure</a><a href="#">Under $50</a><a href="#">On Sale</a><a href="#">New In</a></div>
+      <div class="foot-col"><h4>Company</h4><a href="#">Our Story</a><a href="#">Style Blog</a><a href="#">Contact</a><a href="#">Affiliate Disclosure</a><a href="#">Privacy Policy</a><a href="#">Terms</a></div>
     </div>
-    <div class="footer-bottom">
-      <p>© 2025 FashionToWorld. All rights reserved. This site contains affiliate links. We may earn a commission when you purchase through our links at no extra cost to you.</p>
+    <div class="foot-disclosure">
+      <b>Affiliate disclosure:</b> Fashion to World is an affiliate website. Links to retailers are affiliate links, which means we may earn a commission if you make a purchase &#8212; at no extra cost to you. Prices and availability are set by the retailer, shown as accurately as possible and verified daily, but may change. We are not the seller; all purchases are completed on the retailer's own site.
     </div>
   </div>
 </footer>
@@ -382,9 +315,12 @@
   <script src="public/js/categories.js"></script>
 <script src="public/js/i18n.js"></script>
 <script src="public/js/admitad-api.js"></script>
+<script src="public/js/hero-search.js"></script>
+<script src="public/js/home-v2.js"></script>
 <script src="public/js/site-content.js"></script>
 <script src="public/js/main.js"></script>
 <script src="public/js/footer.js"></script>
 <script src="public/js/mobile-menu.js"></script>
+  <script src="/public/js/cookie-consent.js" defer></script>
 </body>
 </html>
