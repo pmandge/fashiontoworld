@@ -240,7 +240,7 @@ function renderBrands(brands) {
   }
 
   grid.innerHTML = brands.map(b => `
-    <a href="women.html?brand=${encodeURIComponent(b.name)}" class="brand-card">
+    <a href="search.html?advertiser=${encodeURIComponent(b.name)}" class="brand-card">
       <div class="brand-card-header">${b.name[0]}</div>
       <div class="brand-card-body">
         <p class="brand-card-name">${b.name}</p>

@@ -158,13 +158,14 @@
 <script>
 const CATEGORY = "women";
 const GENDER = "";
-let currentPage = 1, currentSub = '', currentSort = 'popularity', currentSale = false, currentBrand = '';
+let currentPage = 1, currentSub = '', currentSort = 'popularity', currentSale = false, currentBrand = '', currentAdvertiser = '';
 let priceMin = '', priceMax = '';
 
-// Honor ?brand=, ?cat=, ?sale=, ?minprice=, ?maxprice= URL params
+// Honor ?brand=, ?advertiser=, ?cat=, ?sale=, ?minprice=, ?maxprice= URL params
 (function(){
   const q = new URLSearchParams(location.search);
   if (q.get('brand')) currentBrand = q.get('brand');
+  if (q.get('advertiser')) currentAdvertiser = q.get('advertiser');
   if (q.get('cat')) currentSub = q.get('cat');
   if (q.get('sale')) currentSale = true;
   if (q.get('minprice')) priceMin = q.get('minprice');
@@ -177,7 +178,7 @@ async function loadProducts(page = 1, reset = true) {
 
   const data = await AdmitadAPI.getProducts({
     category: CATEGORY, gender: GENDER, subcategory: currentSub,
-    brand: currentBrand, sale: currentSale ? 'true' : '',
+    brand: currentBrand, advertiser: currentAdvertiser, sale: currentSale ? 'true' : '',
     minprice: priceMin, maxprice: priceMax,
     page, limit: 24, sort: currentSort,
   });

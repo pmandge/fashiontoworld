@@ -121,15 +121,17 @@
 <script src="../public/js/api-config.js"></script>
 <script src="../public/js/admitad-api.js"></script>
 <script>
-let currentQuery = '', currentSort = 'popularity', currentPage = 1;
+let currentQuery = '', currentAdvertiser = '', currentSort = 'popularity', currentPage = 1;
 
 (function init(){
   const params = new URLSearchParams(location.search);
   currentQuery = (params.get('q') || '').trim();
+  currentAdvertiser = (params.get('advertiser') || '').trim();
   document.getElementById('searchInput').value = currentQuery;
-  document.getElementById('searchTermTitle').textContent = currentQuery ? `"${currentQuery}"` : 'Results';
-  document.title = currentQuery ? `${currentQuery} — Search — FashionToWorld` : 'Search — FashionToWorld';
-  if (currentQuery) runSearch(1, true);
+  const titleLabel = currentAdvertiser || (currentQuery ? `"${currentQuery}"` : 'Results');
+  document.getElementById('searchTermTitle').textContent = titleLabel;
+  document.title = (currentAdvertiser || currentQuery || 'Search') + ' — FashionToWorld';
+  if (currentQuery || currentAdvertiser) runSearch(1, true);
   else {
     document.getElementById('searchGrid').innerHTML = '<div class="empty-state"><h3>What are you looking for?</h3><p>Search across 160,000+ products from worldwide-shipping brands.</p></div>';
     document.getElementById('searchCount').textContent = '';
@@ -149,18 +151,19 @@ async function runSearch(page = 1, reset = true){
   const grid = document.getElementById('searchGrid');
   if (reset){ grid.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8); currentPage = 1; }
 
-  const data = await AdmitadAPI.getProducts({ q: currentQuery, sort: currentSort, page, limit: 24 });
+  const data = await AdmitadAPI.getProducts({ q: currentQuery, advertiser: currentAdvertiser, sort: currentSort, page, limit: 24 });
   const products = data?.products || [];
   const total = data?.total || 0;
+  const label = currentAdvertiser ? currentAdvertiser : '"' + currentQuery + '"';
 
   if (!products.length && reset){
     document.getElementById('searchCount').textContent = '';
-    grid.innerHTML = '<div class="empty-state"><h3>No results for "' + currentQuery + '"</h3><p>Try a different word, or browse <a href="women.html">Women</a>, <a href="men.html">Men</a>, <a href="shoes.html">Shoes</a> or <a href="deals.html">Deals</a>.</p></div>';
+    grid.innerHTML = '<div class="empty-state"><h3>No results for ' + label + '</h3><p>Try a different word, or browse <a href="women.html">Women</a>, <a href="men.html">Men</a>, <a href="shoes.html">Shoes</a> or <a href="deals.html">Deals</a>.</p></div>';
     document.getElementById('loadMoreBtn').style.display = 'none';
     return;
   }
 
-  document.getElementById('searchCount').innerHTML = '<strong>' + total.toLocaleString() + '</strong> results for "' + currentQuery + '"';
+  document.getElementById('searchCount').innerHTML = '<strong>' + total.toLocaleString() + '</strong> results for ' + label;
   if (reset) grid.innerHTML = products.map(AdmitadAPI.renderProductCard).join('');
   else grid.insertAdjacentHTML('beforeend', products.map(AdmitadAPI.renderProductCard).join(''));
   document.getElementById('loadMoreBtn').style.display = products.length < 24 ? 'none' : 'block';
