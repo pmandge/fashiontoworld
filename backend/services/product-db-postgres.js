@@ -70,7 +70,11 @@ async function query({ category, subcategory, gender, brand, advertiser, onSale,
   if (category)    { where.push(`category = $${i++}`); vals.push(category); }
   if (subcategory) { where.push(`subcategory = $${i++}`); vals.push(subcategory); }
   if (gender)      { where.push(`gender = $${i++}`); vals.push(gender); }
-  if (brand)       { where.push(`brand = $${i++}`); vals.push(brand); }
+  if (brand)       {
+    const bs = String(brand).split(',').map(s => s.trim()).filter(Boolean);
+    if (bs.length === 1) { where.push(`brand = $${i++}`); vals.push(bs[0]); }
+    else if (bs.length > 1) { where.push(`brand = ANY($${i++})`); vals.push(bs); }
+  }
   if (advertiser)  { where.push(`advertiser ILIKE $${i++}`); vals.push(`%${advertiser}%`); }
   if (onSale)      { where.push(`on_sale = true`); }
   if (minprice != null) { where.push(`price >= $${i++}`); vals.push(minprice); }
@@ -106,4 +110,9 @@ async function stats() {
   return { total: t.rows[0].n, byCategory: c.rows, brands: b.rows[0].n };
 }
 
-module.exports = { init, upsertMany, pruneOld, query, distinctBrands, setBrandLogo, stats };
+async function advertiserCounts() {
+  const r = await pool.query("SELECT advertiser, COUNT(*)::int n FROM products WHERE advertiser <> '' GROUP BY advertiser ORDER BY n DESC");
+  return r.rows.map(x => ({ name: x.advertiser, count: x.n }));
+}
+
+module.exports = { init, upsertMany, pruneOld, query, distinctBrands, setBrandLogo, stats, advertiserCounts };

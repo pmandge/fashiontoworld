@@ -64,7 +64,10 @@ async function query({ category, subcategory, gender, brand, advertiser, onSale,
   if (category)    { where.push('category = @category'); params.category = category; }
   if (subcategory) { where.push('subcategory = @subcategory'); params.subcategory = subcategory; }
   if (gender)      { where.push('gender = @gender'); params.gender = gender; }
-  if (brand)       { where.push('brand = @brand'); params.brand = brand; }
+  if (brand)       {
+    const bs = String(brand).split(',').map(s => s.trim()).filter(Boolean);
+    if (bs.length) { where.push('brand IN (' + bs.map((_, k) => '@b' + k).join(',') + ')'); bs.forEach((b, k) => { params['b' + k] = b; }); }
+  }
   if (advertiser)  { where.push('advertiser LIKE @advertiser'); params.advertiser = `%${advertiser}%`; }
   if (onSale)      { where.push('on_sale = 1'); }
   if (minprice != null) { where.push('price >= @minprice'); params.minprice = minprice; }
@@ -97,4 +100,9 @@ async function stats() {
 }
 function safe(s){ try { return JSON.parse(s); } catch { return []; } }
 
-module.exports = { init, upsertMany, pruneOld, query, distinctBrands, setBrandLogo, stats };
+function advertiserCounts() {
+  const rows = db.prepare("SELECT advertiser, COUNT(*) n FROM products WHERE advertiser <> '' GROUP BY advertiser ORDER BY n DESC").all();
+  return rows.map(x => ({ name: x.advertiser, count: x.n }));
+}
+
+module.exports = { init, upsertMany, pruneOld, query, distinctBrands, setBrandLogo, stats, advertiserCounts };
