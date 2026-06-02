@@ -223,9 +223,13 @@ const productDb = require('./services/product-db');
 const { startProductSync, getStatus, syncAllFeeds } = require('./services/product-sync');
 const currency = require('./services/currency');
 
+const _prodCache = new Map(); // key: full URL (incl. currency) -> { t, v }
 app.get('/api/admitad/products', async (req, res) => {
   try {
     res.set('Cache-Control', 'private, max-age=120');
+    const cacheKey = req.originalUrl;
+    const hit = _prodCache.get(cacheKey);
+    if (hit && Date.now() - hit.t < 180000) return res.json(hit.v);
     const { category, subcategory, gender, brand, advertiser, sale, minprice, maxprice, page = 1, limit = 24, sort, q } = req.query;
     const result = await productDb.query({
       category, subcategory, gender, brand, advertiser, onSale: sale === 'true',
@@ -234,7 +238,9 @@ app.get('/api/admitad/products', async (req, res) => {
       q, sort, page: parseInt(page), limit: parseInt(limit),
     });
     if (result.total === 0) {
-      return res.json({ products: [], total: 0, demo: true, note: 'product feeds syncing or none populated yet' });
+      const empty = { products: [], total: 0, demo: true, note: 'product feeds syncing or none populated yet' };
+      _prodCache.set(cacheKey, { t: Date.now(), v: empty });
+      return res.json(empty);
     }
     // Convert prices to the visitor's currency (best-effort; keeps original if not possible)
     const toCur = (req.query.currency || req.geo.currency || 'USD').toUpperCase();
@@ -248,7 +254,10 @@ app.get('/api/admitad/products', async (req, res) => {
         p.price_old_display = convOld.formatted;
       }
     }
-    res.json({ ...result, region: req.geo.region, currency: toCur });
+    const payload = { ...result, region: req.geo.region, currency: toCur };
+    _prodCache.set(cacheKey, { t: Date.now(), v: payload });
+    if (_prodCache.size > 200) { const k = _prodCache.keys().next().value; _prodCache.delete(k); }
+    res.json(payload);
   } catch (err) {
     console.error('[API/products]', err.message);
     res.status(500).json({ error: err.message });
