@@ -159,6 +159,7 @@ const { shipsWorldwide } = require('./config/worldwide-stores');
 
 app.get('/api/admitad/coupons', async (req, res) => {
   try {
+    res.set('Cache-Control', 'private, max-age=300');
     const page = parseInt(req.query.page || 1);
     const limit = parseInt(req.query.limit || 24);
     const type = req.query.type;
@@ -224,6 +225,7 @@ const currency = require('./services/currency');
 
 app.get('/api/admitad/products', async (req, res) => {
   try {
+    res.set('Cache-Control', 'private, max-age=120');
     const { category, subcategory, gender, brand, advertiser, sale, minprice, maxprice, page = 1, limit = 24, sort, q } = req.query;
     const result = await productDb.query({
       category, subcategory, gender, brand, advertiser, onSale: sale === 'true',
@@ -254,6 +256,23 @@ app.get('/api/admitad/products', async (req, res) => {
 });
 
 // Product sync status + manual trigger (handy for first import)
+// Distinct worldwide-shipping stores with live product counts (cached 10 min)
+let _storesCache = { at: 0, data: null };
+app.get('/api/admitad/stores', async (req, res) => {
+  try {
+    res.set('Cache-Control', 'public, max-age=600');
+    if (_storesCache.data && Date.now() - _storesCache.at < 600000) return res.json(_storesCache.data);
+    const rows = (await productDb.advertiserCounts()) || [];
+    const stores = rows.filter(s => shipsWorldwide(s.name));
+    const out = { stores, count: stores.length, total_products: stores.reduce((a, s) => a + (s.count || 0), 0) };
+    _storesCache = { at: Date.now(), data: out };
+    res.json(out);
+  } catch (err) {
+    console.error('[API/stores]', err.message);
+    res.status(500).json({ error: err.message, stores: [], count: 0 });
+  }
+});
+
 app.get('/api/products/status', async (req, res) => {
   try { res.json(await getStatus()); }
   catch (e) { res.status(500).json({ error: e.message }); }
@@ -304,6 +323,7 @@ app.get('/api/admitad/brands', async (req, res) => {
 // Categories
 app.get('/api/admitad/categories', async (req, res) => {
   try {
+    res.set('Cache-Control', 'public, max-age=3600');
     const data = await cached('categories', () => admitadGet('/categories/'))();
     res.json({ categories: data.results || [] });
   } catch (err) {
