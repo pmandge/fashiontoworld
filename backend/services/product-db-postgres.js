@@ -27,6 +27,8 @@ async function init() {
     CREATE INDEX IF NOT EXISTS idx_brand ON products(brand);
     CREATE INDEX IF NOT EXISTS idx_sale ON products(on_sale);
     CREATE INDEX IF NOT EXISTS idx_upd ON products(updated_at);
+    CREATE INDEX IF NOT EXISTS idx_price ON products(price);
+    CREATE INDEX IF NOT EXISTS idx_sale_upd ON products(on_sale, updated_at);
   `);
 }
 
@@ -85,7 +87,7 @@ async function query({ category, subcategory, gender, brand, advertiser, onSale,
   if (sort === 'price_asc') order = 'price ASC';
   else if (sort === 'price_desc') order = 'price DESC';
   else if (sort === 'sale') order = 'on_sale DESC, price ASC';
-  else if (sort === 'discount') order = 'on_sale DESC, (CASE WHEN price_old > 0 THEN (price_old - price) / price_old ELSE 0 END) DESC';
+  else if (sort === 'discount') order = 'on_sale DESC, updated_at DESC';
   const lim = Math.min(parseInt(limit) || 24, 100);
   const off = ((parseInt(page) || 1) - 1) * lim;
   const totalR = await pool.query(`SELECT COUNT(*)::int n FROM products ${w}`, vals);
