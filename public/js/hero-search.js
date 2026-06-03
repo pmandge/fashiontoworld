@@ -4,7 +4,7 @@
  * plus a "see all results" link. Enter or the Search button → full search page.
  */
 (function () {
-  function searchPath(q) { return 'pages/search.html?q=' + encodeURIComponent(q); }
+  function searchPath(q) { return '/pages/search.html?q=' + encodeURIComponent(q); }
   function esc(s) { return (s || '').replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
   function row(p) {
@@ -47,22 +47,26 @@
     });
   }
 
+  function ensureDropdown(host) {
+    var dd = host.querySelector('.ls-dropdown');
+    if (!dd) { host.style.position = 'relative'; dd = document.createElement('div'); dd.className = 'ls-dropdown'; host.appendChild(dd); }
+    return dd;
+  }
   function init() {
     if (!window.AdmitadAPI) return;
-    var input = document.getElementById('heroSearchInput') || document.querySelector('.hero-search input');
-    if (!input) return;
-    var dd = document.getElementById('heroSearchResults');
-    if (!dd) {
-      var host = input.closest('.hero-search') || input.parentElement;
-      if (host) { host.style.position = 'relative'; dd = document.createElement('div'); dd.className = 'ls-dropdown'; dd.id = 'heroSearchResults'; host.appendChild(dd); }
-    }
-    var btn = document.getElementById('heroSearchBtn');
-    if (!btn && input.closest('.hero-search')) btn = input.closest('.hero-search').querySelector('button');
-    attach(input, dd);
-    if (btn && input) btn.onclick = function () { var q = input.value.trim(); if (q) location.href = searchPath(q); };
+    var hosts = document.querySelectorAll('.hero-search, .nav-search');
+    hosts.forEach(function (host) {
+      var input = host.querySelector('input'); if (!input) return;
+      var dd = ensureDropdown(host);
+      attach(input, dd);
+      var btn = host.querySelector('button');
+      if (btn) btn.onclick = function () { var q = input.value.trim(); if (q) location.href = searchPath(q); };
+    });
     document.addEventListener('click', function (e) {
-      var form = input.closest('.hero-search');
-      if (form && !form.contains(e.target) && dd) dd.classList.remove('open');
+      document.querySelectorAll('.ls-dropdown.open').forEach(function (dd) {
+        var host = dd.parentElement;
+        if (host && !host.contains(e.target)) dd.classList.remove('open');
+      });
     });
   }
 
