@@ -3,23 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FashionToWorld — Global Style Destination</title>
-<meta name="description" content="Discover the world's best fashion brands. Curated collections, exclusive deals, and global delivery. Your ultimate fashion affiliate destination.">
+<title>Fashion to World — Worldwide Fashion Deals from Trusted Stores</title>
+<meta name="description" content="Shop 169,000+ fashion products from worldwide-shipping stores — women's, men's &amp; kids' clothing, shoes, bags, watches &amp; jewellery. Verified deals in your currency, updated daily.">
 <link rel="canonical" href="https://fashiontoworld.co/">
 
 <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="FashionToWorld">
-<meta property="og:title" content="FashionToWorld — Shop Fashion the World Loves">
-<meta property="og:description" content="160,000+ pieces from worldwide-shipping brands. Real prices, verified deals, updated daily.">
+<meta property="og:title" content="Fashion to World — Worldwide Fashion Deals from Trusted Stores">
+<meta property="og:description" content="169,000+ pieces from worldwide-shipping stores. Verified deals, in your currency, updated daily.">
 <meta property="og:url" content="https://fashiontoworld.co/">
 <meta property="og:image" content="https://fashiontoworld.co/public/images/og-cover.jpg">
 <meta property="og:locale" content="en_US">
 
 <!-- Twitter / X cards -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="FashionToWorld — Shop Fashion the World Loves">
-<meta name="twitter:description" content="160,000+ pieces from worldwide-shipping brands. Real prices, verified deals, updated daily.">
+<meta name="twitter:title" content="Fashion to World — Worldwide Fashion Deals from Trusted Stores">
+<meta name="twitter:description" content="169,000+ pieces from worldwide-shipping stores. Verified deals, in your currency, updated daily.">
 <meta name="twitter:image" content="https://fashiontoworld.co/public/images/og-cover.jpg">
 
 <!-- Structured data: Organization + WebSite with search -->
@@ -73,14 +73,13 @@
       <li><a href="pages/men.html">Men</a></li>
       <li><a href="pages/shoes.html">Shoes</a></li>
       <li><a href="pages/bags.html">Bags</a></li>
+      <li><a href="pages/search.html?q=watch">Watches</a></li>
       <li><a href="pages/jewellery.html">Jewellery</a></li>
       <li><a href="pages/accessories.html">Accessories</a></li>
     </ul>
     <div class="nav-spacer"></div>
     <div class="nav-actions">
-      <button class="btn-search" onclick="toggleSearch()" aria-label="Search">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      </button>
+      <form class="nav-search" onsubmit="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search 169,000+ products…" aria-label="Search products" autocomplete="off"></form>
       <a href="pages/deals.html" class="btn-nav-cta">Shop Deals</a>
     </div>
     <button class="nav-burger" onclick="toggleMenu()" aria-label="Menu">
@@ -106,16 +105,16 @@
       <button><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>Search</span></button>
     </div>
     <div class="hero-chips">
-      <span class="hero-chip">Summer dresses</span><span class="hero-chip">White sneakers</span>
-      <span class="hero-chip">Luxury watches</span><span class="hero-chip">Under $50</span><span class="hero-chip">Designer bags</span>
+      <a class="hero-chip" href="pages/search.html?q=summer%20dress">Summer dresses</a><a class="hero-chip" href="pages/search.html?q=white%20sneakers">White sneakers</a>
+      <a class="hero-chip" href="pages/search.html?q=watch">Luxury watches</a><a class="hero-chip" href="pages/women.html?maxprice=50">Under $50</a><a class="hero-chip" href="pages/bags.html">Designer bags</a>
     </div>
     <div class="hero-cats">
-      <a class="hero-cat" href="#"><span class="ic">👗</span>Women</a>
-      <a class="hero-cat" href="#"><span class="ic">👔</span>Men</a>
-      <a class="hero-cat" href="#"><span class="ic">👟</span>Shoes</a>
-      <a class="hero-cat" href="#"><span class="ic">👜</span>Bags</a>
-      <a class="hero-cat" href="#"><span class="ic">⌚</span>Watches</a>
-      <a class="hero-cat" href="#"><span class="ic">💍</span>Jewellery</a>
+      <a class="hero-cat" href="pages/women.html"><span class="ic">👗</span>Women</a>
+      <a class="hero-cat" href="pages/men.html"><span class="ic">👔</span>Men</a>
+      <a class="hero-cat" href="pages/shoes.html"><span class="ic">👟</span>Shoes</a>
+      <a class="hero-cat" href="pages/bags.html"><span class="ic">👜</span>Bags</a>
+      <a class="hero-cat" href="pages/search.html?q=watch"><span class="ic">⌚</span>Watches</a>
+      <a class="hero-cat" href="pages/jewellery.html"><span class="ic">💍</span>Jewellery</a>
     </div>
     <a class="hero-dealhook" href="#deals">🔥 See today's top deals →</a>
   </div>
@@ -146,7 +145,7 @@
   <div class="container">
     <div class="sec-head row">
       <div><p class="eyebrow">Up to 60% off</p><h2>Trending This Week</h2></div>
-      <a href="#" class="link-more">See more ›</a>
+      <a href="pages/deals.html" class="link-more">See more ›</a>
     </div>
     <div class="prod-grid" id="prods"></div>
   </div>
@@ -165,7 +164,7 @@
   <div class="container">
     <div class="sec-head row">
       <div><p class="eyebrow">Worldwide partners</p><h2>Featured Stores</h2></div>
-      <a href="#" class="link-more">All stores ›</a>
+      <a href="pages/brands.html" class="link-more">All stores ›</a>
     </div>
     <div class="store-chips" id="schips">
       <button class="schip on" data-c="all">All</button>
@@ -189,7 +188,7 @@
 <!-- NEW IN THIS WEEK (freshness + more outbound clicks) -->
 <section class="section">
   <div class="container">
-    <div class="sec-head row"><div><p class="eyebrow">Just landed</p><h2>New In This Week</h2></div><a href="#" class="link-more">See all new &#8250;</a></div>
+    <div class="sec-head row"><div><p class="eyebrow">Just landed</p><h2>New In This Week</h2></div><a href="pages/women.html" class="link-more">See all new &#8250;</a></div>
     <div class="prod-grid" id="prods2"></div>
   </div>
 </section>
@@ -208,7 +207,7 @@
       <span class="brand-word" style="font-weight:600">BALMAIN</span>
       <span class="brand-word">Dolce &amp; Gabbana</span>
     </div>
-    <a href="#" class="btn-outline">All brands →</a>
+    <a href="pages/brands.html" class="btn-outline">All brands →</a>
   </div>
 </section>
 
@@ -223,7 +222,7 @@
 <!-- TODAYS TOP DEALS (compact, more cards) -->
 <section class="section deals-hub" id="deals">
   <div class="container">
-    <div class="sec-head row"><div><p class="eyebrow">Limited time</p><h2>Today's Top Deals</h2></div><a href="#" class="link-more">All deals &#8250;</a></div>
+    <div class="sec-head row"><div><p class="eyebrow">Limited time</p><h2>Today's Top Deals</h2></div><a href="pages/deals.html" class="link-more">All deals &#8250;</a></div>
     <div class="deal-grid" id="todaysDeals"></div>
   </div>
 </section>
@@ -233,11 +232,11 @@
   <div class="container price-strip-inner">
     <div class="ps-label"><span class="eyebrow" style="color:var(--gold-light)">Shop your budget</span><span class="ps-h">Pieces at every price</span></div>
     <div class="ps-chips">
-      <a href="#" class="ps-chip">Under $10</a>
-      <a href="#" class="ps-chip">Under $25</a>
-      <a href="#" class="ps-chip">Under $50</a>
-      <a href="#" class="ps-chip">Under $100</a>
-      <a href="#" class="ps-chip">Luxury $300+</a>
+      <a href="pages/women.html?maxprice=10" class="ps-chip">Under $10</a>
+      <a href="pages/women.html?maxprice=25" class="ps-chip">Under $25</a>
+      <a href="pages/women.html?maxprice=50" class="ps-chip">Under $50</a>
+      <a href="pages/women.html?maxprice=100" class="ps-chip">Under $100</a>
+      <a href="pages/women.html?minprice=300" class="ps-chip">Luxury $300+</a>
     </div>
   </div>
 </section>
@@ -276,7 +275,7 @@
   <div class="container">
     <div class="sec-head row">
       <div><p class="eyebrow">Style notes</p><h2>From the Style Blog</h2></div>
-      <a href="#" class="link-more">Read all ›</a>
+      <a href="pages/blog.html" class="link-more">Read all ›</a>
     </div>
     <div class="blog-grid" id="blog"></div>
   </div>
@@ -296,14 +295,14 @@
   <div class="container">
     <div class="mega-foot">
       <div class="foot-col brand-col">
-        <a href="#" class="logo" style="color:#fff">Fashion <span class="to">to</span> World</a>
+        <a href="/" class="logo" style="color:#fff">Fashion <span class="to">to</span> World</a>
         <p>Curated, worldwide-shipping fashion from trusted stores &#8212; verified deals, updated daily, priced in your currency.</p>
       </div>
-      <div class="foot-col"><h4>Shop</h4><a href="#">Women</a><a href="#">Men</a><a href="#">Kids</a><a href="#">Shoes</a><a href="#">Bags</a><a href="#">Watches</a><a href="#">Jewellery</a><a href="#">Accessories</a><a href="#">Beauty</a></div>
-      <div class="foot-col"><h4>Featured Stores</h4><a href="#">The Luxury Closet</a><a href="#">Stylewe</a><a href="#">AliExpress</a><a href="#">Noracora</a><a href="#">Justfashionnow</a><a href="#">ChicMe</a><a href="#">Glasseslit</a><a href="#">Italo Jewelry</a><a href="#">Wayrates</a><a href="#">Symbol Fashion</a><a href="#">Alibaba</a><a href="#">Hacoo</a></div>
-      <div class="foot-col"><h4>Popular Brands</h4><a href="#">Valentino</a><a href="#">Prada</a><a href="#">Balenciaga</a><a href="#">Max Mara</a><a href="#">Bottega Veneta</a><a href="#">Jimmy Choo</a><a href="#">Balmain</a><a href="#">Dolce &amp; Gabbana</a><a href="#">The Row</a><a href="#">Brunello Cucinelli</a></div>
-      <div class="foot-col"><h4>Shop the Edit</h4><a href="#">Vacation</a><a href="#">Wedding Guest</a><a href="#">Workwear</a><a href="#">Date Night</a><a href="#">Athleisure</a><a href="#">Under $50</a><a href="#">On Sale</a><a href="#">New In</a></div>
-      <div class="foot-col"><h4>Company</h4><a href="#">Our Story</a><a href="#">Style Blog</a><a href="#">Contact</a><a href="#">Affiliate Disclosure</a><a href="#">Privacy Policy</a><a href="#">Terms</a></div>
+      <div class="foot-col"><h4>Shop</h4><a href="pages/women.html">Women</a><a href="pages/men.html">Men</a><a href="pages/kids.html">Kids</a><a href="pages/shoes.html">Shoes</a><a href="pages/bags.html">Bags</a><a href="pages/search.html?q=watch">Watches</a><a href="pages/jewellery.html">Jewellery</a><a href="pages/accessories.html">Accessories</a><a href="pages/beauty.html">Beauty</a></div>
+      <div class="foot-col"><h4>Featured Stores</h4><a href="pages/search.html?advertiser=The%20Luxury%20Closet">The Luxury Closet</a><a href="pages/search.html?advertiser=Stylewe">Stylewe</a><a href="pages/search.html?advertiser=AliExpress">AliExpress</a><a href="pages/search.html?advertiser=Noracora">Noracora</a><a href="pages/search.html?advertiser=Justfashionnow">Justfashionnow</a><a href="pages/search.html?advertiser=ChicMe">ChicMe</a><a href="pages/search.html?advertiser=Glasseslit">Glasseslit</a><a href="pages/search.html?advertiser=Italo">Italo Jewelry</a><a href="pages/search.html?advertiser=Wayrates">Wayrates</a><a href="pages/search.html?advertiser=Symbol%20Fashion">Symbol Fashion</a><a href="pages/search.html?advertiser=Alibaba">Alibaba</a><a href="pages/search.html?advertiser=Hacoo">Hacoo</a></div>
+      <div class="foot-col"><h4>Popular Brands</h4><a href="pages/search.html?q=Valentino">Valentino</a><a href="pages/search.html?q=Prada">Prada</a><a href="pages/search.html?q=Balenciaga">Balenciaga</a><a href="pages/search.html?q=Max%20Mara">Max Mara</a><a href="pages/search.html?q=Bottega%20Veneta">Bottega Veneta</a><a href="pages/search.html?q=Jimmy%20Choo">Jimmy Choo</a><a href="pages/search.html?q=Balmain">Balmain</a><a href="pages/search.html?q=Dolce%20Gabbana">Dolce &amp; Gabbana</a><a href="pages/search.html?q=The%20Row">The Row</a><a href="pages/search.html?q=Brunello%20Cucinelli">Brunello Cucinelli</a></div>
+      <div class="foot-col"><h4>Shop the Edit</h4><a href="pages/women.html?cat=Swimwear">Vacation</a><a href="pages/women.html?cat=Dresses">Wedding Guest</a><a href="pages/men.html">Workwear</a><a href="pages/women.html?cat=Dresses">Date Night</a><a href="pages/women.html">Athleisure</a><a href="pages/women.html?maxprice=50">Under $50</a><a href="pages/women.html?sale=true">On Sale</a><a href="pages/women.html">New In</a></div>
+      <div class="foot-col"><h4>Company</h4><a href="pages/about.html">Our Story</a><a href="pages/blog.html">Style Blog</a><a href="pages/contact.html">Contact</a><a href="pages/affiliate-disclosure.html">Affiliate Disclosure</a><a href="pages/privacy.html">Privacy Policy</a><a href="pages/terms.html">Terms</a></div>
     </div>
     <div class="foot-disclosure">
       <b>Affiliate disclosure:</b> Fashion to World is an affiliate website. Links to retailers are affiliate links, which means we may earn a commission if you make a purchase &#8212; at no extra cost to you. Prices and availability are set by the retailer, shown as accurately as possible and verified daily, but may change. We are not the seller; all purchases are completed on the retailer's own site.
