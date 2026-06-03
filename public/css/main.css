@@ -855,3 +855,9 @@ em { font-style: italic; }
 .ls-price{font-size:14px;font-weight:600;color:var(--ink,#1a1410);white-space:nowrap}
 .ls-all{display:block;padding:12px 16px;text-align:center;font-size:13px;font-weight:500;color:var(--deal,#c0492f);background:var(--deal-tint,#fbf1ec)}
 .ls-loading,.ls-empty{padding:18px;text-align:center;color:var(--text-muted,#6b6b6b);font-size:14px}
+
+/* ===== Nav overflow fix: search yields space; Menu/Shop Deals never clip ===== */
+.nav-actions{min-width:0}
+.btn-nav-cta, .nav-burger, .btn-subscribe{flex-shrink:0}
+.nav-search{flex:0 1 280px;min-width:0;max-width:300px}
+@media (max-width:1180px){.nav-search{display:none}}
