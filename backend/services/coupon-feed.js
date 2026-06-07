@@ -37,14 +37,16 @@ function fetchText(url, redirects) {
 function parse(xml) {
   return new Promise((resolve) => {
     const parser = sax.parser(false, { trim: true, lowercase: true });
-    const out = []; let cur = null; let tag = '';
+    const out = []; let cur = null; let tag = ''; let inCampaign = false; let campaignName = '';
     parser.onopentag = function (n) {
       const name = n.name;
-      if (name === 'coupon' || name === 'offer' || name === 'item') cur = { regions: [], categories: [], types: [] };
+      if (name === 'advcampaign') { inCampaign = true; campaignName = ''; }
+      if (name === 'coupon' || name === 'offer' || name === 'item') cur = { advertiser_name: campaignName, regions: [], categories: [], types: [] };
       tag = name;
     };
     function text(txt) {
-      if (!cur || !txt) return; const v = txt.trim(); if (!v) return;
+      if (!txt) return; const v = txt.trim(); if (!v) return;
+      if (!cur) { if (inCampaign && (tag === 'name' || tag === 'advcampaign_name')) campaignName = (campaignName || '') + v; return; }
       switch (tag) {
         case 'name': case 'title': cur.name = (cur.name || '') + v; break;
         case 'description': case 'short_name': cur.description = (cur.description || '') + v; break;
@@ -63,6 +65,7 @@ function parse(xml) {
     }
     parser.ontext = text; parser.oncdata = text;
     parser.onclosetag = function (name) {
+      if (name === 'advcampaign') { inCampaign = false; campaignName = ''; }
       if (name === 'coupon' || name === 'offer' || name === 'item') {
         if (cur && (cur.name || cur.promocode || cur.discount || cur.url)) {
           out.push({
