@@ -37,45 +37,49 @@ function fetchText(url, redirects) {
 function parse(xml) {
   return new Promise((resolve) => {
     const parser = sax.parser(false, { trim: true, lowercase: true });
-    const out = []; let cur = null; let tag = ''; let inCampaign = false; let campaignName = '';
+    const out = []; const campaignNames = {};
+    let cur = null, tag = '', inCampaign = false, curCampId = null;
     parser.onopentag = function (n) {
       const name = n.name;
-      if (name === 'advcampaign') { inCampaign = true; campaignName = ''; }
-      if (name === 'coupon' || name === 'offer' || name === 'item') cur = { advertiser_name: campaignName, regions: [], categories: [], types: [] };
+      if (name === 'advcampaign') { inCampaign = true; curCampId = (n.attributes && n.attributes.id) || null; }
+      else if (name === 'coupon' || name === 'offer' || name === 'item') { cur = { id: (n.attributes && n.attributes.id) || '', regions: [], categories: [], types: [] }; }
       tag = name;
     };
     function text(txt) {
       if (!txt) return; const v = txt.trim(); if (!v) return;
-      if (!cur) { if (inCampaign && (tag === 'name' || tag === 'advcampaign_name')) campaignName = (campaignName || '') + v; return; }
+      if (!cur) { if (inCampaign && curCampId != null && tag === 'name') campaignNames[curCampId] = (campaignNames[curCampId] || '') + v; return; }
       switch (tag) {
         case 'name': case 'title': cur.name = (cur.name || '') + v; break;
-        case 'description': case 'short_name': cur.description = (cur.description || '') + v; break;
+        case 'description': cur.description = (cur.description || '') + v; break;
         case 'discount': cur.discount = (cur.discount || '') + v; break;
         case 'promocode': case 'code': cur.promocode = (cur.promocode || '') + v; break;
-        case 'advcampaign_name': case 'campaign_name': case 'campaign': case 'advertiser': case 'advertiser_name': cur.advertiser_name = (cur.advertiser_name || '') + v; break;
-        case 'goto_link': case 'goto': case 'url': case 'link': case 'deeplink': cur.url = (cur.url || '') + v; break;
-        case 'date_end': case 'datetime_end': case 'end_date': case 'actual_end': cur.date_end = v; break;
+        case 'advcampaign_id': cur._advId = (cur._advId || '') + v; break;
+        case 'advcampaign_name': case 'campaign_name': case 'campaign': cur.advertiser_name = (cur.advertiser_name || '') + v; break;
+        case 'gotolink': case 'goto_link': case 'goto': cur.url = (cur.url || '') + v; break;
+        case 'promolink': cur.promolink = (cur.promolink || '') + v; break;
+        case 'url': case 'link': case 'deeplink': if (!cur.url) cur.url = v; break;
+        case 'date_end': case 'datetime_end': cur.date_end = v; break;
         case 'status': cur.status = v.toLowerCase(); break;
-        case 'image': case 'logo': case 'image_url': cur.image = (cur.image || '') + v; break;
+        case 'logo': case 'image': case 'image_url': cur.image = (cur.image || '') + v; break;
         case 'region': cur.regions.push(v); break;
-        case 'category': case 'categorie': cur.categories.push(v); break;
+        case 'category': cur.categories.push(v); break;
         case 'type': cur.types.push(v); break;
-        case 'id': if (!cur.id) cur.id = v; break;
       }
     }
     parser.ontext = text; parser.oncdata = text;
     parser.onclosetag = function (name) {
-      if (name === 'advcampaign') { inCampaign = false; campaignName = ''; }
-      if (name === 'coupon' || name === 'offer' || name === 'item') {
-        if (cur && (cur.name || cur.promocode || cur.discount || cur.url)) {
+      if (name === 'advcampaign') { inCampaign = false; curCampId = null; }
+      else if (name === 'coupon' || name === 'offer' || name === 'item') {
+        if (cur && (cur.name || cur.promocode || cur.discount || cur.url || cur.promolink)) {
+          const store = cur.advertiser_name || (cur._advId && campaignNames[cur._advId]) || '';
           out.push({
             id: cur.id || (cur.name || '').slice(0, 40),
             name: cur.name || '', description: cur.description || '',
-            advertiser_name: cur.advertiser_name || '', logo: cur.image || '',
+            advertiser_name: store, logo: cur.image || '',
             promocode: cur.promocode || '', discount: cur.discount || '',
             status: cur.status || 'active', regions: cur.regions || [],
             types: cur.types || [], categories: cur.categories || [],
-            url: cur.url || '', date_end: cur.date_end || null,
+            url: cur.url || cur.promolink || '', date_end: cur.date_end || null,
           });
         }
         cur = null;
