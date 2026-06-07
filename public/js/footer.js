@@ -28,17 +28,30 @@
       '</div>' +
       '<div class="foot-col"><h4>Shop</h4>' + shopLinks + '</div>' +
       '<div class="foot-col"><h4>Featured Stores</h4>' + storeLinks + '</div>' +
-      '<div class="foot-col"><h4>Popular Brands</h4>' + brandLinks + '</div>' +
+      '<div class="foot-col"><h4>Popular Brands</h4><span id="footBrands">' + brandLinks + '</span></div>' +
       '<div class="foot-col"><h4>Shop the Edit</h4>' + editLinks + '</div>' +
       '<div class="foot-col"><h4>Company</h4>' + companyLinks + '</div>' +
     '</div>' +
     '<div class="foot-disclosure"><b>Affiliate disclosure:</b> Fashion to World is an affiliate website. Links to retailers are affiliate links, which means we may earn a commission if you make a purchase \u2014 at no extra cost to you. Prices and availability are set by the retailer and verified daily, but may change. We are not the seller; purchases complete on the retailer&#39;s own site.</div>' +
   '</div>';
 
+  function loadTopBrands() {
+    try {
+      var base = window.API_BASE || '';
+      fetch(base + '/api/brands/top?limit=12')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (list) {
+          if (!list || !list.length) return;
+          var el = document.getElementById('footBrands'); if (!el) return;
+          el.innerHTML = list.map(function (b) { return link(SEARCH + '?q=' + enc(b.name), b.name); }).join('');
+        }).catch(function () {});
+    } catch (e) {}
+  }
   function inject() {
     var footer = document.querySelector('footer.footer');
     if (!footer) { footer = document.createElement('footer'); footer.className = 'footer'; document.body.appendChild(footer); }
     footer.innerHTML = html;
+    loadTopBrands();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', inject);
   else inject();
