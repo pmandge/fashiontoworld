@@ -137,7 +137,7 @@ async function subcategoryFacets() {
 }
 
 async function topBrands(limit) {
-  const r = await pool.query(`SELECT brand, COUNT(*)::int c FROM products WHERE brand IS NOT NULL AND brand <> '' AND brand NOT IN (SELECT DISTINCT advertiser FROM products WHERE advertiser IS NOT NULL AND advertiser <> '') GROUP BY brand ORDER BY c DESC LIMIT $1`, [limit || 12]);
+  const r = await pool.query(`SELECT brand, COUNT(*)::int c FROM products WHERE brand IS NOT NULL AND brand <> '' AND LOWER(brand) NOT IN (SELECT DISTINCT LOWER(advertiser) FROM products WHERE advertiser IS NOT NULL AND advertiser <> '') GROUP BY brand ORDER BY c DESC LIMIT $1`, [limit || 12]);
   return r.rows.map(function (row) { return { name: row.brand, count: row.c }; });
 }
 
