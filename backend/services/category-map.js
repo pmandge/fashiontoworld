@@ -14,12 +14,12 @@ const CATEGORY_RULES = [
   { cat: 'shoes',       kw: ['shoe','sneaker','boot','heel','sandal','loafer','espadrille','mule','uggs','ballet flat','slides','flip flop','moccasin','trainers','pumps'] },
   { cat: 'bags',        kw: ['handbag','bag','clutch','backpack','tote','purse','wallet','briefcase','satchel','messenger','belt bag','mini bag','travel bag'] },
   { cat: 'jewellery',   kw: ['ring','necklace','earring','bracelet','brooch','jewel','watch','pendant','keyring','anklet','cufflink'] },
-  { cat: 'accessories', kw: ['belt','scarf','scarves','glove','hat','cap','beanie','sunglass','glasses','tie','umbrella','hair accessor','bow tie','pocket square','bucket hat','bowler','cases'] },
-  { cat: 'beauty',      kw: ['fragrance','perfume','parfum','cologne','eau de','cosmetic','beauty','makeup','lipstick','mascara','foundation','concealer','eyeshadow','eyeliner','blush','skincare','serum','moisturiser','moisturizer','cleanser','shampoo','conditioner','lotion','nail polish','nail lacquer','palette','candle'] },
+  { cat: 'accessories', kw: ['belt','scarf','scarves','glove','hat','cap','beanie','sunglass','glasses','tie','umbrella','hair accessor','bow tie','pocket square','bucket hat','bowler'] },
+  { cat: 'beauty',      kw: ['fragrance','perfume','parfum','cologne','eau de','cosmetic','beauty','makeup','lipstick','mascara','foundation','concealer','eyeshadow','eyeliner','blush','skincare','serum','moisturiser','moisturizer','cleanser','shampoo','conditioner','lotion','nail polish','nail lacquer','palette'] },
   { cat: 'kids',        kw: ['baby','babies','kids','child','children','toddler','infant','animal clothing'] },
 ];
 
-const CLOTHING_HINT = ['dress','jean','trouser','pant','skirt','top','blouse','shirt','jacket','coat','blazer','sweater','hoodie','sweatshirt','cardigan','jumper','knit','t-shirt','tee','legging','short','suit','vest','poncho','bodysuit','lingerie','bra','panties','underwear','swimwear','swimsuit','bikini','pajama','nightgown','jumpsuit','co-ord','tracksuit','turtleneck','polo','parka','bomber','windbreaker','trench','fur','sheepskin','down jacket','raincoat','tights','socks','stockings'];
+const CLOTHING_HINT = ['dress','jean','trouser','pant','skirt','top','blouse','shirt','jacket','coat','blazer','sweater','hoodie','sweatshirt','cardigan','jumper','knit','t-shirt','tee','legging','short','suit','vest','poncho','bodysuit','lingerie','bra','panties','underwear','swimwear','swimsuit','bikini','pajama','nightgown','jumpsuit','co-ord','tracksuit','turtleneck','polo','parka','bomber','windbreaker','trench','fur','sheepskin','down jacket','raincoat','tights','socks','stockings','cape','gown','kimono','tunic','kaftan','overalls','dungarees'];
 
 // Gender signals scanned in the product name + description.
 const MEN_SIGNALS   = /\b(men|men'?s|man'?s|male|gentlemen|menswear|guys|boys?|boy'?s)\b/i;
@@ -51,12 +51,24 @@ function detectGender(text, feedGender) {
 // genderText: extra text (description) — only used for gender.
 function mapCategory(typeText, genderText, genderHint, advertiser) {
   const n = (typeText || '').toLowerCase();
-  for (const rule of CATEGORY_RULES) {
-    if (rule.kw.some(k => n.includes(k))) return rule.cat;
+  const byCat = {}; CATEGORY_RULES.forEach(r => { byCat[r.cat] = r.kw; });
+  const hit = (kw) => kw && kw.some(k => n.includes(k));
+  function genderCat() {
+    let g = detectGender(`${typeText || ''} ${genderText || ''}`, genderHint);
+    if (!g) g = storeGender(advertiser);
+    return g === 'men' ? 'men' : 'women';
   }
-  let g = detectGender(`${typeText || ''} ${genderText || ''}`, genderHint);
-  if (!g) g = storeGender(advertiser);   // store fallback when no signal anywhere
-  return g === 'men' ? 'men' : 'women';
+  // Order matters: kids first; then distinct product types; then a CLOTHING guard
+  // so garments that merely contain 'tie'/'belt'/'cap' are NOT mis-tagged as
+  // accessories; then accessories/beauty; finally gender default.
+  if (hit(byCat.kids)) return 'kids';
+  if (hit(byCat.shoes)) return 'shoes';
+  if (hit(byCat.bags)) return 'bags';
+  if (hit(byCat.jewellery)) return 'jewellery';
+  if (CLOTHING_HINT.some(k => n.includes(k))) return genderCat();
+  if (hit(byCat.accessories)) return 'accessories';
+  if (hit(byCat.beauty)) return 'beauty';
+  return genderCat();
 }
 
 const SUBCATEGORY_RULES = [
