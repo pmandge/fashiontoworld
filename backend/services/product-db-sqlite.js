@@ -115,7 +115,7 @@ async function subcategoryFacets() {
 }
 
 async function topBrands(limit) {
-  const rows = db.prepare(`SELECT brand, COUNT(*) c FROM products WHERE brand IS NOT NULL AND brand <> '' GROUP BY brand ORDER BY c DESC LIMIT ?`).all(limit || 12);
+  const rows = db.prepare(`SELECT brand, COUNT(*) c FROM products WHERE brand IS NOT NULL AND brand <> '' AND brand NOT IN (SELECT DISTINCT advertiser FROM products WHERE advertiser IS NOT NULL AND advertiser <> '') GROUP BY brand ORDER BY c DESC LIMIT ?`).all(limit || 12);
   return rows.map(function (row) { return { name: row.brand, count: row.c }; });
 }
 
