@@ -195,29 +195,67 @@
   };
   window.FTWSubscribe = FTWSubscribe;
 
-  function buildMegaMenus() {
+  // Data-driven mega menus: built from the subcategories that actually exist
+  // in the product feed (so items always have products, and new feeds appear
+  // automatically). Falls back to the curated taxonomy if the API is offline.
+  async function buildMegaMenus() {
     const tax = window.FASHION_TAXONOMY || {};
+    let facets = null;
+    try {
+      const base = window.API_BASE || '';
+      const r = await fetch(base + '/api/categories/subcategories');
+      if (r.ok) facets = await r.json();
+    } catch (e) { /* offline -> fallback below */ }
+
     document.querySelectorAll('.nav-links > li > a').forEach(function (link) {
       const label = link.textContent.trim().toLowerCase();
       let key = null;
-      for (const k in tax) {
-        if (tax[k].label.toLowerCase() === label) { key = k; break; }
-      }
+      for (const k in tax) { if (tax[k].label.toLowerCase() === label) { key = k; break; } }
       if (!key) return;
       const c = tax[key];
       const li = link.parentElement;
       if (li.querySelector('.mega')) return;
 
-      const groups = Object.values(c.subcategories);
+      const real = facets && facets[c.slug];   // [{name,count}] for this category
+      let groupsHtml = '';
+
+      if (real && real.length) {
+        const realCount = {};
+        real.forEach(function (s) { realCount[s.name.toLowerCase()] = s.count; });
+        const used = {};
+        // Curated groups, but only the items that truly exist in the feed
+        Object.values(c.subcategories).forEach(function (g) {
+          const items = g.items.filter(function (it) { return realCount[it.toLowerCase()] != null; });
+          items.forEach(function (it) { used[it.toLowerCase()] = 1; });
+          if (items.length) {
+            groupsHtml += '<div class="mega-group"><h5>' + g.label + '</h5>' +
+              items.map(function (it) { return '<a href="' + catUrl(c.slug) + '?cat=' + encodeURIComponent(it) + '">' + it + '</a>'; }).join('') +
+              '</div>';
+          }
+        });
+        // Real subcategories not in the curated taxonomy (e.g. from new feeds) -> "More"
+        const extras = real.filter(function (s) { return !used[s.name.toLowerCase()]; }).slice(0, 10);
+        if (extras.length) {
+          groupsHtml += '<div class="mega-group"><h5>More</h5>' +
+            extras.map(function (s) { return '<a href="' + catUrl(c.slug) + '?cat=' + encodeURIComponent(s.name) + '">' + s.name + '</a>'; }).join('') +
+            '</div>';
+        }
+      }
+
+      if (!groupsHtml) {
+        // Fallback: curated taxonomy as-is
+        groupsHtml = Object.values(c.subcategories).map(function (g) {
+          return '<div class="mega-group"><h5>' + g.label + '</h5>' +
+            g.items.slice(0, 8).map(function (it) { return '<a href="' + catUrl(c.slug) + '?cat=' + encodeURIComponent(it) + '">' + it + '</a>'; }).join('') +
+            '</div>';
+        }).join('');
+      }
+
       const mega = document.createElement('div');
       mega.className = 'mega';
-      mega.style.setProperty('--mega-rows', Math.ceil(groups.length / 2));
-      mega.innerHTML = groups.map(function (g) {
-        const items = g.items.slice(0, 8).map(function (it) {
-          return '<a href="' + catUrl(c.slug) + '">' + it + '</a>';
-        }).join('');
-        return '<div class="mega-group"><h5>' + g.label + '</h5>' + items + '</div>';
-      }).join('');
+      const groupCount = (groupsHtml.match(/mega-group/g) || []).length;
+      mega.style.setProperty('--mega-rows', Math.ceil(groupCount / 2));
+      mega.innerHTML = groupsHtml;
       li.appendChild(mega);
     });
   }
