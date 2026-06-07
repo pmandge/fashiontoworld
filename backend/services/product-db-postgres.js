@@ -67,7 +67,7 @@ async function pruneOld(runStamp) {
   return r.rowCount;
 }
 
-async function query({ category, subcategory, gender, brand, advertiser, onSale, minprice, maxprice, q, sort, limit = 24, page = 1 } = {}) {
+async function query({ category, subcategory, gender, brand, advertiser, color, size, onSale, minprice, maxprice, q, sort, limit = 24, page = 1 } = {}) {
   const where = []; const vals = []; let i = 1;
   if (category)    { where.push(`category = $${i++}`); vals.push(category); }
   if (subcategory) { where.push(`subcategory = $${i++}`); vals.push(subcategory); }
@@ -78,6 +78,8 @@ async function query({ category, subcategory, gender, brand, advertiser, onSale,
     else if (bs.length > 1) { where.push(`brand = ANY($${i++})`); vals.push(bs); }
   }
   if (advertiser)  { where.push(`advertiser ILIKE $${i++}`); vals.push(`%${advertiser}%`); }
+  if (color)       { const cs = String(color).split(',').map(s => s.trim()).filter(Boolean); if (cs.length) { where.push(`color = ANY($${i++})`); vals.push(cs); } }
+  if (size)        { const ss = String(size).split(',').map(s => s.trim()).filter(Boolean); if (ss.length) { where.push(`size = ANY($${i++})`); vals.push(ss); } }
   if (onSale)      { where.push(`on_sale = true`); }
   if (minprice != null) { where.push(`price >= $${i++}`); vals.push(minprice); }
   if (maxprice != null) { where.push(`price <= $${i++}`); vals.push(maxprice); }

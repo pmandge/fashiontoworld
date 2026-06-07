@@ -59,7 +59,7 @@ async function pruneOld(runStamp) {
   return db.prepare('DELETE FROM products WHERE updated_at < ?').run(runStamp).changes;
 }
 
-async function query({ category, subcategory, gender, brand, advertiser, onSale, minprice, maxprice, q, sort, limit = 24, page = 1 } = {}) {
+async function query({ category, subcategory, gender, brand, advertiser, color, size, onSale, minprice, maxprice, q, sort, limit = 24, page = 1 } = {}) {
   const where = []; const params = {};
   if (category)    { where.push('category = @category'); params.category = category; }
   if (subcategory) { where.push('subcategory = @subcategory'); params.subcategory = subcategory; }
@@ -69,6 +69,8 @@ async function query({ category, subcategory, gender, brand, advertiser, onSale,
     if (bs.length) { where.push('brand IN (' + bs.map((_, k) => '@b' + k).join(',') + ')'); bs.forEach((b, k) => { params['b' + k] = b; }); }
   }
   if (advertiser)  { where.push('advertiser LIKE @advertiser'); params.advertiser = `%${advertiser}%`; }
+  if (color)       { const cs=String(color).split(',').map(s=>s.trim()).filter(Boolean); if(cs.length){ where.push('color IN ('+cs.map((_,k)=>'@c'+k).join(',')+')'); cs.forEach((c,k)=>{params['c'+k]=c;}); } }
+  if (size)        { const ss=String(size).split(',').map(s=>s.trim()).filter(Boolean); if(ss.length){ where.push('size IN ('+ss.map((_,k)=>'@s'+k).join(',')+')'); ss.forEach((s,k)=>{params['s'+k]=s;}); } }
   if (onSale)      { where.push('on_sale = 1'); }
   if (minprice != null) { where.push('price >= @minprice'); params.minprice = minprice; }
   if (maxprice != null) { where.push('price <= @maxprice'); params.maxprice = maxprice; }
@@ -78,7 +80,7 @@ async function query({ category, subcategory, gender, brand, advertiser, onSale,
   if (sort === 'price_asc') order = 'price ASC';
   else if (sort === 'price_desc') order = 'price DESC';
   else if (sort === 'sale') order = 'on_sale DESC, price ASC';
-  else if (sort === 'discount') order = 'on_sale DESC, (CASE WHEN price_old > 0 THEN (price_old - price) / price_old ELSE 0 END) DESC';
+  else if (sort === 'discount') order = 'on_sale DESC, updated_at DESC';
   const lim = Math.min(parseInt(limit) || 24, 100);
   const off = ((parseInt(page) || 1) - 1) * lim;
   const total = db.prepare(`SELECT COUNT(*) n FROM products ${w}`).get(params).n;
