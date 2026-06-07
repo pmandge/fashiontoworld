@@ -230,3 +230,9 @@
 .ls-all{display:block;padding:12px 16px;text-align:center;font-size:13px;font-weight:500;color:var(--deal,#c0492f);background:var(--deal-tint,#fbf1ec)}
 .ls-loading,.ls-empty{padding:18px;text-align:center;color:var(--text-muted,#6b6b6b);font-size:14px}
 :root{--gold-deep:#a8862f}
+
+/* Deal cards with store logos */
+.deal-head{display:flex;align-items:center;gap:10px;font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink)}
+.deal-logo{width:38px;height:38px;border-radius:9px;object-fit:contain;background:#fff;border:1px solid var(--border);padding:4px;flex-shrink:0}
+.deal-logo-ph{display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:17px;color:var(--gold-deep)}
+.deal-head .store{color:var(--ink);font-weight:600;font-size:13px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
