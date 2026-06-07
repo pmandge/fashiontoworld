@@ -65,11 +65,14 @@
   .ticker{display:flex;align-items:center;gap:0;background:var(--ink);color:#fff;border-radius:12px;overflow:hidden;margin-bottom:30px}
   .ticker-flag{background:var(--deal);padding:12px 18px;font-size:13px;font-weight:600;white-space:nowrap;letter-spacing:.04em}
   .ticker-vp{flex:1;overflow:hidden;position:relative;height:44px}
-  .ticker-track{position:absolute;display:flex;gap:48px;white-space:nowrap;animation:scrollx 26s linear infinite;height:44px;align-items:center;padding-left:24px}
+  .ticker-track{position:absolute;display:flex;gap:48px;white-space:nowrap;animation:scrollx 55s linear infinite;height:44px;align-items:center;padding-left:24px}
   @keyframes scrollx{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  .ticker-item{font-size:13.5px;color:rgba(255,255,255,.9)}
+  .ticker-item{font-size:13.5px;color:rgba(255,255,255,.9);text-decoration:none}
+  .ticker-item:hover{color:#fff}
+  .ticker-track:hover{animation-play-state:paused}
   .ticker-item b{color:var(--gold-light)}
-  .ticker-cta{padding:0 20px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-light);white-space:nowrap}
+  .ticker-cta{padding:0 20px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-light);white-space:nowrap;cursor:pointer;text-decoration:none}
+  .ticker-cta:hover{color:#fff}
   .deal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
   .deal-card{position:relative;background:#fff;border:1px solid var(--border);border-radius:13px;padding:18px 18px;display:flex;flex-direction:column;overflow:hidden;transition:.28s}
   .deal-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--deal));transform:scaleX(0);transform-origin:left;transition:transform .35s}
