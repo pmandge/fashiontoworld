@@ -156,12 +156,20 @@ app.get('/health', (req, res) => res.json({ status: 'ok', ts: new Date().toISOSt
 // region ranking) so behaviour matches exactly after the move.
 const FASHION_EXCLUDE = ['electronics','laptop','smartphone','gadget','flight','hotel','grocery','finance','bank','crypto','casino','betting','pharma','furniture','appliance','vpn','hosting'];
 const { shipsWorldwide } = require('./config/worldwide-stores');
+const couponFeed = require('./services/coupon-feed');
 
 app.get('/api/admitad/coupons', async (req, res) => {
   try {
     res.set('Cache-Control', 'private, max-age=300');
     const page = parseInt(req.query.page || 1);
     const limit = parseInt(req.query.limit || 24);
+    // Preferred source: the coupon XML feed (URL in .env). Falls back to the API if unset/empty.
+    if (process.env.COUPON_FEED_URL) {
+      try {
+        const fed = await couponFeed.getCoupons(Math.max(limit, 60));
+        if (fed && fed.length) return res.json({ coupons: fed.slice((page - 1) * limit, page * limit), total: fed.length, source: 'feed' });
+      } catch (e) { console.error('[coupon-feed]', e.message); }
+    }
     const type = req.query.type;
     const region = (req.query.region || req.geo.region || '').toUpperCase();
     const language = req.query.lang || req.geo.language;
@@ -230,9 +238,9 @@ app.get('/api/admitad/products', async (req, res) => {
     const cacheKey = req.originalUrl;
     const hit = _prodCache.get(cacheKey);
     if (hit && Date.now() - hit.t < 180000) return res.json(hit.v);
-    const { category, subcategory, gender, brand, advertiser, sale, minprice, maxprice, page = 1, limit = 24, sort, q } = req.query;
+    const { category, subcategory, gender, brand, advertiser, color, size, sale, minprice, maxprice, page = 1, limit = 24, sort, q } = req.query;
     const result = await productDb.query({
-      category, subcategory, gender, brand, advertiser, onSale: sale === 'true',
+      category, subcategory, gender, brand, advertiser, color, size, onSale: sale === 'true',
       minprice: minprice ? parseFloat(minprice) : null,
       maxprice: maxprice ? parseFloat(maxprice) : null,
       q, sort, page: parseInt(page), limit: parseInt(limit),
