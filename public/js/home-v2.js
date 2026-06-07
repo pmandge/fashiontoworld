@@ -201,7 +201,10 @@
           deals.innerHTML = cs.slice(0, 8).map(function (c) {
             var href = c.url || '#';
             return '<a class="deal-card" href="' + href + '" target="_blank" rel="sponsored nofollow noopener" style="text-decoration:none">' +
-              '<div class="deal-head"><span class="store">' + esc(c.advertiser_name || 'Store') + '</span><span class="dot"></span><span>WW</span></div>' +
+              '<div class="deal-head">' +
+                (c.logo ? '<img class="deal-logo" src="' + esc(c.logo) + '" alt="' + esc(c.advertiser_name || '') + '" loading="lazy" onerror="this.remove()">' : '<span class="deal-logo deal-logo-ph">' + esc((c.advertiser_name || 'S').charAt(0)) + '</span>') +
+                '<span class="store">' + esc(c.advertiser_name || 'Store') + '</span>' +
+              '</div>' +
               '<div class="deal-offer">' + esc(shortOffer(c)) + '</div>' +
               '<span class="deal-code">' + esc(c.promocode || 'No code') + '</span>' +
               '<span class="deal-link">View <span class="arr">&#8594;</span></span></a>';
