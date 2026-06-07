@@ -158,6 +158,16 @@ const FASHION_EXCLUDE = ['electronics','laptop','smartphone','gadget','flight','
 const { shipsWorldwide } = require('./config/worldwide-stores');
 const couponFeed = require('./services/coupon-feed');
 
+app.get('/api/brands/top', async (req, res) => {
+  try {
+    res.set('Cache-Control', 'public, max-age=600');
+    if (_brandsCache.data && Date.now() - _brandsCache.at < 600000) return res.json(_brandsCache.data);
+    const data = await productDb.topBrands(parseInt(req.query.limit) || 12);
+    _brandsCache = { at: Date.now(), data };
+    res.json(data);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/categories/subcategories', async (req, res) => {
   try {
     res.set('Cache-Control', 'public, max-age=600');
@@ -239,6 +249,7 @@ app.get('/api/admitad/coupons', async (req, res) => {
 // Real fashion products — served from the feed database
 const productDb = require('./services/product-db');
 let _subcatCache = { at: 0, data: null };
+let _brandsCache = { at: 0, data: null };
 const { startProductSync, getStatus, syncAllFeeds } = require('./services/product-sync');
 const currency = require('./services/currency');
 
