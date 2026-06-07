@@ -807,7 +807,7 @@ em { font-style: italic; }
 .mf-price{display:flex;align-items:center;gap:8px}
 .mf-price input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-family:var(--font-sans);font-size:13px}
 .mf-search{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-family:var(--font-sans);font-size:13px;margin-bottom:10px}
-.mf-opts{max-height:210px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;padding-right:4px}
+.mf-opts{max-height:156px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;padding-right:4px}
 .mf-opt{display:flex;align-items:center;gap:10px;font-size:14px;padding:5px 4px;border-radius:6px;cursor:pointer}
 .mf-opt:hover{background:var(--cream)}
 .mf-opt input{width:16px;height:16px;accent-color:var(--gold);cursor:pointer}
@@ -880,3 +880,9 @@ em { font-style: italic; }
 .mf-sizes{display:flex;flex-wrap:wrap;gap:7px}
 .mf-size{min-width:38px;text-align:center;padding:7px 6px;border:1px solid var(--line,rgba(0,0,0,.15));background:#fff;border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--font-sans)}
 .mf-size.on{background:var(--black,#1a1410);color:#fff;border-color:var(--black,#1a1410)}
+
+/* ===== Collapsible filter sections ===== */
+.mf-collapsible .mf-head{cursor:pointer;user-select:none}
+.mf-chev{transition:transform .2s;font-size:11px;color:var(--text-muted,#6b6b6b)}
+.mf-block.collapsed .mf-chev{transform:rotate(-90deg)}
+.mf-block.collapsed > *:not(.mf-head){display:none}
