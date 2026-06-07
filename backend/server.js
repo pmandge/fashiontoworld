@@ -40,7 +40,7 @@ const CONFIG = {
   ADMITAD_API_BASE: 'https://api.admitad.com',
   PORT: process.env.PORT || 3000,
   CACHE_TTL: 30 * 60 * 1000,            // 30 minutes
-  DATAFEED_SYNC_INTERVAL: 2 * 60 * 60 * 1000, // 2 hours
+  DATAFEED_SYNC_INTERVAL: 24 * 60 * 60 * 1000, // once a day
 };
 
 // ─── TOKEN MANAGEMENT ────────────────────────────────────────
@@ -442,7 +442,7 @@ app.get('*', (req, res) => {
 app.listen(CONFIG.PORT, () => {
   console.log(`\n🌍 FashionToWorld running at http://localhost:${CONFIG.PORT}`);
   console.log('📦 Admitad API proxy: /api/admitad/*');
-  console.log('🔄 Datafeed sync: every 2 hours\n');
+  console.log('🔄 Datafeed sync: once a day\n');
 });
 
 module.exports = app;

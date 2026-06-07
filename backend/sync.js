@@ -23,7 +23,7 @@ const fs = require('fs');
 const path = require('path');
 
 const CACHE_FILE = path.join(__dirname, '../cache/feed-cache.json');
-const SYNC_INTERVAL_MS = 2 * 60 * 60 * 1000; // every 2 hours
+const SYNC_INTERVAL_MS = 24 * 60 * 60 * 1000; // once a day
 
 function ensureCacheDir() {
   const dir = path.dirname(CACHE_FILE);
