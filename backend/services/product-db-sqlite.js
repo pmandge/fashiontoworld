@@ -114,4 +114,9 @@ async function subcategoryFacets() {
   return out;
 }
 
-module.exports = { init, upsertMany, pruneOld, query, distinctBrands, setBrandLogo, stats, advertiserCounts, subcategoryFacets };
+async function topBrands(limit) {
+  const rows = db.prepare(`SELECT brand, COUNT(*) c FROM products WHERE brand IS NOT NULL AND brand <> '' GROUP BY brand ORDER BY c DESC LIMIT ?`).all(limit || 12);
+  return rows.map(function (row) { return { name: row.brand, count: row.c }; });
+}
+
+module.exports = { init, upsertMany, pruneOld, query, distinctBrands, setBrandLogo, stats, advertiserCounts, subcategoryFacets, topBrands };

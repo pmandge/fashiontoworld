@@ -29,6 +29,9 @@ async function init() {
     CREATE INDEX IF NOT EXISTS idx_upd ON products(updated_at);
     CREATE INDEX IF NOT EXISTS idx_price ON products(price);
     CREATE INDEX IF NOT EXISTS idx_sale_upd ON products(on_sale, updated_at);
+    CREATE INDEX IF NOT EXISTS idx_cat_upd ON products(category, updated_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_cat_price ON products(category, price);
+    CREATE INDEX IF NOT EXISTS idx_cat_sale_upd ON products(category, on_sale DESC, updated_at DESC);
   `);
   // Fast text search: trigram indexes make `name/brand ILIKE '%q%'` index-accelerated.
   // Guarded so a missing extension can never block startup.
@@ -133,4 +136,9 @@ async function subcategoryFacets() {
   return out;
 }
 
-module.exports = { init, upsertMany, pruneOld, query, distinctBrands, setBrandLogo, stats, advertiserCounts, subcategoryFacets };
+async function topBrands(limit) {
+  const r = await pool.query(`SELECT brand, COUNT(*)::int c FROM products WHERE brand IS NOT NULL AND brand <> '' GROUP BY brand ORDER BY c DESC LIMIT $1`, [limit || 12]);
+  return r.rows.map(function (row) { return { name: row.brand, count: row.c }; });
+}
+
+module.exports = { init, upsertMany, pruneOld, query, distinctBrands, setBrandLogo, stats, advertiserCounts, subcategoryFacets, topBrands };
