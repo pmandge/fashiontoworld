@@ -26,7 +26,8 @@
     var cnt = document.getElementById('cnt');
     function animateCount(target){ if(!cnt) return; var t0=null; requestAnimationFrame(function step(t){ if(!t0)t0=t; var p=Math.min((t-t0)/1500,1); cnt.textContent=Math.floor((1-Math.pow(1-p,3))*target).toLocaleString(); if(p<1)requestAnimationFrame(step); }); }
     function setTrustProducts(total){ document.querySelectorAll('.trust-item').forEach(function(it){ var lbl=it.querySelector('.trust-label'); if(lbl && /product/i.test(lbl.textContent)){ var num=it.querySelector('.trust-num'); if(num) num.textContent=(total>=1000?Math.round(total/1000)+'K+':total.toLocaleString()); } }); }
-    if(API && cnt){ API.getProducts({limit:1}).then(function(d){ var total=(d&&d.total)||169000; animateCount(total); setTrustProducts(total); }).catch(function(){ animateCount(169000); }); } else { animateCount(169000); }
+    animateCount(169000);
+    window.__ftwTotal = function (val) { if (cnt && val) cnt.textContent = val.toLocaleString(); if (val) setTrustProducts(val); };
   })();
 
   /* ---------------- static: Find Your Style ---------------- */
@@ -120,6 +121,7 @@
         if (rows.length) { STORES = rows.slice(0, 12).map(function (r) { return build(r.name, r.count); }); var on = chips && chips.querySelector('.schip.on'); draw(on ? (on.getAttribute('data-cat') || on.getAttribute('data-c') || 'all') : 'all'); }
         var cnt = (data && data.count) || rows.length;
         if (cnt) setTrustStores(cnt);
+        if (data && data.total_products && window.__ftwTotal) window.__ftwTotal(data.total_products);
       }).catch(function () { });
     }
   })();

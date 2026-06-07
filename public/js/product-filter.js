@@ -251,6 +251,17 @@
     openBtn.onclick = openD; backdrop.onclick = closeD; closer.onclick = closeD;
   }
 
+  // collapsible facets (modern, no long scroll): tap a heading to open/close
+  sidebar.querySelectorAll('.mf-block').forEach(function (block) {
+    var head = block.querySelector('.mf-head');
+    if (!head || head.querySelector('.mf-clear')) return; // skip the Active-filters block
+    block.classList.add('mf-collapsible');
+    head.insertAdjacentHTML('beforeend', '<span class="mf-chev">\u25be</span>');
+    head.addEventListener('click', function (e) { if (e.target.closest('.mf-clear')) return; block.classList.toggle('collapsed'); });
+  });
+  if (colorBlock) colorBlock.classList.add('collapsed');
+  if (sizeBlock) sizeBlock.classList.add('collapsed');
+
   // init
   load(true);
   loadBrands();
