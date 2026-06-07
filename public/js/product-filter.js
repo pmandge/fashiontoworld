@@ -213,7 +213,22 @@
     var total = (data && data.total) || 0;
     if (countEl) countEl.textContent = total.toLocaleString() + ' products';
     if (!products.length && reset) {
-      grid.innerHTML = '<div class="empty-state"><p>No products match these filters. Try widening the price range or clearing a brand.</p></div>';
+      // No exact matches -> fall back to a forgiving name/brand search so the
+      // area never sits blank (covers niche subcategories AND Popular-Brand links).
+      var fbTerm = '';
+      if (state.sub) fbTerm = (state.sub.split(/[\s/&-]+/).filter(Boolean)[0] || state.sub);
+      else if (state.brands.size === 1) fbTerm = Array.from(state.brands)[0];
+      if (fbTerm) {
+        var alt = await API.getProducts({ category: CATEGORY, gender: GENDER, q: fbTerm, page: 1, limit: 24, sort: state.sort });
+        var ap = (alt && alt.products) || [];
+        if (ap.length) {
+          if (countEl) countEl.textContent = ((alt.total) || ap.length).toLocaleString() + ' products';
+          grid.innerHTML = ap.map(API.renderProductCard).join('');
+          if (moreBtn) moreBtn.style.display = 'none';
+          return;
+        }
+      }
+      grid.innerHTML = '<div class="empty-state"><p>No products match this yet. Try a different category or clear a filter.</p></div>';
       if (moreBtn) moreBtn.style.display = 'none';
       return;
     }
