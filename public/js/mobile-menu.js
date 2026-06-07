@@ -17,6 +17,49 @@
   const root = inPages ? '' : 'pages/';          // link prefix to subpages
   const home = inPages ? '../index.html' : 'index.html';
 
+  // Shared: fetch the real subcategories once (used by both mobile drawer + desktop mega)
+  let _facetsPromise = null;
+  function getFacets() {
+    if (_facetsPromise) return _facetsPromise;
+    const base = window.API_BASE || '';
+    _facetsPromise = fetch(base + '/api/categories/subcategories')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });
+    return _facetsPromise;
+  }
+  function subItems(c, facets) {
+    var items = [];
+    var real = facets && facets[c.slug];
+    if (real && real.length) items = real.map(function (s) { return s.name; });
+    else Object.values(c.subcategories).forEach(function (g) { g.items.forEach(function (it) { items.push(it); }); });
+    var seen = {};
+    return items.filter(function (n) { var k = n.toLowerCase(); if (seen[k]) return false; seen[k] = 1; return true; });
+  }
+  function renderCats(tax, facets) {
+    var ICONS = { women:'<path d="M12 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM9 9l-2 7h3l-1 6h4l-1-6h3L12 9"/>', men:'<path d="M6 3h12l-2 5 2 13H6l2-13z"/>', kids:'<circle cx="12" cy="5" r="2.5"/><path d="M8 9h8l-1 5h-2l1 7h-4l1-7H9z"/>', shoes:'<path d="M2 16h13l5 2h2v2H2zM2 10v6h4l-1-6z"/>', bags:'<path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/>', jewellery:'<path d="M12 3l4 5-4 13-4-13zM8 8h8"/>', accessories:'<circle cx="7" cy="13" r="4"/><circle cx="17" cy="13" r="4"/><path d="M11 12h2"/>', beauty:'<path d="M12 2l2 6h-4zM10 8h4v6a2 2 0 0 1-4 0zM9 20h6"/>' };
+    var cats = '';
+    for (var key in tax) {
+      var c = tax[key];
+      var icon = ICONS[c.slug] || '<circle cx="12" cy="12" r="9"/>';
+      var subs = subItems(c, facets).slice(0, 16);
+      var links = subs.map(function (it) {
+        return '<a href="' + catUrl(c.slug) + '?cat=' + encodeURIComponent(it) + '" style="display:block;padding:6px 0;font-size:13px;color:#6b6b6b;text-decoration:none">' + it + '</a>';
+      }).join('');
+      cats +=
+        '<details style="border-bottom:1px solid rgba(0,0,0,.07)">' +
+          '<summary style="list-style:none;cursor:pointer;padding:16px 0;display:flex;align-items:center;gap:12px">' +
+            '<span style="display:inline-flex;width:34px;height:34px;border-radius:50%;background:#f5f2ec;align-items:center;justify-content:center;flex-shrink:0">' +
+              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#c9a84c" stroke-width="1.4">' + icon + '</svg>' +
+            '</span>' +
+            '<span style="flex:1"><a href="' + catUrl(c.slug) + '" style="font-family:Georgia,serif;font-size:19px;font-weight:600;color:#0f0f0f;text-decoration:none;display:block;line-height:1.2">' + c.label + '</a></span>' +
+            '<span style="color:#c9a84c;font-size:20px;font-weight:300">+</span>' +
+          '</summary>' +
+          '<div style="padding:0 0 14px 46px">' + links + '</div>' +
+        '</details>';
+    }
+    return cats;
+  }
+
   function catUrl(slug) {
     // Every top-level category now has its own real page.
     const pages = ['women','men','shoes','bags','jewellery','accessories','beauty','kids','deals','brands'];
@@ -39,47 +82,7 @@
     drawer.setAttribute('aria-label', 'Menu');
     drawer.style.cssText = 'position:fixed;top:0;right:0;height:100%;width:84%;max-width:340px;background:#fafaf8;transform:translateX(100%);transition:transform .28s ease;z-index:1999;overflow-y:auto;box-shadow:-8px 0 40px rgba(0,0,0,.15)';
 
-    // Inline SVG icons per category slug
-    var ICONS = {
-      women: '<path d="M12 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM9 9l-2 7h3l-1 6h4l-1-6h3L12 9"/>',
-      men: '<path d="M6 3h12l-2 5 2 13H6l2-13z"/>',
-      kids: '<circle cx="12" cy="5" r="2.5"/><path d="M8 9h8l-1 5h-2l1 7h-4l1-7H9z"/>',
-      shoes: '<path d="M2 16h13l5 2h2v2H2zM2 10v6h4l-1-6z"/>',
-      bags: '<path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/>',
-      jewellery: '<path d="M12 3l4 5-4 13-4-13zM8 8h8"/>',
-      accessories: '<circle cx="7" cy="13" r="4"/><circle cx="17" cy="13" r="4"/><path d="M11 12h2"/>',
-      beauty: '<path d="M12 2l2 6h-4zM10 8h4v6a2 2 0 0 1-4 0zM9 20h6"/>',
-      luxury: '<path d="M3 8l4 10h10l4-10-5 4-4-6-4 6z"/>',
-      sustainable: '<path d="M12 3C7 7 5 11 12 21 19 11 17 7 12 3z"/>',
-    };
-
-    var cats = '';
-    for (var key in tax) {
-      var c = tax[key];
-      var icon = ICONS[c.slug] || '<circle cx="12" cy="12" r="9"/>';
-      var groupsArr = Object.keys(c.subcategories).map(function (gk) { return c.subcategories[gk]; });
-      var itemCount = groupsArr.reduce(function (n, g) { return n + g.items.length; }, 0);
-      var groups = groupsArr.map(function (g) {
-        var items = g.items.map(function (it) {
-          return '<a href="' + catUrl(c.slug) + '" style="display:block;padding:6px 0;font-size:13px;color:#6b6b6b;text-decoration:none;transition:color .15s" onmouseover="this.style.color=\'#0f0f0f\'" onmouseout="this.style.color=\'#6b6b6b\'">' + it + '</a>';
-        }).join('');
-        return '<div style="margin:10px 0 6px"><div style="font-family:\'DM Sans\',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#c9a84c;margin-bottom:4px">' + g.label + '</div>' + items + '</div>';
-      }).join('');
-
-      cats +=
-        '<details style="border-bottom:1px solid rgba(0,0,0,.07)">' +
-          '<summary style="list-style:none;cursor:pointer;padding:16px 0;display:flex;align-items:center;gap:12px">' +
-            '<span style="display:inline-flex;width:34px;height:34px;border-radius:50%;background:#f5f2ec;align-items:center;justify-content:center;flex-shrink:0">' +
-              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#c9a84c" stroke-width="1.4">' + icon + '</svg>' +
-            '</span>' +
-            '<span style="flex:1">' +
-              '<a href="' + catUrl(c.slug) + '" style="font-family:Georgia,\'Cormorant Garamond\',serif;font-size:19px;font-weight:600;color:#0f0f0f;text-decoration:none;display:block;line-height:1.2">' + c.label + '</a>' +
-            '</span>' +
-            '<span style="color:#c9a84c;font-size:20px;font-weight:300;transition:transform .2s">+</span>' +
-          '</summary>' +
-          '<div style="padding:0 0 14px 46px">' + groups + '</div>' +
-        '</details>';
-    }
+    var cats = renderCats(tax, null);
 
     drawer.innerHTML =
       '<div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(0,0,0,.1)">' +
@@ -93,13 +96,14 @@
         '</div>' +
         '<a href="' + root + 'deals.html" style="display:block;background:#c9a84c;color:#0f0f0f;text-align:center;padding:12px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;margin-bottom:8px">Shop Deals</a>' +
         '<button onclick="FTWSubscribe.open()" style="width:100%;background:#0f0f0f;color:#fafaf8;border:none;padding:12px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;margin-bottom:16px">Subscribe</button>' +
-        cats +
+        '<div id="mmCats">' + cats + '</div>' +
         '<a href="' + root + 'brands.html" style="display:block;padding:14px 0;font-family:Georgia,serif;font-size:18px;color:#0f0f0f;text-decoration:none;border-bottom:1px solid rgba(0,0,0,.08)">All Brands</a>' +
         '<a href="' + root + 'blog.html" style="display:block;padding:14px 0;font-family:Georgia,serif;font-size:18px;color:#0f0f0f;text-decoration:none">Style Blog</a>' +
       '</div>';
 
     document.body.appendChild(overlay);
     document.body.appendChild(drawer);
+    getFacets().then(function (f) { var el = document.getElementById('mmCats'); if (el && f) el.innerHTML = renderCats(tax, f); });
     drawer.querySelector('#mmClose').addEventListener('click', close);
 
     // ---- Floating "Shop Deals" CTA (appears after scrolling) ----
@@ -195,17 +199,11 @@
   };
   window.FTWSubscribe = FTWSubscribe;
 
-  // Data-driven mega menus: built from the subcategories that actually exist
-  // in the product feed (so items always have products, and new feeds appear
-  // automatically). Falls back to the curated taxonomy if the API is offline.
+  // Data-driven mega menus: a clean, evenly-aligned grid of the subcategories
+  // that actually exist in the product feed. Falls back to the curated taxonomy.
   async function buildMegaMenus() {
     const tax = window.FASHION_TAXONOMY || {};
-    let facets = null;
-    try {
-      const base = window.API_BASE || '';
-      const r = await fetch(base + '/api/categories/subcategories');
-      if (r.ok) facets = await r.json();
-    } catch (e) { /* offline -> fallback below */ }
+    const facets = await getFacets();
 
     document.querySelectorAll('.nav-links > li > a').forEach(function (link) {
       const label = link.textContent.trim().toLowerCase();
@@ -216,46 +214,24 @@
       const li = link.parentElement;
       if (li.querySelector('.mega')) return;
 
-      const real = facets && facets[c.slug];   // [{name,count}] for this category
-      let groupsHtml = '';
-
+      let items = [];
+      const real = facets && facets[c.slug];
       if (real && real.length) {
-        const realCount = {};
-        real.forEach(function (s) { realCount[s.name.toLowerCase()] = s.count; });
-        const used = {};
-        // Curated groups, but only the items that truly exist in the feed
-        Object.values(c.subcategories).forEach(function (g) {
-          const items = g.items.filter(function (it) { return realCount[it.toLowerCase()] != null; });
-          items.forEach(function (it) { used[it.toLowerCase()] = 1; });
-          if (items.length) {
-            groupsHtml += '<div class="mega-group"><h5>' + g.label + '</h5>' +
-              items.map(function (it) { return '<a href="' + catUrl(c.slug) + '?cat=' + encodeURIComponent(it) + '">' + it + '</a>'; }).join('') +
-              '</div>';
-          }
-        });
-        // Real subcategories not in the curated taxonomy (e.g. from new feeds) -> "More"
-        const extras = real.filter(function (s) { return !used[s.name.toLowerCase()]; }).slice(0, 10);
-        if (extras.length) {
-          groupsHtml += '<div class="mega-group"><h5>More</h5>' +
-            extras.map(function (s) { return '<a href="' + catUrl(c.slug) + '?cat=' + encodeURIComponent(s.name) + '">' + s.name + '</a>'; }).join('') +
-            '</div>';
-        }
+        items = real.map(function (s) { return s.name; });           // already sorted by count
+      } else {
+        Object.values(c.subcategories).forEach(function (g) { g.items.forEach(function (it) { items.push(it); }); });
       }
-
-      if (!groupsHtml) {
-        // Fallback: curated taxonomy as-is
-        groupsHtml = Object.values(c.subcategories).map(function (g) {
-          return '<div class="mega-group"><h5>' + g.label + '</h5>' +
-            g.items.slice(0, 8).map(function (it) { return '<a href="' + catUrl(c.slug) + '?cat=' + encodeURIComponent(it) + '">' + it + '</a>'; }).join('') +
-            '</div>';
-        }).join('');
-      }
+      // de-dupe (case-insensitive) and cap so the grid stays tidy
+      const seen = {};
+      items = items.filter(function (n) { const k = n.toLowerCase(); if (seen[k]) return false; seen[k] = 1; return true; }).slice(0, 21);
+      if (!items.length) return;
 
       const mega = document.createElement('div');
       mega.className = 'mega';
-      const groupCount = (groupsHtml.match(/mega-group/g) || []).length;
-      mega.style.setProperty('--mega-rows', Math.ceil(groupCount / 2));
-      mega.innerHTML = groupsHtml;
+      mega.style.setProperty('--mega-rows', Math.max(3, Math.ceil(items.length / 3)));
+      mega.innerHTML = '<div class="mega-list">' + items.map(function (name) {
+        return '<a href="' + catUrl(c.slug) + '?cat=' + encodeURIComponent(name) + '">' + name + '</a>';
+      }).join('') + '</div>';
       li.appendChild(mega);
     });
   }
