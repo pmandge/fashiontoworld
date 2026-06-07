@@ -154,6 +154,7 @@
 
   async function fillProducts(id, opts, cardOpts) {
     var el = document.getElementById(id); if (!el || !API) return;
+    el.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8);
     try {
       var data = await API.getProducts(opts);
       var items = (data && data.products) || [];
@@ -169,7 +170,7 @@
     if (!('IntersectionObserver' in window)) { fillProducts(id, opts, cardOpts); return; }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) { io.disconnect(); fillProducts(id, opts, cardOpts); } });
-    }, { rootMargin: '300px 0px' });
+    }, { rootMargin: '900px 0px' });
     io.observe(target);
   }
   fillProducts('prods', { sort: 'discount', limit: 8, page: 1 });                       // Trending — near top, load now
@@ -191,7 +192,7 @@
       var cs = (data && data.coupons) || [];
       if (tick) {
         if (cs.length) {
-          var items = cs.map(function (c) { return '<span class="ticker-item"><b>' + esc(shortOffer(c)) + '</b> at ' + esc(c.advertiser_name || 'a worldwide store') + '</span>'; });
+          var items = cs.map(function (c) { var u = c.url || 'pages/deals.html'; var out = /^https?:/i.test(u); return '<a class="ticker-item" href="' + u + '"' + (out ? ' target="_blank" rel="sponsored nofollow noopener"' : '') + '><b>' + esc(shortOffer(c)) + '</b> at ' + esc(c.advertiser_name || 'a worldwide store') + '</a>'; });
           tick.innerHTML = items.concat(items).join('');
         } else { tickFallback(tick); }
       }
@@ -211,6 +212,6 @@
   })();
   function tickFallback(tick) {
     var f = ['New season knitwear at <b>Stylewe</b>', 'Free shipping worldwide on <b>Noracora</b>', 'Up to <b>70% off</b> at The Luxury Closet', 'Verified deals, updated daily'];
-    tick.innerHTML = f.concat(f).map(function (x) { return '<span class="ticker-item">' + x + '</span>'; }).join('');
+    tick.innerHTML = f.concat(f).map(function (x) { return '<a class="ticker-item" href="pages/deals.html">' + x + '</a>'; }).join('');
   }
 })();
