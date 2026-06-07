@@ -30,6 +30,13 @@ async function init() {
     CREATE INDEX IF NOT EXISTS idx_price ON products(price);
     CREATE INDEX IF NOT EXISTS idx_sale_upd ON products(on_sale, updated_at);
   `);
+  // Fast text search: trigram indexes make `name/brand ILIKE '%q%'` index-accelerated.
+  // Guarded so a missing extension can never block startup.
+  try {
+    await pool.query('CREATE EXTENSION IF NOT EXISTS pg_trgm');
+    await pool.query('CREATE INDEX IF NOT EXISTS idx_name_trgm ON products USING gin (name gin_trgm_ops)');
+    await pool.query('CREATE INDEX IF NOT EXISTS idx_brand_trgm ON products USING gin (brand gin_trgm_ops)');
+  } catch (e) { console.error('[search index] skipped:', e.message); }
 }
 
 async function upsertMany(products, runStamp) {

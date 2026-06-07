@@ -10,7 +10,8 @@ const https = require('https');
 const http = require('http');
 const zlib = require('zlib');
 
-let _cache = { at: 0, data: null };
+let _cache = { at: 0, data: [] };
+let _fetching = false;
 
 function fetchText(url, redirects) {
   redirects = redirects || 0;
@@ -92,15 +93,24 @@ function parse(xml) {
   });
 }
 
-async function getCoupons(limit) {
+function refresh() {
   const url = process.env.COUPON_FEED_URL;
-  if (!url) return null; // not configured -> caller falls back to the API
-  if (_cache.data && Date.now() - _cache.at < 3600000) return _cache.data.slice(0, limit || 60);
-  const xml = await fetchText(url);
-  let coupons = await parse(xml);
-  coupons = coupons.filter((c) => !c.status || c.status === 'active');
-  _cache = { at: Date.now(), data: coupons };
-  return coupons.slice(0, limit || 60);
+  if (!url || _fetching) return;
+  _fetching = true;
+  fetchText(url).then(parse).then(function (coupons) {
+    _cache = { at: Date.now(), data: coupons.filter(function (c) { return !c.status || c.status === 'active'; }) };
+  }).catch(function (e) { console.error('[coupon-feed] refresh', e.message); }).then(function () { _fetching = false; });
 }
+
+// Returns the cached coupons immediately (never blocks a request). Triggers a
+// background refresh when the cache is stale.
+function getCoupons(limit) {
+  if (!process.env.COUPON_FEED_URL) return null;
+  if (Date.now() - _cache.at > 86400000) refresh();
+  return (_cache.data || []).slice(0, limit || 60);
+}
+
+// Warm the cache at startup and refresh hourly, in the background.
+if (process.env.COUPON_FEED_URL) { refresh(); setInterval(refresh, 86400000); }
 
 module.exports = { getCoupons };
