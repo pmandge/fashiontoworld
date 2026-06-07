@@ -225,7 +225,7 @@
   <div class="container">
     <p class="section-eyebrow" style="justify-content:center;display:flex">Updated Daily</p>
     <h1>Fashion Deals &<br><em>Exclusive Codes</em></h1>
-    <p>Save big with verified coupons from 200+ top fashion brands.</p>
+    <p>Verified promo codes and hand-picked sale deals from worldwide-shipping stores — updated daily.</p>
   </div>
 </section>
 
@@ -239,8 +239,8 @@
         <div class="deals-stat-label">Active Deals</div>
       </div>
       <div class="deals-stat">
-        <div class="deals-stat-num" id="stat-brands">200+</div>
-        <div class="deals-stat-label">Brands</div>
+        <div class="deals-stat-num" id="stat-brands">—</div>
+        <div class="deals-stat-label">Stores</div>
       </div>
       <div class="deals-stat">
         <div class="deals-stat-num" id="stat-savings">60%</div>
@@ -285,38 +285,68 @@ async function loadDeals(filter = 'all') {
   const grid = document.getElementById('dealsGrid');
   grid.innerHTML = '<div class="loading-skeleton" style="height:200px"></div>'.repeat(6);
 
-  // Fetch all deals once; filter client-side so the buttons always work.
-  const data = await AdmitadAPI.getCoupons({ limit: 60 });
-  let coupons = data?.coupons || [];
+  const [cData, pData] = await Promise.all([
+    AdmitadAPI.getCoupons({ limit: 60 }).catch(() => null),
+    fetch((window.API_BASE || '') + '/api/products/top-deals').then(r => r.ok ? r.json() : null).catch(() => null)
+  ]);
+  const coupons = (cData && cData.coupons) || [];
+  const products = (pData && pData.products) || [];
 
-  // Client-side filtering by type
-  if (filter !== 'all') {
-    coupons = coupons.filter(c => {
-      const name = (c.name || '').toLowerCase();
-      const type = (c.type || '').toLowerCase();
-      if (filter === 'code') return !!c.promocode;
-      if (filter === 'sale') return type === 'sale' || /sale|off|%|discount/.test(name);
-      if (filter === 'freeship') return /free ship|free deliver|shipping/.test(name);
-      if (filter === 'luxury') return /luxury|designer|premium/.test(name) || /luxury closet|symbol|italo/.test((c.advertiser_name||'').toLowerCase());
-      if (filter === 'highstreet') return !/luxury|designer/.test(name);
-      return true;
-    });
-  }
+  // ---- data-driven stats ----
+  const advSet = new Set();
+  coupons.forEach(c => { if (c.advertiser_name) advSet.add(c.advertiser_name.replace(/\s*WW$/i, '').trim()); });
+  products.forEach(p => { if (p.advertiser) advSet.add(p.advertiser); });
+  let maxDisc = 0;
+  coupons.forEach(c => { const m = (c.discount || '').match(/(\d+)\s*%/); if (m) maxDisc = Math.max(maxDisc, +m[1]); });
+  products.forEach(p => { if (p.price_old && p.price_old > p.price) maxDisc = Math.max(maxDisc, Math.round((1 - p.price / p.price_old) * 100)); });
+  document.getElementById('stat-deals').textContent = (coupons.length + products.length) || '—';
+  const sb = document.getElementById('stat-brands'); if (sb) sb.textContent = advSet.size || '—';
+  const ss = document.getElementById('stat-savings'); if (ss) ss.textContent = maxDisc ? (maxDisc + '%') : '—';
 
-  document.getElementById('stat-deals').textContent = (data?.total || (data?.coupons||[]).length) + '';
+  // ---- filter -> items ----
+  let items = [];
+  if (filter === 'code') items = coupons.map(couponCard);
+  else if (filter === 'sale') items = products.map(productCard);
+  else if (filter === 'freeship') items = coupons.filter(c => /free ship|free deliver|shipping/.test((c.name || '').toLowerCase())).map(couponCard);
+  else if (filter === 'luxury') items = products.filter(p => /luxury closet|symbol|italo/.test((p.advertiser || '').toLowerCase())).map(productCard).concat(coupons.filter(c => /luxury|designer|premium/.test((c.name || '').toLowerCase())).map(couponCard));
+  else if (filter === 'highstreet') items = products.filter(p => !/luxury closet|symbol|italo/.test((p.advertiser || '').toLowerCase())).map(productCard);
+  else items = products.map(productCard).concat(coupons.map(couponCard));
 
-  if (!coupons.length) {
+  if (!items.length) {
     grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:60px;text-align:center;color:#888"><p>No deals in this category right now. Try another filter — we update deals daily.</p></div>';
     return;
   }
+  grid.innerHTML = items.join('');
+}
 
-  grid.innerHTML = coupons.map(c => {
-    const title = (c.name || '').length > 90 ? c.name.slice(0, 88) + '…' : c.name;
-    const initial = (c.advertiser_name || '?').trim().charAt(0).toUpperCase();
-    const logoHtml = c.logo
-      ? `<img src="${c.logo}" alt="${c.advertiser_name}" class="deal-logo-img" loading="lazy" onerror="this.parentNode.innerHTML='${initial}'">`
-      : initial;
-    return `
+function productCard(p) {
+  const disc = (p.price_old && p.price_old > p.price) ? Math.round((1 - p.price / p.price_old) * 100) : 0;
+  const img = p.image_url || '';
+  const price = p.price_display || (p.price ? ('$' + p.price) : '');
+  const was = p.price_old ? (p.price_old_display || ('$' + p.price_old)) : '';
+  const link = p.affiliate_url || p.url || '';
+  const href = /^https?:/i.test(link) ? link : '#';
+  const title = (p.name || '').length > 88 ? p.name.slice(0, 86) + '…' : (p.name || '');
+  return `
+    <div class="deal-card" data-type="sale">
+      <div class="deal-card-head">
+        <div class="deal-store-row"><span class="deal-store">${p.advertiser || ''}</span></div>
+        <span class="deal-type sale">${disc ? '-' + disc + '%' : 'Sale'}</span>
+      </div>
+      <div style="height:160px;border-radius:10px;margin:6px 0 12px;background:#efe9df center/contain no-repeat${img ? ` url('${img}')` : ''}"></div>
+      <h3 class="deal-title" style="font-size:16px">${title}</h3>
+      <p class="deal-desc">${price}${was ? ` <s style="color:#aaa">${was}</s>` : ''}</p>
+      ${href !== '#' ? `<a href="${href}" class="deal-action" target="_blank" rel="noopener sponsored nofollow">Shop ›</a>` : `<span class="deal-action" style="opacity:.55;cursor:default">Unavailable</span>`}
+    </div>`;
+}
+
+function couponCard(c) {
+  const title = (c.name || '').length > 90 ? c.name.slice(0, 88) + '…' : c.name;
+  const initial = (c.advertiser_name || '?').trim().charAt(0).toUpperCase();
+  const logoHtml = c.logo
+    ? `<img src="${c.logo}" alt="${c.advertiser_name}" class="deal-logo-img" loading="lazy" onerror="this.parentNode.textContent='${initial}'">`
+    : initial;
+  return `
     <div class="deal-card" data-type="${c.type || 'code'}">
       <div class="deal-card-head">
         <div class="deal-store-row">
@@ -329,17 +359,12 @@ async function loadDeals(filter = 'all') {
       <p class="deal-desc">${c.description || 'Limited time offer. Shop and save now.'}</p>
       ${c.expires_at ? `<p class="deal-expires">Expires: <span>${formatDate(c.expires_at)}</span></p>` : ''}
       ${c.promocode
-        ? `<div class="deal-code-box" onclick="copyCode('${c.promocode}', this)">
-             <span class="deal-code-text">${c.promocode}</span>
-             <button class="deal-copy-btn">Copy</button>
-           </div>`
-        : `<p class="no-code-note">✓ No code needed — discount applied automatically</p>`
-      }
+        ? `<div class="deal-code-box" onclick="copyCode('${c.promocode}', this)"><span class="deal-code-text">${c.promocode}</span><button class="deal-copy-btn">Copy</button></div>`
+        : `<p class="no-code-note">✓ No code needed — discount applied automatically</p>`}
       ${/^https?:/i.test(c.url || '')
         ? `<a href="${c.url}" class="deal-action" target="_blank" rel="noopener sponsored nofollow">Get Deal ›</a>`
         : `<span class="deal-action" style="opacity:.55;cursor:default">Deal Unavailable</span>`}
-    </div>
-  `; }).join('');
+    </div>`;
 }
 
 function filterDeals(type, btn) {
