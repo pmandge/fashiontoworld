@@ -907,3 +907,6 @@ html, body { max-width: 100%; overflow-x: hidden; }
 img, video { max-width: 100%; }
 /* Keep the language menu on-screen on small viewports */
 @media (max-width: 560px){ #langMenu{ right:8px !important; } }
+
+/* Empty results message (never a blank gap) */
+.empty-state{grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--text-muted,#6b6b6b);font-size:15px;line-height:1.6}
