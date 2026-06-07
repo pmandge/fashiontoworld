@@ -187,31 +187,31 @@
     var tick = document.getElementById('tick');
     var deals = document.getElementById('todaysDeals');
     if (!API || (!tick && !deals)) return;
-    try {
-      var data = await API.getCoupons({ limit: 12 });
-      var cs = (data && data.coupons) || [];
-      if (tick) {
+
+    // Ticker: real promo codes from the coupon feed
+    if (tick) {
+      try {
+        var data = await API.getCoupons({ limit: 12 });
+        var cs = (data && data.coupons) || [];
         if (cs.length) {
           var items = cs.map(function (c) { var u = c.url || 'pages/deals.html'; var out = /^https?:/i.test(u); return '<a class="ticker-item" href="' + u + '"' + (out ? ' target="_blank" rel="sponsored nofollow noopener"' : '') + '><b>' + esc(shortOffer(c)) + '</b> at ' + esc(c.advertiser_name || 'a worldwide store') + '</a>'; });
           tick.innerHTML = items.concat(items).join('');
         } else { tickFallback(tick); }
-      }
-      if (deals) {
-        if (cs.length) {
-          deals.innerHTML = cs.slice(0, 8).map(function (c) {
-            var href = c.url || '#';
-            return '<a class="deal-card" href="' + href + '" target="_blank" rel="sponsored nofollow noopener" style="text-decoration:none">' +
-              '<div class="deal-head">' +
-                (c.logo ? '<img class="deal-logo" src="' + esc(c.logo) + '" alt="' + esc(c.advertiser_name || '') + '" loading="lazy" onerror="this.remove()">' : '<span class="deal-logo deal-logo-ph">' + esc((c.advertiser_name || 'S').charAt(0)) + '</span>') +
-                '<span class="store">' + esc(c.advertiser_name || 'Store') + '</span>' +
-              '</div>' +
-              '<div class="deal-offer">' + esc(shortOffer(c)) + '</div>' +
-              '<span class="deal-code">' + esc(c.promocode || 'No code') + '</span>' +
-              '<span class="deal-link">View <span class="arr">&#8594;</span></span></a>';
-          }).join('');
-        } else { hideSection(deals); }
-      }
-    } catch (e) { if (tick) tickFallback(tick); if (deals) hideSection(deals); }
+      } catch (e) { tickFallback(tick); }
+    }
+
+    // Today's Top Deals: one top-discounted product per store (variety across all 13 stores)
+    if (deals) {
+      deals.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8);
+      try {
+        var base = window.API_BASE || '';
+        var r = await fetch(base + '/api/products/top-deals');
+        var dd = r.ok ? await r.json() : null;
+        var dp = (dd && dd.products) || [];
+        if (dp.length) { deals.innerHTML = dp.map(function (p) { return pcard(p, {}); }).join(''); }
+        else { hideSection(deals); }
+      } catch (e) { hideSection(deals); }
+    }
   })();
   function tickFallback(tick) {
     var f = ['New season knitwear at <b>Stylewe</b>', 'Free shipping worldwide on <b>Noracora</b>', 'Up to <b>70% off</b> at The Luxury Closet', 'Verified deals, updated daily'];
