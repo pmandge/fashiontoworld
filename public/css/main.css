@@ -181,11 +181,8 @@ em { font-style: italic; }
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: 0 16px 50px rgba(0,0,0,0.13);
-  padding: 24px 28px;
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(var(--mega-rows, 4), auto);
-  gap: 6px 36px;
+  padding: 22px 26px;
+  display: block;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s, transform 0.2s;
@@ -202,6 +199,21 @@ em { font-style: italic; }
   top: -14px; left: 0; right: 0; height: 14px;
 }
 .mega-group { break-inside: avoid; min-width: 150px; }
+.mega-list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(var(--mega-rows, 7), auto);
+  gap: 2px 44px;
+}
+.mega-list a {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 6px 0;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.mega-list a:hover { color: var(--black); }
 .mega-group h5 {
   font-family: var(--font-sans);
   font-size: 11px;
