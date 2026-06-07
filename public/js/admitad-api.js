@@ -82,6 +82,8 @@ const AdmitadAPI = (() => {
       gender: opts.gender || '',
       brand: opts.brand || '',
       advertiser: opts.advertiser || '',
+      color: opts.color || '',
+      size: opts.size || '',
       sale: opts.sale || '',
       minprice: opts.minprice || '',
       maxprice: opts.maxprice || '',
@@ -124,6 +126,11 @@ const AdmitadAPI = (() => {
    */
   async function getCategories() {
     return request('/categories');
+  }
+
+  // Distinct worldwide stores with live product counts
+  async function getStores() {
+    return request('/stores', {});
   }
 
   /**
@@ -649,6 +656,7 @@ const AdmitadAPI = (() => {
     getProducts,
     getCoupons,
     getBrands,
+    getStores,
     getCategories,
     getAffiliateLink,
     getStats,

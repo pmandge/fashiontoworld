@@ -56,8 +56,8 @@
     var edits = [
       { n: 'Vacation', img: '1523381210434-271e8be1f52b', href: 'pages/women.html?cat=Swimwear' },
       { n: 'Wedding Guest', img: '1566174053879-31528523f8ae', href: 'pages/women.html?cat=Dresses' },
-      { n: 'Workwear', img: '1507003211169-0a1dd7228f2d', href: 'pages/men.html' },
-      { n: 'Date Night', img: '1529139574466-a303027c1d8b', href: 'pages/women.html?cat=Dresses' },
+      { n: 'Workwear', img: '1469334031218-e382a71b716b', href: 'pages/men.html' },
+      { n: 'Date Night', img: '1539109136881-3be0616acf4b', href: 'pages/women.html?cat=Dresses' },
       { n: 'Athleisure', img: '1483721310020-03333e577078', href: 'pages/women.html' }
     ];
     el.innerHTML = edits.map(function (e) {

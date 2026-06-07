@@ -26,7 +26,7 @@
   if (!API || !grid || !sidebar) return;
 
   var state = {
-    sub: '', sale: false, brands: new Set(), advertiser: '',
+    sub: '', sale: false, brands: new Set(), advertiser: '', colors: new Set(), sizes: new Set(),
     minp: '', maxp: '', sort: 'popularity', page: 1
   };
 
@@ -59,6 +59,14 @@
       '<input type="text" class="mf-search" id="mfBrandSearch" placeholder="Search brands\u2026">' +
       '<div class="mf-opts" id="mfBrands"><p class="mf-muted">Loading brands\u2026</p></div>' +
     '</div>' +
+    '<div class="mf-block" id="mfColorBlock" style="display:none">' +
+      '<div class="mf-head">Colour</div>' +
+      '<div class="mf-swatches" id="mfColors"></div>' +
+    '</div>' +
+    '<div class="mf-block" id="mfSizeBlock" style="display:none">' +
+      '<div class="mf-head">Size</div>' +
+      '<div class="mf-sizes" id="mfSizes"></div>' +
+    '</div>' +
     '<div class="mf-block">' +
       '<label class="mf-toggle" id="mfSale"><span>On sale only</span><span class="mf-tg"></span></label>' +
     '</div>';
@@ -87,6 +95,14 @@
   var pillsBox = document.getElementById('mfPills');
   var activeBlock = document.getElementById('mfActiveBlock');
   var sortSel = document.getElementById('mfSort');
+  var colorBox = document.getElementById('mfColors');
+  var sizeBox = document.getElementById('mfSizes');
+  var colorBlock = document.getElementById('mfColorBlock');
+  var sizeBlock = document.getElementById('mfSizeBlock');
+  function escA(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function colorHex(name){var m={black:'#222',white:'#efe9da',grey:'#9a9a9a',gray:'#9a9a9a',red:'#b23b3b',blue:'#3b5b9b',navy:'#243b66',green:'#3b7d5b',beige:'#d8c5a8',brown:'#6b4a2f',pink:'#d98fb0',purple:'#7d5ba6',gold:'#c9a84c',silver:'#c8c8c8',yellow:'#e3c34a',orange:'#d98841',cream:'#efe9d8',tan:'#c8a97a'};var k=(name||'').toLowerCase().trim();if(m[k])return m[k];var hit=Object.keys(m).filter(function(x){return k.indexOf(x)>-1;})[0];return hit?m[hit]:'#bbb';}
+  function renderColors(cols){if(!colorBox||!cols.length)return;colorBlock.style.display='';colorBox.innerHTML=cols.map(function(c){return '<button class="mf-sw'+(state.colors.has(c)?' on':'')+'" data-c="'+escA(c)+'" title="'+escA(c)+'" style="background:'+colorHex(c)+'"></button>';}).join('');colorBox.querySelectorAll('.mf-sw').forEach(function(b){b.onclick=function(){var c=b.getAttribute('data-c');if(state.colors.has(c)){state.colors.delete(c);b.classList.remove('on');}else{state.colors.add(c);b.classList.add('on');}load(true);};});}
+  function renderSizes(szs){if(!sizeBox||!szs.length)return;sizeBlock.style.display='';sizeBox.innerHTML=szs.map(function(s){return '<button class="mf-size'+(state.sizes.has(s)?' on':'')+'" data-s="'+escA(s)+'">'+escA(s)+'</button>';}).join('');sizeBox.querySelectorAll('.mf-size').forEach(function(b){b.onclick=function(){var s=b.getAttribute('data-s');if(state.sizes.has(s)){state.sizes.delete(s);b.classList.remove('on');}else{state.sizes.add(s);b.classList.add('on');}load(true);};});}
 
   if (state.sale) saleTg.classList.add('on');
   if (state.minp) { minR.value = state.minp; minN.value = state.minp; }
@@ -118,10 +134,12 @@
   if (sortSel) sortSel.onchange = function () { state.sort = this.value; load(true); };
   brandSearch.oninput = function () { renderBrands(this.value); };
   document.getElementById('mfClear').onclick = function () {
-    state.sub = ''; state.sale = false; state.brands.clear(); state.advertiser = '';
+    state.sub = ''; state.sale = false; state.brands.clear(); state.advertiser = ''; state.colors.clear(); state.sizes.clear();
     state.minp = ''; state.maxp = '';
     minR.value = 0; maxR.value = PRICE_CAP; minN.value = ''; maxN.value = ''; paintRange();
     saleTg.classList.remove('on');
+    if (colorBox) colorBox.querySelectorAll('.on').forEach(function (x) { x.classList.remove('on'); });
+    if (sizeBox) sizeBox.querySelectorAll('.on').forEach(function (x) { x.classList.remove('on'); });
     document.querySelectorAll('.subcat-btn').forEach(function (b, idx) { b.classList.toggle('active', idx === 0); });
     renderBrands(brandSearch.value);
     load(true);
@@ -135,6 +153,10 @@
       allBrands = [].concat.apply([], (data && data.products ? data.products : []).map(function (p) { return p.brand ? [p.brand] : []; }));
       allBrands = Array.from(new Set(allBrands)).sort();
       renderBrands('');
+      var prods = (data && data.products) ? data.products : [];
+      var cols = Array.from(new Set(prods.map(function (x) { return (x.color || '').trim(); }).filter(Boolean))).slice(0, 14);
+      var szs = Array.from(new Set(prods.map(function (x) { return (x.size || '').trim(); }).filter(Boolean))).slice(0, 14);
+      renderColors(cols); renderSizes(szs);
     } catch (e) { brandBox.innerHTML = '<p class="mf-muted">\u2014</p>'; }
   }
   function renderBrands(q) {
@@ -159,6 +181,8 @@
     var items = [];
     if (state.sub) items.push(['Category', state.sub, function () { state.sub = ''; document.querySelectorAll('.subcat-btn').forEach(function (b, idx) { b.classList.toggle('active', idx === 0); }); }]);
     state.brands.forEach(function (b) { items.push(['Brand', b, function () { state.brands.delete(b); renderBrands(brandSearch.value); }]); });
+    state.colors.forEach(function (c) { items.push(['Colour', c, function () { state.colors.delete(c); var x = colorBox && colorBox.querySelector('[data-c="' + c + '"]'); if (x) x.classList.remove('on'); }]); });
+    state.sizes.forEach(function (s) { items.push(['Size', s, function () { state.sizes.delete(s); var x = sizeBox && sizeBox.querySelector('[data-s="' + s + '"]'); if (x) x.classList.remove('on'); }]); });
     if (state.advertiser) items.push(['Store', state.advertiser, function () { state.advertiser = ''; }]);
     if (state.sale) items.push(['', 'On sale', function () { state.sale = false; saleTg.classList.remove('on'); }]);
     if (state.minp || state.maxp) items.push(['Price', '$' + (state.minp || 0) + '\u2013$' + (state.maxp || PRICE_CAP + '+'), function () { state.minp = ''; state.maxp = ''; minR.value = 0; maxR.value = PRICE_CAP; minN.value = ''; maxN.value = ''; paintRange(); }]);
@@ -181,6 +205,7 @@
     var data = await API.getProducts({
       category: CATEGORY, gender: GENDER, subcategory: state.sub,
       brand: Array.from(state.brands).join(','), advertiser: state.advertiser,
+      color: Array.from(state.colors).join(','), size: Array.from(state.sizes).join(','),
       sale: state.sale ? 'true' : '', minprice: state.minp, maxprice: state.maxp,
       page: state.page, limit: 24, sort: state.sort
     });
