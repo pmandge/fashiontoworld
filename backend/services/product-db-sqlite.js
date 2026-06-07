@@ -107,4 +107,11 @@ function advertiserCounts() {
   return rows.map(x => ({ name: x.advertiser, count: x.n }));
 }
 
-module.exports = { init, upsertMany, pruneOld, query, distinctBrands, setBrandLogo, stats, advertiserCounts };
+async function subcategoryFacets() {
+  const rows = db.prepare(`SELECT category, subcategory, COUNT(*) c FROM products WHERE subcategory IS NOT NULL AND subcategory <> '' AND category IS NOT NULL AND category <> '' GROUP BY category, subcategory ORDER BY c DESC`).all();
+  const out = {};
+  for (const row of rows) { (out[row.category] = out[row.category] || []).push({ name: row.subcategory, count: row.c }); }
+  return out;
+}
+
+module.exports = { init, upsertMany, pruneOld, query, distinctBrands, setBrandLogo, stats, advertiserCounts, subcategoryFacets };
