@@ -48,7 +48,7 @@ ul { list-style: none; }
 
 /* CONTAINER */
 .container {
-  max-width: var(--max-w);
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 40px;
 }
@@ -110,7 +110,7 @@ em { font-style: italic; }
 .nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
 
 .nav-inner {
-  max-width: var(--max-w);
+  max-width: 1460px;
   margin: 0 auto;
   padding: 0 32px;
   height: var(--nav-h);
@@ -886,3 +886,12 @@ em { font-style: italic; }
 .mf-chev{transition:transform .2s;font-size:11px;color:var(--text-muted,#6b6b6b)}
 .mf-block.collapsed .mf-chev{transform:rotate(-90deg)}
 .mf-block.collapsed > *:not(.mf-head){display:none}
+
+/* ===== Nav fit + mobile hardening ===== */
+/* Desktop (>1240px): links are shown with hover mega-menus, so hide the redundant burger */
+@media (min-width: 1241px){ .nav-burger{ display:none !important } }
+/* Never allow accidental sideways scroll on mobile */
+html, body { max-width: 100%; overflow-x: hidden; }
+img, video { max-width: 100%; }
+/* Keep the language menu on-screen on small viewports */
+@media (max-width: 560px){ #langMenu{ right:8px !important; } }
