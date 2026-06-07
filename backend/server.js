@@ -158,6 +158,24 @@ const FASHION_EXCLUDE = ['electronics','laptop','smartphone','gadget','flight','
 const { shipsWorldwide } = require('./config/worldwide-stores');
 const couponFeed = require('./services/coupon-feed');
 
+app.get('/api/products/top-deals', async (req, res) => {
+  try {
+    res.set('Cache-Control', 'public, max-age=600');
+    if (Date.now() - _topDeals.at > 1800000) refreshTopDeals();
+    const toCur = (req.query.currency || (req.geo && req.geo.currency) || 'USD').toUpperCase();
+    const prods = await Promise.all((_topDeals.data || []).map(async function (p0) {
+      const p = Object.assign({}, p0);
+      try {
+        const c = await currency.convert(p.price, (p.currency || 'EUR').toUpperCase(), toCur);
+        p.price_display = c.formatted;
+        if (p.price_old) { const co = await currency.convert(p.price_old, (p.currency || 'EUR').toUpperCase(), toCur); p.price_old_display = co.formatted; }
+      } catch (e) {}
+      return p;
+    }));
+    res.json({ products: prods, total: prods.length });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/brands/top', async (req, res) => {
   try {
     res.set('Cache-Control', 'public, max-age=600');
@@ -187,7 +205,17 @@ app.get('/api/admitad/coupons', async (req, res) => {
     if (process.env.COUPON_FEED_URL) {
       try {
         const fed = await couponFeed.getCoupons(Math.max(limit, 60));
-        if (fed && fed.length) return res.json({ coupons: fed.slice((page - 1) * limit, page * limit), total: fed.length, source: 'feed' });
+        if (fed && fed.length) {
+          // Diversify by store: one coupon per advertiser first, then the rest,
+          // so the deals grid shows variety instead of mostly AliExpress.
+          const seen = {}, firstPass = [], rest = [];
+          fed.forEach(function (c) {
+            const a = (c.advertiser_name || c.id || '').toLowerCase();
+            if (!seen[a]) { seen[a] = 1; firstPass.push(c); } else { rest.push(c); }
+          });
+          const ordered = firstPass.concat(rest);
+          return res.json({ coupons: ordered.slice((page - 1) * limit, page * limit), total: ordered.length, source: 'feed' });
+        }
       } catch (e) { console.error('[coupon-feed]', e.message); }
     }
     const type = req.query.type;
@@ -250,6 +278,26 @@ app.get('/api/admitad/coupons', async (req, res) => {
 const productDb = require('./services/product-db');
 let _subcatCache = { at: 0, data: null };
 let _brandsCache = { at: 0, data: null };
+let _topDeals = { at: 0, data: [] };
+let _tdFetching = false;
+async function refreshTopDeals() {
+  if (_tdFetching) return; _tdFetching = true;
+  try {
+    const stores = (await productDb.advertiserCounts()).slice(0, 12);
+    const out = [];
+    for (const s of stores) {
+      try {
+        const r = await productDb.query({ advertiser: s.name, onSale: true, sort: 'discount', limit: 1 });
+        const pr = r && r.products && r.products[0];
+        if (pr && pr.price_old && pr.price_old > pr.price) out.push(pr);
+      } catch (e) {}
+    }
+    _topDeals = { at: Date.now(), data: out };
+  } catch (e) { console.error('[top-deals]', e.message); }
+  finally { _tdFetching = false; }
+}
+setTimeout(function () { refreshTopDeals(); }, 6000);
+setInterval(function () { refreshTopDeals(); }, 1800000);
 const { startProductSync, getStatus, syncAllFeeds } = require('./services/product-sync');
 const currency = require('./services/currency');
 
