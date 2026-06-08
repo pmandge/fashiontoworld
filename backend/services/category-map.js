@@ -12,9 +12,9 @@
 
 const CATEGORY_RULES = [
   { cat: 'shoes',       kw: ['shoe','sneaker','boot','heel','sandal','loafer','espadrille','mule','uggs','ballet flat','slides','flip flop','moccasin','trainers','pumps'] },
-  { cat: 'bags',        kw: ['handbag','bag','clutch','backpack','tote','purse','wallet','briefcase','satchel','messenger','belt bag','mini bag','travel bag'] },
+  { cat: 'bags',        kw: ['handbag','bag','clutch','backpack','tote','purse','wallet','briefcase','satchel','messenger','belt bag','mini bag','travel bag','pouch','cosmetic bag','cosmetic case','vanity case','makeup bag'] },
   { cat: 'jewellery',   kw: ['ring','necklace','earring','bracelet','brooch','jewel','watch','pendant','keyring','anklet','cufflink'] },
-  { cat: 'accessories', kw: ['belt','scarf','scarves','glove','hat','cap','beanie','sunglass','glasses','tie','umbrella','hair accessor','bow tie','pocket square','bucket hat','bowler'] },
+  { cat: 'accessories', kw: ['belt','scarf','scarves','glove','hat','cap','beanie','sunglass','sunglasses','eyewear','eyeglass','reading glasses','tie','umbrella','hair accessor','bow tie','pocket square','bucket hat','bowler'] },
   { cat: 'beauty',      kw: ['fragrance','perfume','parfum','cologne','eau de','cosmetic','beauty','makeup','lipstick','mascara','foundation','concealer','eyeshadow','eyeliner','blush','skincare','serum','moisturiser','moisturizer','cleanser','shampoo','conditioner','lotion','nail polish','nail lacquer','palette'] },
   { cat: 'kids',        kw: ['baby','babies','kids','child','children','toddler','infant','animal clothing'] },
 ];
@@ -47,10 +47,14 @@ function detectGender(text, feedGender) {
   return '';
 }
 
+// Non-fashion homeware/drinkware that some stores list — excluded from the catalogue.
+const NON_FASHION_RE = /(?:wine|whisk(?:e)?y|cognac|champagne|crystal|water|shot|cocktail|beer)\s+glass|set of[^.]*glass|glass(?:es)?\s+\d+\s*pcs|\b(?:decanter|tumbler|goblet|carafe)\b|(?:aroma|reed)\s+diffuser|scented candle|(?:interior|home|textile|room)\s+perfum|perfum\w*\s+(?:spray\s+)?for home|spray for home|home fragrance|\b(?:vase|cushion|duvet|bedding|tableware|dinnerware|cutlery|cookware|candlestick|incense|figurine|ashtray|coaster|placemat)\b/i;
+
 // typeText: name (+ feed category) — clean signal for product TYPE.
 // genderText: extra text (description) — only used for gender.
 function mapCategory(typeText, genderText, genderHint, advertiser) {
   const n = (typeText || '').toLowerCase();
+  if (NON_FASHION_RE.test(n)) return 'excluded';
   const byCat = {}; CATEGORY_RULES.forEach(r => { byCat[r.cat] = r.kw; });
   const hit = (kw) => kw && kw.some(k => n.includes(k));
   function genderCat() {
