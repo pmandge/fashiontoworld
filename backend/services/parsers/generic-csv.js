@@ -18,6 +18,7 @@
 const https = require('https');
 const http = require('http');
 const readline = require('readline');
+const zlib = require('zlib');
 
 function splitCsvLine(line, delim) {
   const out = [];
@@ -48,7 +49,10 @@ function parse(feedUrl, opts, onRaw) {
     const req = lib.get(feedUrl, (res) => {
       if (res.statusCode === 301 || res.statusCode === 302) return parse(res.headers.location, opts, onRaw).then(resolve).catch(reject);
       if (res.statusCode !== 200) return reject(new Error(`feed HTTP ${res.statusCode}`));
-      const rl = readline.createInterface({ input: res, crlfDelay: Infinity });
+      const isGzip = /gzip/i.test(feedUrl) || /gzip/i.test(res.headers['content-encoding'] || '') || /gzip/i.test(res.headers['content-type'] || '');
+      let stream = res;
+      if (isGzip) { const gz = zlib.createGunzip(); res.pipe(gz); gz.on('error', reject); stream = gz; }
+      const rl = readline.createInterface({ input: stream, crlfDelay: Infinity });
       rl.on('line', (line) => {
         if (!header) {
           header = splitCsvLine(line, delim).map(h => h.trim().replace(/^"|"$/g, ''));
@@ -68,6 +72,7 @@ function parse(feedUrl, opts, onRaw) {
           currency: get('currency') || opts.currency || 'EUR',
           images: get('image_url') ? [get('image_url')] : [],
           url,
+          advertiser: get('advertiser'),
           feed_category: get('category'),
           gender: get('gender'), color: get('color'), size: get('size'),
         });
