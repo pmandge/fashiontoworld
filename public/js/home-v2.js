@@ -103,6 +103,7 @@
       'symbol': { d: 'symbolclothing.com', t: 'Essentials', cats: ['women', 'market'] },
       'alibaba': { d: 'alibaba.com', t: 'Marketplace', cats: ['market'] },
       'hacoo': { d: 'hacoo.com', t: 'Marketplace', cats: ['market'] },
+      'watches of usa': { d: 'watchesofusa.com', t: 'Watches', cats: ['luxury'] },
       'drippy': { d: '', t: 'Custom', cats: ['market'] }
     };
     function metaFor(name) { var n = (name || '').toLowerCase(); for (var k in META) { if (n.indexOf(k) > -1) return META[k]; } return { d: '', t: 'Worldwide store', cats: ['all'] }; }
