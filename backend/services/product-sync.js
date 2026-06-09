@@ -38,7 +38,7 @@ async function syncAllFeeds() {
       try {
         await parseFeed(feed, {}, (p) => {
           // Only keep products from worldwide-shipping stores
-          if (!shipsWorldwide(p.advertiser_name || feed.advertiser)) return;
+          if ((feed.network || 'admitad') === 'admitad' && !shipsWorldwide(p.advertiser_name || feed.advertiser)) return;
           if (p.category === 'excluded') return; // drop non-fashion homeware/drinkware
           batch.push(p); n++;
           if (batch.length >= 500) { const b = batch; batch = []; productDb.upsertMany(b, runStamp).catch(()=>{}); }

@@ -11,12 +11,12 @@
  */
 
 const CATEGORY_RULES = [
-  { cat: 'shoes',       kw: ['shoe','sneaker','boot','heel','sandal','loafer','espadrille','mule','uggs','ballet flat','slides','flip flop','moccasin','trainers','pumps'] },
-  { cat: 'bags',        kw: ['handbag','bag','clutch','backpack','tote','purse','wallet','briefcase','satchel','messenger','belt bag','mini bag','travel bag','pouch','cosmetic bag','cosmetic case','vanity case','makeup bag'] },
+  { cat: 'shoes',       kw: ['shoe','sneaker','boot','heel','sandal','loafer','espadrille','mule','uggs','ballet flat','slides','flip flop','moccasin','trainers','pumps','slipper','slippers','clogs','derby','oxford','brogue'] },
+  { cat: 'bags',        kw: ['handbag','bag','clutch','backpack','tote','purse','wallet','briefcase','satchel','messenger','belt bag','mini bag','travel bag','pouch','cosmetic bag','cosmetic case','vanity case','makeup bag','pochette','hobo','crossbody','shoulder bag','bucket bag','flap bag','birkin','baguette bag','saddle bag','top handle'] },
   { cat: 'jewellery',   kw: ['ring','necklace','earring','bracelet','brooch','jewel','watch','pendant','keyring','anklet','cufflink'] },
   { cat: 'accessories', kw: ['belt','scarf','scarves','glove','hat','cap','beanie','sunglass','sunglasses','eyewear','eyeglass','reading glasses','tie','umbrella','hair accessor','bow tie','pocket square','bucket hat','bowler'] },
-  { cat: 'beauty',      kw: ['fragrance','perfume','parfum','cologne','eau de','cosmetic','beauty','makeup','lipstick','mascara','foundation','concealer','eyeshadow','eyeliner','blush','skincare','serum','moisturiser','moisturizer','cleanser','shampoo','conditioner','lotion','nail polish','nail lacquer','palette'] },
   { cat: 'kids',        kw: ['baby','babies','kids','child','children','toddler','infant','animal clothing'] },
+  { cat: 'beauty',      kw: ['fragrance','perfume','parfum','cologne','eau de','makeup','lipstick','mascara','foundation','concealer','eyeshadow','eyeliner','skincare','serum','moisturiser','moisturizer','cleanser','shampoo','conditioner','nail polish','nail lacquer'] },
 ];
 
 const CLOTHING_HINT = ['dress','jean','trouser','pant','skirt','top','blouse','shirt','jacket','coat','blazer','sweater','hoodie','sweatshirt','cardigan','jumper','knit','t-shirt','tee','legging','short','suit','vest','poncho','bodysuit','lingerie','bra','panties','underwear','swimwear','swimsuit','bikini','pajama','nightgown','jumpsuit','co-ord','tracksuit','turtleneck','polo','parka','bomber','windbreaker','trench','fur','sheepskin','down jacket','raincoat','tights','socks','stockings','cape','gown','kimono','tunic','kaftan','overalls','dungarees'];
@@ -48,7 +48,7 @@ function detectGender(text, feedGender) {
 }
 
 // Non-fashion homeware/drinkware that some stores list — excluded from the catalogue.
-const NON_FASHION_RE = /(?:wine|whisk(?:e)?y|cognac|champagne|crystal|water|shot|cocktail|beer)\s+glass|set of[^.]*glass|glass(?:es)?\s+\d+\s*pcs|\b(?:decanter|tumbler|goblet|carafe)\b|(?:aroma|reed)\s+diffuser|scented candle|(?:interior|home|textile|room)\s+perfum|perfum\w*\s+(?:spray\s+)?for home|spray for home|home fragrance|perfumed home|home spray|home diffuser|room fragrance|\b(?:vase|cushion|duvet|bedding|tableware|dinnerware|cutlery|cookware|candlestick|incense|figurine|ashtray|coaster|placemat)\b/i;
+const NON_FASHION_RE = /(?:wine|whisk(?:e)?y|cognac|champagne|crystal|water|shot|cocktail|beer)\s+glass|set of[^.]*glass|glass(?:es)?\s+\d+\s*pcs|\b(?:decanter|tumbler|goblet|carafe)\b|(?:aroma|reed)\s+diffuser|scented candle|(?:interior|home|textile|room)\s+perfum|perfum\w*\s+(?:spray\s+)?for home|spray for home|home fragrance|perfume for textile|perfume for home|perfumed home|home spray|home diffuser|room fragrance|\b(?:vase|cushion|duvet|bedding|tableware|dinnerware|cutlery|cookware|candlestick|incense|figurine|ashtray|coaster|placemat)\b/i;
 
 // typeText: name (+ feed category) — clean signal for product TYPE.
 // genderText: extra text (description) — only used for gender.
@@ -122,7 +122,7 @@ function buildProduct(raw, opts) {
     name: name.trim(),
     description: desc.trim(),
     brand: (raw.brand || '').trim(),
-    advertiser_name: opts.advertiser || raw.brand || '',
+    advertiser_name: raw.advertiser || opts.advertiser || raw.brand || '',
     price: parseFloat(raw.price) || 0,
     price_old: raw.price_old ? parseFloat(raw.price_old) : null,
     currency: (raw.currency || 'EUR').trim(),
