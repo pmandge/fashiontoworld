@@ -157,6 +157,7 @@ app.get('/health', (req, res) => res.json({ status: 'ok', ts: new Date().toISOSt
 const FASHION_EXCLUDE = ['electronics','laptop','smartphone','gadget','flight','hotel','grocery','finance','bank','crypto','casino','betting','pharma','furniture','appliance','vpn','hosting'];
 const { shipsWorldwide } = require('./config/worldwide-stores');
 const couponFeed = require('./services/coupon-feed');
+const pinterestCatalog = require('./services/pinterest-catalog');
 
 app.get('/api/products/top-deals', async (req, res) => {
   try {
@@ -174,6 +175,15 @@ app.get('/api/products/top-deals', async (req, res) => {
     }));
     res.json({ products: prods, total: prods.length });
   } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.get('/api/pinterest/catalog.xml', async (req, res) => {
+  try {
+    res.set('Content-Type', 'application/xml; charset=utf-8');
+    res.set('Cache-Control', 'public, max-age=21600');
+    const xml = await pinterestCatalog.getFeed();
+    res.send(xml);
+  } catch (e) { res.status(500).send('<?xml version="1.0"?><error>' + e.message + '</error>'); }
 });
 
 app.get('/api/brands/top', async (req, res) => {
