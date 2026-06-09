@@ -22,6 +22,13 @@
  * ============================================================
  */
 
+const AWIN_COLUMNS = {
+  id: 'aw_product_id', name: 'product_name', description: 'description', brand: 'brand_name',
+  price: 'search_price', price_old: 'product_price_old', currency: 'currency',
+  image_url: 'aw_image_url', url: 'aw_deep_link', category: 'merchant_category',
+  color: 'colour', advertiser: 'merchant_name',
+};
+
 function fromEnv() {
   const raw = process.env.PRODUCT_FEEDS;
   if (!raw) return [];
@@ -30,7 +37,9 @@ function fromEnv() {
     // Support both new 4-field and old 2-field (advertiser|url) formats
     if (parts.length >= 4) {
       const [network, advertiser, format, url] = parts;
-      return { network, advertiser, format: format || 'admitad-yml', url };
+      const feed = { network, advertiser, format: format || 'admitad-yml', url };
+      if ((network || '').toLowerCase() === 'awin') { feed.format = 'generic-csv'; feed.columns = AWIN_COLUMNS; feed.delimiter = ','; }
+      return feed;
     }
     const [advertiser, url] = parts;
     return { network: 'admitad', advertiser, format: 'admitad-yml', url };
