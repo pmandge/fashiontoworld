@@ -16,12 +16,20 @@
     var href = a.getAttribute('href');
     if (!isOutbound(href)) return;
     if (typeof window.pintrk !== 'function') return;
-    var store = '';
-    try { store = new URL(href, location.href).hostname.replace(/^www\./, ''); } catch (e) {}
+    var store = '', pid = '';
+    try {
+      var u = new URL(href, location.href);
+      store = u.hostname.replace(/^www\./, '');
+      var h = 0, s = href; for (var i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) | 0; }
+      pid = store + '-' + Math.abs(h).toString(36);
+    } catch (e) { pid = 'outbound'; }
+    // prefer a real product id if the link/card exposes one
+    var dataPid = (a.getAttribute('data-pid')) || (a.closest('[data-id]') && a.closest('[data-id]').getAttribute('data-id'));
+    if (dataPid) pid = dataPid;
     // 'lead' = a qualified outbound click-through to a retailer (closest signal to a sale on an affiliate site)
     window.pintrk('track', 'lead', {
       lead_type: 'outbound_click',
-      line_items: [{ product_name: (a.textContent || '').trim().slice(0, 100), product_category: store }]
+      line_items: [{ product_id: pid, product_name: (a.textContent || '').trim().slice(0, 100), product_category: store }]
     });
   }, true);
 })();

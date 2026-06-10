@@ -640,6 +640,11 @@ const AdmitadAPI = (() => {
 
   async function initDatafeed() {
     animateTrustBar();
+    // Legacy loader: only fetch if the OLD page containers exist. The redesigned
+    // homepage (home-v2.js) and category pages (product-filter.js) use different
+    // IDs, so this no-ops and avoids ~7 wasteful fetches on every page load.
+    var legacy = ['categoryGrid','dtTrack','trendingProducts','dotdGrid','saleProducts','dealsPreview','storesGrid'];
+    if (!legacy.some(function (id) { return document.getElementById(id); })) return;
     await Promise.allSettled([
       populateCategories('categoryGrid'),
       populateDealsTicker('dtTrack'),

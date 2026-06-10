@@ -294,12 +294,23 @@ async function refreshTopDeals() {
   if (_tdFetching) return; _tdFetching = true;
   try {
     const stores = (await productDb.advertiserCounts()).slice(0, 12);
-    const out = [];
+    const out = []; const seen = {};
+    // one top-discount product per store (variety)
     for (const s of stores) {
       try {
         const r = await productDb.query({ advertiser: s.name, onSale: true, sort: 'discount', limit: 1 });
         const pr = r && r.products && r.products[0];
-        if (pr && pr.price_old && pr.price_old > pr.price) out.push(pr);
+        if (pr && pr.price_old && pr.price_old > pr.price && !seen[pr.id]) { seen[pr.id] = 1; out.push(pr); }
+      } catch (e) {}
+    }
+    // fill up to 10 with the most-discounted products overall
+    if (out.length < 10) {
+      try {
+        const more = await productDb.query({ onSale: true, sort: 'discount', limit: 40 });
+        for (const pr of ((more && more.products) || [])) {
+          if (out.length >= 10) break;
+          if (pr && pr.price_old && pr.price_old > pr.price && !seen[pr.id]) { seen[pr.id] = 1; out.push(pr); }
+        }
       } catch (e) {}
     }
     _topDeals = { at: Date.now(), data: out };

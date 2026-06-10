@@ -111,6 +111,13 @@ function mapSubcategory(text) {
 }
 
 // Standard product shape every parser must emit
+var STORE_ALIASES = {
+  'watch home awin first': 'Watch Home',
+  'shenzhen shibao jewelry co., ltd.': 'SilverBene',
+  'shenzhen shibao jewelry co.,ltd.': 'SilverBene',
+};
+function aliasStore(n) { var k = (n || '').toLowerCase().trim(); return STORE_ALIASES[k] || n; }
+
 function buildProduct(raw, opts) {
   const catName = raw.feed_category || '';
   const name = raw.name || '';
@@ -122,7 +129,7 @@ function buildProduct(raw, opts) {
     name: name.trim(),
     description: desc.trim(),
     brand: (raw.brand || '').trim(),
-    advertiser_name: raw.advertiser || opts.advertiser || raw.brand || '',
+    advertiser_name: aliasStore(raw.advertiser || opts.advertiser || raw.brand || ''),
     price: parseFloat(raw.price) || 0,
     price_old: raw.price_old ? parseFloat(raw.price_old) : null,
     currency: (raw.currency || 'EUR').trim(),

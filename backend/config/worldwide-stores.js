@@ -34,6 +34,8 @@ const DEFAULT_WORLDWIDE = [
   'AliExpress',
   'Alibaba',
   'Hacoo',
+  'The Deal',
+  'Watches Of USA',
   // add more vetted worldwide stores here...
 ];
 
