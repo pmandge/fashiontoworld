@@ -85,13 +85,13 @@
   border-color: var(--black);
 }
 
-.brand-card{display:block;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s;background:var(--white);text-decoration:none}
-.brand-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 14px 36px rgba(201,168,76,.16)}
-.brand-card-header{height:128px;background:linear-gradient(140deg,#faf8f3,#efe9dc);display:flex;align-items:center;justify-content:center;padding:20px;font-family:var(--font-serif);font-size:30px;color:#a8862f;border-bottom:1px solid var(--border)}
-.brand-card-header img{max-width:82%;max-height:64px;object-fit:contain}
-.brand-card-body{padding:15px 16px}
-.brand-card-name{font-family:var(--font-serif);font-size:18px;margin:0 0 3px;color:var(--black);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brand-card-meta{font-size:12px;color:var(--text-muted);margin:0}
+.brand-card{display:block;background:#221a11;border:1px solid rgba(201,168,76,.18);border-radius:14px;overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s;text-decoration:none;text-align:center;padding:16px}
+.brand-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 16px 38px rgba(0,0,0,.4)}
+.brand-card-header{height:84px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:14px;font-family:var(--font-serif);font-size:22px;color:#1a1410;margin-bottom:12px}
+.brand-card-header img{max-width:84%;max-height:54px;object-fit:contain}
+.brand-card-body{padding:0}
+.brand-card-name{font-family:var(--font-serif);font-size:18px;margin:0 0 3px;color:#faf8f3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-card-meta{font-size:11px;color:#c9a84c;letter-spacing:.04em;margin:0}
 
 .brands-count-bar {
   background: var(--cream);
@@ -104,6 +104,31 @@
 }
 .brands-count-bar p { font-size: 14px; color: var(--text-muted); }
 .brands-count-bar strong { color: var(--black); }
+
+.brand-hero-dark{background:#161009;color:#faf8f3;text-align:center}
+.brand-hero-dark .section-eyebrow{color:#c9a84c !important}
+.brand-hero-dark h1{color:#faf8f3}
+.brand-hero-dark h1 em{color:#e8d5a3}
+.brand-hero-dark .brands-search{max-width:460px;margin:24px auto 0}
+.brand-hero-dark .brands-search input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:#fff}
+.brand-hero-dark .brands-search input::placeholder{color:rgba(255,255,255,.45)}
+.brand-hero-dark .brands-search svg{color:rgba(255,255,255,.5)}
+.featured-head{font-family:var(--font-serif);font-size:26px;margin:0 0 18px;color:var(--black)}
+.featured-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:16px;margin-bottom:8px}
+.fbrand{display:block;background:#221a11;border:1px solid rgba(201,168,76,.18);border-radius:14px;padding:18px;text-decoration:none;text-align:center;transition:transform .25s,box-shadow .25s,border-color .25s}
+.fbrand:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.4)}
+.fbrand .lg{height:74px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:12px;margin-bottom:12px;color:#1a1410;font-family:var(--font-serif)}
+.fbrand .lg img{max-width:84%;max-height:48px;object-fit:contain}
+.fbrand .nm{font-family:var(--font-serif);font-size:17px;color:#faf8f3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fbrand .ct{font-size:11px;color:#c9a84c;letter-spacing:.04em;margin-top:2px}
+
+.brands-dark .alpha-btn{background:transparent;border-color:rgba(255,255,255,.16);color:rgba(255,255,255,.66)}
+.brands-dark .alpha-btn:hover,.brands-dark .alpha-btn.active{background:var(--gold);color:#1a1410;border-color:var(--gold)}
+.brands-dark .brands-count-bar{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)}
+.brands-dark .brands-count-bar p{color:rgba(255,255,255,.55)}
+.brands-dark .brands-count-bar strong{color:#faf8f3}
+.brands-dark .featured-head{color:#faf8f3}
+.brands-dark .empty-state{color:rgba(255,255,255,.6)}
 </style>
   <link rel="icon" type="image/svg+xml" href="/public/images/favicon.svg">
   <link rel="alternate icon" href="/public/images/favicon.svg">
@@ -161,7 +186,7 @@
   </div>
 </nav>
 
-<section class="page-hero">
+<section class="page-hero brand-hero-dark">
   <div class="container">
     <p class="section-eyebrow" style="justify-content:center;display:flex"><span id="heroBrandCount">Curated</span>&nbsp;Brands</p>
     <h1>Shop the World's<br><em>Best Brands</em></h1>
@@ -174,7 +199,14 @@
   </div>
 </section>
 
-<section class="section" style="padding-top:0">
+<section class="section brands-dark" style="padding-bottom:8px;background:#161009">
+  <div class="container">
+    <h2 class="featured-head">Popular Brands</h2>
+    <div class="featured-grid" id="featuredBrands"></div>
+  </div>
+</section>
+
+<section class="section brands-dark" style="padding-top:12px;background:#161009">
   <div class="container">
 
     <!-- tier tabs removed: not applicable to product brands -->
@@ -208,7 +240,7 @@
 // Real product brands from the catalogue (data-driven; stores are listed separately under Featured Stores).
 let allBrands = [];
 function ftwDom(n){return (n||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]/g,'')+'.com';}
-function logoImg(n){var i=((n||'?')[0]||'?').toUpperCase();return '<img src="https://logo.clearbit.com/'+ftwDom(n)+'" alt="'+n+'" loading="lazy" onerror="this.remove();this.parentNode.textContent=\''+i+'\'" style="max-width:82%;max-height:64px;object-fit:contain">';}
+function logoImg(n){var i=((n||'?')[0]||'?').toUpperCase();return '<img src="https://logo.clearbit.com/'+ftwDom(n)+'" alt="'+n+'" loading="lazy" onerror="this.remove();this.parentNode.textContent=\''+i+'\'" style="max-width:84%;max-height:50px;object-fit:contain">';}
 async function loadBrandList() {
   try {
     const base = window.API_BASE || '';
@@ -218,11 +250,22 @@ async function loadBrandList() {
   } catch (e) { allBrands = []; }
   filtered = [...allBrands];
   var hc = document.getElementById('heroBrandCount'); if (hc) hc.textContent = allBrands.length.toLocaleString();
+  renderFeatured(allBrands.slice(0, 12));
   renderBrands(allBrands);
 }
 
 let filtered = [...allBrands];
 let currentTier = 'all';
+
+function renderFeatured(list) {
+  var el = document.getElementById('featuredBrands'); if (!el) return;
+  el.innerHTML = list.map(function (b) {
+    return '<a href="search.html?q=' + encodeURIComponent(b.name) + '" class="fbrand">' +
+      '<div class="lg">' + logoImg(b.name) + '</div>' +
+      '<div class="nm">' + b.name + '</div>' +
+      '<div class="ct">' + (b.count || 0).toLocaleString() + ' ITEMS</div></a>';
+  }).join('');
+}
 
 function renderBrands(brands) {
   const grid = document.getElementById('brandsDirectory');
