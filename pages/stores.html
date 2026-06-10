@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shop by Brand — Worldwide-Shipping Fashion | Fashion to World</title>
+<title>Our Stores — Worldwide-Shipping Fashion | Fashion to World</title>
 <meta name="description" content="Shop from 200+ fashion brands worldwide. Luxury, premium, high street and sport brands with global delivery.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -85,13 +85,46 @@
   border-color: var(--black);
 }
 
-.brand-card{display:block;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s;background:var(--white);text-decoration:none}
-.brand-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 14px 36px rgba(201,168,76,.16)}
-.brand-card-header{height:128px;background:linear-gradient(140deg,#faf8f3,#efe9dc);display:flex;align-items:center;justify-content:center;padding:20px;font-family:var(--font-serif);font-size:30px;color:#a8862f;border-bottom:1px solid var(--border)}
-.brand-card-header img{max-width:82%;max-height:64px;object-fit:contain}
-.brand-card-body{padding:15px 16px}
-.brand-card-name{font-family:var(--font-serif);font-size:18px;margin:0 0 3px;color:var(--black);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brand-card-meta{font-size:12px;color:var(--text-muted);margin:0}
+.brand-card {
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.25s;
+  background: var(--white);
+}
+.brand-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(201,168,76,0.15);
+}
+.brand-card-header {
+  height: 100px;
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: var(--black);
+}
+.brand-card-body { padding: 16px; }
+.brand-card-name { font-family: var(--font-serif); font-size: 18px; margin-bottom: 4px; }
+.brand-card-meta { font-size: 12px; color: var(--text-muted); }
+.brand-card-tier {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-top: 8px;
+}
+.tier-luxury { background: #f5f0e5; color: #8b6914; }
+.tier-premium { background: #e8f5f0; color: #1a7a5e; }
+.tier-highstreet { background: #e8edf5; color: #1a3d7a; }
+.tier-sport { background: #f5e8e8; color: #7a1a1a; }
 
 .brands-count-bar {
   background: var(--cream);
@@ -107,19 +140,19 @@
 </style>
   <link rel="icon" type="image/svg+xml" href="/public/images/favicon.svg">
   <link rel="alternate icon" href="/public/images/favicon.svg">
-  <link rel="canonical" href="https://fashiontoworld.co/pages/brands.html">
+  <link rel="canonical" href="https://fashiontoworld.co/pages/stores.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Fashion to World">
-  <meta property="og:title" content="Shop by Brand — Worldwide-Shipping Fashion | Fashion to World">
+  <meta property="og:title" content="Our Stores — Worldwide-Shipping Fashion | Fashion to World">
   <meta property="og:description" content="Shop from 200+ fashion brands worldwide. Luxury, premium, high street and sport brands with global delivery.">
-  <meta property="og:url" content="https://fashiontoworld.co/pages/brands.html">
+  <meta property="og:url" content="https://fashiontoworld.co/pages/stores.html">
   <meta property="og:image" content="https://fashiontoworld.co/public/images/og-cover.jpg">
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Shop by Brand — Worldwide-Shipping Fashion | Fashion to World">
+  <meta name="twitter:title" content="Our Stores — Worldwide-Shipping Fashion | Fashion to World">
   <meta name="twitter:description" content="Shop from 200+ fashion brands worldwide. Luxury, premium, high street and sport brands with global delivery.">
   <meta name="twitter:image" content="https://fashiontoworld.co/public/images/og-cover.jpg">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://fashiontoworld.co/"},{"@type":"ListItem","position":2,"name":"Brands","item":"https://fashiontoworld.co/pages/brands.html"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://fashiontoworld.co/"},{"@type":"ListItem","position":2,"name":"Brands","item":"https://fashiontoworld.co/pages/stores.html"}]}</script>
   <meta name="p:domain_verify" content="661d8a8320ccc55e6fcb78c7beae954b"/>
   <!-- Pinterest Tag -->
   <script>
@@ -163,7 +196,7 @@
 
 <section class="page-hero">
   <div class="container">
-    <p class="section-eyebrow" style="justify-content:center;display:flex"><span id="heroBrandCount">Curated</span>&nbsp;Brands</p>
+    <p class="section-eyebrow" style="justify-content:center;display:flex">200+ Partners</p>
     <h1>Shop the World's<br><em>Best Brands</em></h1>
     <div class="brands-search">
       <input type="text" placeholder="Search brands..." id="brandSearch" oninput="filterBrands(this.value)">
@@ -177,14 +210,20 @@
 <section class="section" style="padding-top:0">
   <div class="container">
 
-    <!-- tier tabs removed: not applicable to product brands -->
+    <div class="tier-tabs">
+      <button class="tier-tab active" onclick="filterTier('all', this)">All Stores</button>
+      <button class="tier-tab" onclick="filterTier('luxury', this)">Luxury</button>
+      <button class="tier-tab" onclick="filterTier('premium', this)">Premium</button>
+      <button class="tier-tab" onclick="filterTier('highstreet', this)">High Street</button>
+      <button class="tier-tab" onclick="filterTier('sport', this)">Sport & Active</button>
+    </div>
 
     <!-- A-Z Navigation -->
     <div class="alpha-nav" id="alphaNav"></div>
 
     <div class="brands-count-bar">
       <p>Showing <strong id="brandCount">—</strong> brands</p>
-      <p style="font-size:12px">Affiliate links — we may earn a commission at no extra cost to you</p>
+      <p style="font-size:12px">Commissions earned on qualifying purchases</p>
     </div>
 
     <div class="brands-grid" id="brandsDirectory" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
@@ -208,16 +247,15 @@
 // Real product brands from the catalogue (data-driven; stores are listed separately under Featured Stores).
 let allBrands = [];
 function ftwDom(n){return (n||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]/g,'')+'.com';}
-function logoImg(n){var i=((n||'?')[0]||'?').toUpperCase();return '<img src="https://logo.clearbit.com/'+ftwDom(n)+'" alt="'+n+'" loading="lazy" onerror="this.remove();this.parentNode.textContent=\''+i+'\'" style="max-width:82%;max-height:64px;object-fit:contain">';}
+function logoImg(n){var i=((n||'?')[0]||'?').toUpperCase();return '<img src="https://logo.clearbit.com/'+ftwDom(n)+'" alt="'+n+'" loading="lazy" onerror="this.remove();this.parentNode.textContent=\''+i+'\'" style="max-width:74%;max-height:74%;object-fit:contain">';}
 async function loadBrandList() {
   try {
     const base = window.API_BASE || '';
-    const r = await fetch(base + '/api/brands/top?limit=80');
-    const list = r.ok ? await r.json() : [];
-    allBrands = (list || []).map(function (b) { return { name: b.name, count: b.count }; });
+    const r = await fetch(base + '/api/admitad/stores');
+    const d = r.ok ? await r.json() : {};
+    allBrands = ((d && d.stores) || []).map(function (b) { return { name: b.name, count: b.count }; });
   } catch (e) { allBrands = []; }
   filtered = [...allBrands];
-  var hc = document.getElementById('heroBrandCount'); if (hc) hc.textContent = allBrands.length.toLocaleString();
   renderBrands(allBrands);
 }
 
@@ -234,7 +272,7 @@ function renderBrands(brands) {
   }
 
   grid.innerHTML = brands.map(b => `
-    <a href="search.html?q=${encodeURIComponent(b.name)}" class="brand-card">
+    <a href="search.html?advertiser=${encodeURIComponent(b.name)}" class="brand-card">
       <div class="brand-card-header">${logoImg(b.name)}</div>
       <div class="brand-card-body">
         <p class="brand-card-name">${b.name}</p>
