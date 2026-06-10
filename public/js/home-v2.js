@@ -100,10 +100,12 @@
       'glasseslit': { d: 'glasseslit.com', t: 'Eyewear', cats: ['eyewear'] },
       'italo': { d: 'italojewelry.com', t: 'Jewellery', cats: ['luxury'] },
       'wayrates': { d: 'wayrates.com', t: "Men's fashion", cats: ['market'] },
-      'symbol': { d: 'symbolclothing.com', t: 'Essentials', cats: ['women', 'market'] },
+      'symbol': { d: 'symbol.fashion', t: 'Essentials', cats: ['women', 'market'] },
       'alibaba': { d: 'alibaba.com', t: 'Marketplace', cats: ['market'] },
       'hacoo': { d: 'hacoo.com', t: 'Marketplace', cats: ['market'] },
       'watches of usa': { d: 'watchesofusa.com', t: 'Watches', cats: ['luxury'] },
+      'cerqular': { d: 'cerqular.com', t: 'Sustainable fashion', cats: ['women', 'luxury'] },
+      'metro brazil': { d: 'metrobrazil.com', t: 'Global marketplace', cats: ['market', 'women'] },
       'drippy': { d: '', t: 'Custom', cats: ['market'] }
     };
     function metaFor(name) { var n = (name || '').toLowerCase(); for (var k in META) { if (n.indexOf(k) > -1) return META[k]; } return { d: '', t: 'Worldwide store', cats: ['all'] }; }
@@ -179,7 +181,7 @@
     }, { rootMargin: '900px 0px' });
     io.observe(target);
   }
-  fillProducts('prods', { sort: 'discount', limit: 8, page: 1 });                       // Trending — near top, load now
+  fillProducts('prods', { sort: 'popularity', limit: 8, page: 1 });                       // Trending — near top, load now
   lazyFill('prodsBig', { sort: 'discount', limit: 8, page: 2 });                        // Biggest Discounts — on scroll
   lazyFill('prods2', { sort: 'popularity', limit: 8, page: 1 }, { newBadge: true });    // New In — on scroll
 
