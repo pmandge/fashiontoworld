@@ -114,6 +114,9 @@
       'watches of usa': { d: 'watchesofusa.com', t: 'Watches', cats: ['luxury'] },
       'cerqular': { d: 'cerqular.com', t: 'Sustainable fashion', cats: ['women', 'luxury'] },
       'metro brazil': { d: 'metrobrazil.com', t: 'Global marketplace', cats: ['market', 'women'] },
+      'watch home': { d: 'watchhome.com', t: 'Watches', cats: ['luxury'] },
+      'silverbene': { d: 'silverbene.com', t: 'Jewellery', cats: ['luxury'] },
+      'watch enclave': { d: 'watchenclave.co.uk', t: 'Watches', cats: ['luxury'] },
       'drippy': { d: '', t: 'Custom', cats: ['market'] }
     };
     function metaFor(name) { var n = (name || '').toLowerCase(); for (var k in META) { if (n.indexOf(k) > -1) return META[k]; } return { d: '', t: 'Worldwide store', cats: ['all'] }; }
