@@ -26,7 +26,15 @@
     var cnt = document.getElementById('cnt');
     function animateCount(target){ if(!cnt) return; var t0=null; requestAnimationFrame(function step(t){ if(!t0)t0=t; var p=Math.min((t-t0)/1500,1); cnt.textContent=Math.floor((1-Math.pow(1-p,3))*target).toLocaleString(); if(p<1)requestAnimationFrame(step); }); }
     function setTrustProducts(total){ document.querySelectorAll('.trust-item').forEach(function(it){ var lbl=it.querySelector('.trust-label'); if(lbl && /product/i.test(lbl.textContent)){ var num=it.querySelector('.trust-num'); if(num) num.textContent=(total>=1000?Math.round(total/1000)+'K+':total.toLocaleString()); } }); }
-    animateCount(169000);
+    (function () {
+      var base = window.API_BASE || '';
+      fetch(base + '/api/products/status').then(function (r) { return r.json(); }).then(function (d) {
+        var tot = (d && d.total) || 169000;
+        animateCount(tot); setTrustProducts(tot);
+        document.querySelectorAll('.js-prodcount').forEach(function (e) { e.textContent = tot.toLocaleString(); });
+        var pi = document.querySelector('.nav-search input'); if (pi) pi.placeholder = 'Search ' + tot.toLocaleString() + '+ products…';
+      }).catch(function () { animateCount(169000); });
+    })();
     window.__ftwTotal = function (val) { if (cnt && val) cnt.textContent = val.toLocaleString(); if (val) setTrustProducts(val); };
   })();
 
@@ -130,6 +138,14 @@
         var cnt = (data && data.count) || rows.length;
         if (cnt) setTrustStores(cnt);
         if (data && data.total_products && window.__ftwTotal) window.__ftwTotal(data.total_products);
+        if (data) {
+          var sc = data.count || (data.stores && data.stores.length) || 0;
+          if (sc) document.querySelectorAll('.js-storecount').forEach(function (e) { e.textContent = sc; });
+          if (data.total_products) {
+            document.querySelectorAll('.js-prodcount').forEach(function (e) { e.textContent = data.total_products.toLocaleString(); });
+            var pi2 = document.querySelector('.nav-search input'); if (pi2) pi2.placeholder = 'Search ' + data.total_products.toLocaleString() + '+ products…';
+          }
+        }
       }).catch(function () { });
     }
   })();
