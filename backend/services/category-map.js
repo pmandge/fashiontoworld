@@ -52,9 +52,16 @@ const NON_FASHION_RE = /(?:wine|whisk(?:e)?y|cognac|champagne|crystal|water|shot
 
 // typeText: name (+ feed category) — clean signal for product TYPE.
 // genderText: extra text (description) — only used for gender.
+// Adult toys / intimacy products — excluded from a fashion catalogue.
+// IMPORTANT: this deliberately does NOT match intimate APPAREL — lingerie,
+// bras, panties, underwear, swimwear, bikinis, thongs, corsets, garters,
+// suspenders, bodysuits etc. are clothing and stay in the catalogue.
+const ADULT_RE = /\b(?:vibrator|dildo|butt[\s-]?plug|anal|sex\s*toys?|adult\s+(?:toy|toys|product|products|novelt\w+|dvd|video)|sexual\s+wellness|masturbat\w*|fleshlight|cock\s*ring|strapon|strap-on|bdsm|nipple\s+clamp|ball\s+gag|gag\s+ball|lubricant|lube|condoms?|prostate|g[\s-]?spot|clitoral|clitoris|erotica?|aphrodisiac|dominatrix|penis|(?:wand|personal|intimate|clitoral)\s+massager|pleasure\s+(?:toy|wand|ring|bead))s?\b/i;
+
 function mapCategory(typeText, genderText, genderHint, advertiser) {
   const n = (typeText || '').toLowerCase();
   if (NON_FASHION_RE.test(n)) return 'excluded';
+  if (ADULT_RE.test(`${typeText || ''} ${genderText || ''}`)) return 'excluded';
   const byCat = {}; CATEGORY_RULES.forEach(r => { byCat[r.cat] = r.kw; });
   const hit = (kw) => kw && kw.some(k => n.includes(k));
   function genderCat() {
