@@ -173,11 +173,11 @@ const AdmitadAPI = (() => {
     return `
       <article class="product-card">
         <div class="product-img">
-          <img src="${product.image_url || '/public/images/placeholder.jpg'}"
+          <img src="${product.image_url || ''}"
                alt="${product.name}"
                loading="lazy"
                decoding="async"
-               onerror="this.onerror=null;this.src='/public/images/placeholder.jpg'">
+               onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           ${hasDiscount ? `<span class="product-badge sale">-${discount}%</span>` : ''}
           ${product.is_new ? `<span class="product-badge">New</span>` : ''}
         </div>
