@@ -63,16 +63,16 @@
   (function () {
     var el = document.getElementById('edits'); if (!el) return;
     var edits = [
-      { n: 'Vacation', img: '1523381210434-271e8be1f52b', href: 'pages/women.html?cat=Swimwear' },
-      { n: 'Wedding Guest', img: '1566174053879-31528523f8ae', href: 'pages/women.html?cat=Dresses' },
-      { n: 'Workwear', img: '1490481651871-ab68de25d43d', href: 'pages/men.html' },
-      { n: 'Date Night', img: '1539109136881-3be0616acf4b', href: 'pages/women.html?cat=Dresses' },
-      { n: 'Athleisure', img: '1483721310020-03333e577078', href: 'pages/women.html' },
-      { n: 'Coats & Jackets', img: '1441984904996-e0b6ba687e04', href: 'pages/women.html?cat=Coats' },
-      { n: 'Statement Jewellery', img: '1515562141207-7a88fb7ce338', href: 'pages/jewellery.html' },
+      { n: 'Vacation', img: '1523381210434-271e8be1f52b', href: 'pages/search.html?q=swimwear' },
+      { n: 'Wedding Guest', img: '1566174053879-31528523f8ae', href: 'pages/search.html?q=occasion%20dress' },
+      { n: 'Workwear', img: '1490481651871-ab68de25d43d', href: 'pages/search.html?q=tailored%20blazer' },
+      { n: 'Date Night', img: '1539109136881-3be0616acf4b', href: 'pages/search.html?q=evening%20dress' },
+      { n: 'Athleisure', img: '1483721310020-03333e577078', href: 'pages/search.html?q=activewear' },
+      { n: 'Coats & Jackets', img: '1441984904996-e0b6ba687e04', href: 'pages/search.html?q=coat' },
+      { n: 'Statement Jewellery', img: '1515562141207-7a88fb7ce338', href: 'pages/search.html?q=statement%20necklace' },
       { n: 'Sneaker Edit', img: '1542291026-7eec264c27ff', href: 'pages/shoes.html?cat=Sneakers' },
       { n: 'Bags We Love', img: '1584917865442-de89df76afd3', href: 'pages/bags.html' },
-      { n: 'Best Sellers', img: '1483985988355-763728e1935b', href: 'pages/women.html' }
+      { n: 'Best Sellers', img: '1483985988355-763728e1935b', href: 'pages/search.html?q=designer%20handbag' }
     ];
     el.innerHTML = edits.map(function (e) {
       return '<a class="edit-tile" href="' + e.href + '"><div class="ph" data-img="' + e.img + '"></div><div class="shade"></div><span class="lbl">' + e.n + '</span></a>';
@@ -126,7 +126,7 @@
       rail.innerHTML = STORES.filter(function (s) { return cat === 'all' || (s.cats || []).indexOf(cat) > -1; }).map(function (s) {
         var logo = s.d ? ('<img alt="' + esc(s.name) + '" loading="lazy" src="https://logo.clearbit.com/' + s.d + '" onerror="this.onerror=null;this.src=\'https://www.google.com/s2/favicons?domain=' + s.d + '&sz=128\'">') : s.name.trim()[0];
         var cta = (s.count != null) ? (s.count.toLocaleString() + ' items &#8250;') : 'Visit store &#8250;';
-        return '<a class="store" href="pages/search.html?advertiser=' + encodeURIComponent(s.name) + '">' +
+        return '<a class="store" href="pages/go.html?store=' + encodeURIComponent(s.name) + '">' +
           '<div class="store-logo">' + logo + '</div>' +
           '<div class="store-name">' + esc(s.name) + '</div><div class="store-tag">' + esc(s.t) + '</div>' +
           '<div class="store-count">' + cta + '</div></a>';
