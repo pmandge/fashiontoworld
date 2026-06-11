@@ -70,6 +70,14 @@
 .empty-state { padding: 60px 20px; text-align: center; color: var(--text-muted); }
 .empty-state h3 { font-family: var(--font-serif); font-size: 26px; color: var(--ink, #1a1410); margin-bottom: 10px; }
 .empty-state a { color: var(--gold); }
+
+/* shop layout (filter sidebar + results) — matches category pages */
+.shop-layout { display: grid; grid-template-columns: 240px 1fr; gap: 48px; max-width: var(--max-w); margin: 0 auto; padding: 0 32px; }
+.sidebar { position: sticky; top: calc(var(--nav-h) + 20px); align-self: start; }
+.products-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+.products-toolbar #productsCount { font-family: var(--font-sans); font-size: 15px; color: var(--text); }
+.products-grid .empty-state { grid-column: 1 / -1; }
+@media (max-width: 860px) { .shop-layout { grid-template-columns: 1fr; gap: 24px; padding: 0 20px; } }
 .btn-disabled { opacity: .5; cursor: not-allowed; }
 </style>
   <link rel="icon" type="image/svg+xml" href="/public/images/favicon.svg">
@@ -149,21 +157,18 @@
 </section>
 
 <section class="search-results">
-  <div class="search-toolbar">
-    <span class="search-count" id="searchCount">Searching…</span>
-    <select class="sort-select" id="sortSelect" onchange="changeSort()">
-      <option value="popularity">Most Relevant</option>
-      <option value="price_asc">Price: Low → High</option>
-      <option value="price_desc">Price: High → Low</option>
-      <option value="sale">Biggest Discount</option>
-    </select>
-  </div>
-  <div class="search-grid-wrap">
-    <div class="products-grid" id="searchGrid">
-      <div class="loading-skeleton"></div><div class="loading-skeleton"></div>
-      <div class="loading-skeleton"></div><div class="loading-skeleton"></div>
-    </div>
-    <button class="btn-load" id="loadMoreBtn" onclick="loadMore()" style="display:none">Load More</button>
+  <div class="shop-layout">
+    <aside class="sidebar mf-sidebar" id="filterSidebar"></aside>
+    <main>
+      <div class="products-toolbar"><span id="productsCount">Searching…</span></div>
+      <div class="products-grid" id="productsGrid">
+        <div class="loading-skeleton"></div><div class="loading-skeleton"></div>
+        <div class="loading-skeleton"></div><div class="loading-skeleton"></div>
+        <div class="loading-skeleton"></div><div class="loading-skeleton"></div>
+        <div class="loading-skeleton"></div><div class="loading-skeleton"></div>
+      </div>
+      <button class="btn-load" id="loadMoreBtn" onclick="loadMore()" style="display:none">Load More</button>
+    </main>
   </div>
 </section>
 
@@ -172,20 +177,27 @@
 <script src="../public/js/api-config.js"></script>
 <script src="../public/js/admitad-api.js"></script>
 <script>
-let currentQuery = '', currentAdvertiser = '', currentSort = 'popularity', currentPage = 1;
-
 (function init(){
   const params = new URLSearchParams(location.search);
-  currentQuery = (params.get('q') || '').trim();
-  currentAdvertiser = (params.get('advertiser') || '').trim();
+  const currentQuery = (params.get('q') || '').trim();
+  const currentAdvertiser = (params.get('advertiser') || '').trim();
   document.getElementById('searchInput').value = currentQuery;
-  const titleLabel = currentAdvertiser || (currentQuery ? `"${currentQuery}"` : 'Results');
+  const titleLabel = currentAdvertiser || (currentQuery ? '"' + currentQuery + '"' : 'Results');
   document.getElementById('searchTermTitle').textContent = titleLabel;
   document.title = (currentAdvertiser || currentQuery || 'Search') + ' — FashionToWorld';
-  if (currentQuery || currentAdvertiser) runSearch(1, true);
-  else {
-    document.getElementById('searchGrid').innerHTML = '<div class="empty-state"><h3>What are you looking for?</h3><p>Search across 160,000+ products from worldwide-shipping brands.</p></div>';
-    document.getElementById('searchCount').textContent = '';
+
+  // Drive the shared modern filter (sidebar + toolbar + results) with this query
+  window.FILTER_CONFIG = { q: currentQuery, advertiser: currentAdvertiser };
+
+  if (currentQuery || currentAdvertiser) {
+    var s = document.createElement('script');
+    s.src = '../public/js/product-filter.js';
+    document.body.appendChild(s);
+  } else {
+    var grid = document.getElementById('productsGrid');
+    if (grid) grid.innerHTML = '<div class="empty-state"><h3>What are you looking for?</h3><p>Search across 390,000+ products from worldwide-shipping brands.</p></div>';
+    var pc = document.getElementById('productsCount'); if (pc) pc.textContent = '';
+    var sb = document.getElementById('filterSidebar'); if (sb) sb.style.display = 'none';
   }
 })();
 
@@ -194,30 +206,6 @@ function doSearch(){
   const q = document.getElementById('searchInput').value.trim();
   if (!q) return;
   location.href = 'search.html?q=' + encodeURIComponent(q);
-}
-function changeSort(){ currentSort = document.getElementById('sortSelect').value; runSearch(1, true); }
-function loadMore(){ currentPage++; runSearch(currentPage, false); }
-
-async function runSearch(page = 1, reset = true){
-  const grid = document.getElementById('searchGrid');
-  if (reset){ grid.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8); currentPage = 1; }
-
-  const data = await AdmitadAPI.getProducts({ q: currentQuery, advertiser: currentAdvertiser, sort: currentSort, page, limit: 24 });
-  const products = data?.products || [];
-  const total = data?.total || 0;
-  const label = currentAdvertiser ? currentAdvertiser : '"' + currentQuery + '"';
-
-  if (!products.length && reset){
-    document.getElementById('searchCount').textContent = '';
-    grid.innerHTML = '<div class="empty-state"><h3>No results for ' + label + '</h3><p>Try a different word, or browse <a href="women.html">Women</a>, <a href="men.html">Men</a>, <a href="shoes.html">Shoes</a> or <a href="deals.html">Deals</a>.</p></div>';
-    document.getElementById('loadMoreBtn').style.display = 'none';
-    return;
-  }
-
-  document.getElementById('searchCount').innerHTML = '<strong>' + total.toLocaleString() + '</strong> results for ' + label;
-  if (reset) grid.innerHTML = products.map(AdmitadAPI.renderProductCard).join('');
-  else grid.insertAdjacentHTML('beforeend', products.map(AdmitadAPI.renderProductCard).join(''));
-  document.getElementById('loadMoreBtn').style.display = products.length < 24 ? 'none' : 'block';
 }
 </script>
 <script src="../public/js/categories.js"></script>
