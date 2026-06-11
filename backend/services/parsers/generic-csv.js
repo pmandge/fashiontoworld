@@ -64,13 +64,16 @@ function parse(feedUrl, opts, onRaw) {
         const name = get('name');
         const url = get('url');
         if (!name || !url) return;
+        // Prefer the merchant's direct, full-resolution image; fall back to the
+        // network's proxied thumbnail only if the merchant didn't supply one.
+        const image = get('image_url') || get('image_url_alt');
         onRaw({
           id: get('id') || String(count),
           name, description: get('description'),
           brand: get('brand'),
           price: get('price'), price_old: get('price_old'),
           currency: get('currency') || opts.currency || 'EUR',
-          images: get('image_url') ? [get('image_url')] : [],
+          images: image ? [image] : [],
           url,
           advertiser: get('advertiser'),
           feed_category: get('category'),
