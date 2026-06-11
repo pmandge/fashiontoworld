@@ -25,7 +25,7 @@
 const AWIN_COLUMNS = {
   id: 'aw_product_id', name: 'product_name', description: 'description', brand: 'brand_name',
   price: 'search_price', price_old: 'product_price_old', currency: 'currency',
-  image_url: 'aw_image_url', url: 'aw_deep_link', category: 'merchant_category',
+  image_url: 'merchant_image_url', image_url_alt: 'aw_image_url', url: 'aw_deep_link', category: 'merchant_category',
   color: 'colour', advertiser: 'merchant_name',
 };
 
