@@ -46,6 +46,25 @@ function fromEnv() {
   }).filter(f => f.url);
 }
 
+// Combined Awin fashion feeds (multi-merchant CSV). These URLs embed a live
+// Awin API key, so they live in the droplet .env (NOT in this public repo).
+// Add ONE OR MORE feeds, separated by ';' (Awin URLs never contain ';'):
+//   AWIN_FASHION_FEED_URL=https://productdata.awin.com/...feed1...;https://productdata.awin.com/...feed2...
+// Each row carries its own merchant_name, so 'advertiser' below is only a
+// fallback label — real store names come from the feed per-product.
+function awinFromEnv() {
+  const raw = process.env.AWIN_FASHION_FEED_URL;
+  if (!raw) return [];
+  return raw.split(';').map(s => s.trim()).filter(Boolean).map((url, i) => ({
+    network: 'awin',
+    advertiser: 'Awin Fashion' + (i ? ' ' + (i + 1) : ''),
+    format: 'generic-csv',
+    columns: AWIN_COLUMNS,
+    delimiter: ',',
+    url,
+  }));
+}
+
 // Hardcoded feeds (use for CSV feeds that need column mapping)
 const HARDCODED = [
   // --- Admitad (XML) example ---
@@ -67,7 +86,7 @@ const HARDCODED = [
 
 function getFeeds() {
   const env = fromEnv();
-  return [...env, ...HARDCODED];
+  return [...env, ...awinFromEnv(), ...HARDCODED];
 }
 
 module.exports = { getFeeds };
