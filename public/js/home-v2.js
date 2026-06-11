@@ -51,7 +51,7 @@
       { n: 'Accessories', img: '1511499767150-a48a237f0083', href: 'pages/accessories.html' },
       { n: 'Beauty', img: '1596462502278-27bfdc403348', href: 'pages/beauty.html' },
       { n: 'Watches', img: '1523275335684-37898b6baf30', href: 'pages/search.html?q=watch', isNew: true },
-      { n: 'On Sale', img: '1445205170230-053b83016050', href: 'pages/women.html?sale=true' }
+      { n: 'On Sale', img: '1445205170230-053b83016050', href: 'pages/search.html?sale=true' }
     ];
     el.innerHTML = cats.map(function (c) {
       return '<a class="cat-tile' + (c.isNew ? ' new' : '') + '" href="' + c.href + '"><div class="ph" data-img="' + c.img + '"></div><div class="shade"></div><span class="lbl">' + c.n + '</span></a>';
@@ -70,7 +70,7 @@
       { n: 'Athleisure', img: '1483721310020-03333e577078', href: 'pages/women.html' },
       { n: 'Coats & Jackets', img: '1441984904996-e0b6ba687e04', href: 'pages/women.html?cat=Coats' },
       { n: 'Statement Jewellery', img: '1515562141207-7a88fb7ce338', href: 'pages/jewellery.html' },
-      { n: 'Sneaker Edit', img: '1596462502278-27bfdc403348', href: 'pages/shoes.html?cat=Sneakers' },
+      { n: 'Sneaker Edit', img: '1542291026-7eec264c27ff', href: 'pages/shoes.html?cat=Sneakers' },
       { n: 'Bags We Love', img: '1584917865442-de89df76afd3', href: 'pages/bags.html' },
       { n: 'Best Sellers', img: '1483985988355-763728e1935b', href: 'pages/women.html' }
     ];
@@ -200,7 +200,7 @@
     }, { rootMargin: '900px 0px' });
     io.observe(target);
   }
-  fillProducts('prods', { sort: 'popularity', limit: 8, page: 1 });                       // Trending — near top, load now
+  fillProducts('prods', { sort: 'discount', limit: 8, page: 1 });                       // Trending — near top, load now
   lazyFill('prodsBig', { sort: 'discount', limit: 8, page: 2 });                        // Biggest Discounts — on scroll
   lazyFill('prods2', { sort: 'popularity', limit: 8, page: 1 }, { newBadge: true });    // New In — on scroll
 
