@@ -1,0 +1,109 @@
+/* ============================================================
+   FashionToWorld — Site-wide responsive fixes (Mobile + Tablet)
+   Loaded LAST in <head> so it overrides page-level inline styles.
+   Desktop layout is untouched: every rule is inside a max-width
+   media query, except the safe global image/overflow guards.
+   ============================================================ */
+
+/* ---- Global safety (all widths) ---- */
+img, svg, video, iframe { max-width: 100%; }
+img { height: auto; }
+
+/* ============================================================
+   TABLET  (<= 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  /* No page should ever scroll sideways */
+  html, body { overflow-x: hidden; }
+
+  /* Multi-column stat/info blocks ease to 2 across */
+  .deals-stats { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Product / directory grids: comfortable tablet counts */
+  .products-grid { grid-template-columns: repeat(3, 1fr); }
+  .deals-grid    { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important; }
+  .featured-grid,
+  .brands-grid   { grid-template-columns: repeat(3, 1fr) !important; }
+
+  /* Trim heavy inner paddings a little */
+  .cat-hero-inner, .art-hero-inner, .search-hero-inner,
+  .content, .cat-seo .cat-seo-inner { padding-left: 28px; padding-right: 28px; }
+}
+
+/* ============================================================
+   MOBILE  (<= 768px)
+   ============================================================ */
+@media (max-width: 768px) {
+  /* ---- Generic hero padding relief ---- */
+  .page-hero   { padding: calc(var(--nav-h) + 40px) 0 36px; }
+  .art-hero    { padding-top: calc(var(--nav-h) + 30px); }
+  .content     { padding: 40px 20px !important; }
+  .cat-hero-inner, .art-hero-inner, .search-hero-inner,
+  .cat-seo .cat-seo-inner { padding-left: 20px; padding-right: 20px; }
+
+  /* ---- Grids collapse sensibly ---- */
+  .products-grid { grid-template-columns: repeat(2, 1fr); }
+  .deals-grid    { grid-template-columns: 1fr !important; }
+  .deals-stats   { grid-template-columns: repeat(2, 1fr) !important; }
+  .featured-grid,
+  .brands-grid   { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* ============================================================
+     CATEGORY HERO  →  proper mobile banner
+     The category image (set inline on .cat-hero-visual) is shown
+     full-width with the heading + CTA overlaid, instead of being
+     hidden. Uses a single-cell grid overlay (no absolute pos).
+     ============================================================ */
+  .cat-hero { padding-top: var(--nav-h); overflow: hidden; }
+  .cat-hero-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: "stack";
+    min-height: 300px;
+    padding: 0;
+  }
+  .cat-hero-visual,
+  .cat-hero-text { grid-area: stack; }
+
+  .cat-hero-visual {
+    display: block !important;
+    height: 100%;
+    width: 100%;
+    border-radius: 0;
+    background-size: cover !important;
+    background-position: center !important;
+  }
+  /* Heading + CTA sit on the image, anchored to the bottom, with a
+     dark gradient for guaranteed legibility on any photo. */
+  .cat-hero-text {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 90px 22px 30px !important;
+    color: #fff;
+    background: linear-gradient(180deg, rgba(20,16,12,0) 30%, rgba(20,16,12,.72) 100%);
+  }
+  .cat-hero-text .section-eyebrow { color: rgba(255,255,255,.85); }
+  .cat-hero-text h1 { color: #fff; }
+  .cat-hero-text h1 em { color: var(--gold-light, #e8d5a3); }
+  .cat-hero-text p { color: rgba(255,255,255,.92); max-width: 100%; }
+  .cat-hero-text .btn-primary {
+    background: #fff;
+    color: var(--black);
+    border-color: #fff;
+    align-self: flex-start;
+  }
+}
+
+/* ============================================================
+   SMALL PHONES  (<= 420px)
+   ============================================================ */
+@media (max-width: 420px) {
+  .deals-stats,
+  .featured-grid,
+  .brands-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .cat-hero-inner { min-height: 260px; }
+  .cat-hero-text { padding: 70px 18px 26px !important; }
+}
