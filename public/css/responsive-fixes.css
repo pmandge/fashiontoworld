@@ -98,6 +98,21 @@ img { height: auto; }
 }
 
 /* ============================================================
+   FILTER SIDEBAR GAP FIX  (<= 860px)
+   Each category page's inline `.sidebar { position: static }`
+   overrides main.css's `.mf-sidebar { position: fixed }`, but the
+   off-canvas `transform: translateX(-105%)` still applies — so the
+   sidebar is pushed off-screen yet still reserves its full height,
+   leaving a big blank gap above the products. Forcing it back to
+   fixed removes it from the layout (it stays a working drawer).
+   ============================================================ */
+@media (max-width: 860px) {
+  .shop-layout > .mf-sidebar,
+  .shop-layout > .sidebar { position: fixed !important; }
+  .shop-layout { padding-top: 24px !important; }
+}
+
+/* ============================================================
    SMALL PHONES  (<= 420px)
    ============================================================ */
 @media (max-width: 420px) {
