@@ -293,25 +293,19 @@ let _tdFetching = false;
 async function refreshTopDeals() {
   if (_tdFetching) return; _tdFetching = true;
   try {
-    const stores = (await productDb.advertiserCounts()).slice(0, 12);
-    const out = []; const seen = {};
-    // one top-discount product per store (variety)
-    for (const s of stores) {
-      try {
-        const r = await productDb.query({ advertiser: s.name, onSale: true, sort: 'discount', limit: 1 });
-        const pr = r && r.products && r.products[0];
-        if (pr && pr.price_old && pr.price_old > pr.price && !seen[pr.id]) { seen[pr.id] = 1; out.push(pr); }
-      } catch (e) {}
-    }
-    // fill up to 10 with the most-discounted products overall
-    if (out.length < 10) {
-      try {
-        const more = await productDb.query({ onSale: true, sort: 'discount', limit: 40 });
-        for (const pr of ((more && more.products) || [])) {
-          if (out.length >= 10) break;
-          if (pr && pr.price_old && pr.price_old > pr.price && !seen[pr.id]) { seen[pr.id] = 1; out.push(pr); }
-        }
-      } catch (e) {}
+    const TARGET = 15;                 // ~3 rows
+    const out = []; const seen = {}; const perStore = {};
+    // Pull a large batch of the most-discounted products, then enforce variety
+    // (max 2 per store) and keep only genuine old-price discounts.
+    const r = await productDb.query({ onSale: true, sort: 'discount', limit: 150 });
+    for (const pr of ((r && r.products) || [])) {
+      if (out.length >= TARGET) break;
+      if (!pr || !pr.price_old || pr.price_old <= pr.price) continue;
+      if (seen[pr.id]) continue;
+      const store = pr.advertiser_name || '';
+      if ((perStore[store] || 0) >= 2) continue;
+      seen[pr.id] = 1; perStore[store] = (perStore[store] || 0) + 1;
+      out.push(pr);
     }
     _topDeals = { at: Date.now(), data: out };
   } catch (e) { console.error('[top-deals]', e.message); }
