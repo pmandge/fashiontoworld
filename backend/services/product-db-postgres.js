@@ -79,6 +79,8 @@ async function pruneOld(runStamp) {
 
 async function query({ category, subcategory, gender, brand, advertiser, color, size, onSale, minprice, maxprice, q, sort, limit = 24, page = 1 } = {}) {
   const where = []; const vals = []; let i = 1;
+  // Always require a real image — products with no picture are hidden site-wide.
+  where.push(`image_url IS NOT NULL AND image_url <> ''`);
   if (category)    { where.push(`category = $${i++}`); vals.push(category); }
   if (subcategory) { where.push(`subcategory = $${i++}`); vals.push(subcategory); }
   if (gender)      { where.push(`gender = $${i++}`); vals.push(gender); }
