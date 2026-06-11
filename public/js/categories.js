@@ -131,4 +131,22 @@ if (typeof module !== 'undefined' && module.exports) {
 if (typeof window !== 'undefined') {
   window.FASHION_TAXONOMY = FASHION_TAXONOMY;
   window.flattenTaxonomy = flattenTaxonomy;
+
+  /* ---- Live product count in the nav search box (every page) ----
+     Replaces the hardcoded "169,000+" with the real current total so the
+     search box is always accurate, not stale. */
+  (function () {
+    var base = window.API_BASE || '';
+    fetch(base + '/api/products/status').then(function (r) { return r.json(); }).then(function (d) {
+      if (!d) return;
+      var tot = d.total || 0;
+      if (tot) {
+        document.querySelectorAll('.nav-search input').forEach(function (i) {
+          i.placeholder = 'Search ' + tot.toLocaleString() + '+ products\u2026';
+        });
+        document.querySelectorAll('.js-prodcount').forEach(function (e) { e.textContent = tot.toLocaleString(); });
+      }
+      if (d.brands) document.querySelectorAll('.js-brandcount').forEach(function (e) { e.textContent = d.brands.toLocaleString(); });
+    }).catch(function () {});
+  })();
 }
