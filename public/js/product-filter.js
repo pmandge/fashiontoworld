@@ -15,6 +15,7 @@
   var cfg = window.FILTER_CONFIG || {};
   var CATEGORY = cfg.category || '';
   var GENDER = cfg.gender || '';
+  var QUERY = cfg.q || '';
   var API = window.AdmitadAPI;
   var PRICE_CAP = 1000;
 
@@ -149,7 +150,7 @@
   var allBrands = [];
   async function loadBrands() {
     try {
-      var data = await API.getProducts({ category: CATEGORY, gender: GENDER, limit: 100, sort: 'popularity' });
+      var data = await API.getProducts({ category: CATEGORY, gender: GENDER, q: QUERY, limit: 100, sort: 'popularity' });
       allBrands = [].concat.apply([], (data && data.products ? data.products : []).map(function (p) { return p.brand ? [p.brand] : []; }));
       allBrands = Array.from(new Set(allBrands)).sort();
       renderBrands('');
@@ -203,7 +204,7 @@
     if (reset) { grid.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8); state.page = 1; }
     renderPills();
     var data = await API.getProducts({
-      category: CATEGORY, gender: GENDER, subcategory: state.sub,
+      category: CATEGORY, gender: GENDER, q: QUERY, subcategory: state.sub,
       brand: Array.from(state.brands).join(','), advertiser: state.advertiser,
       color: Array.from(state.colors).join(','), size: Array.from(state.sizes).join(','),
       sale: state.sale ? 'true' : '', minprice: state.minp, maxprice: state.maxp,
