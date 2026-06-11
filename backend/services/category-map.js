@@ -58,6 +58,15 @@ const NON_FASHION_RE = /(?:wine|whisk(?:e)?y|cognac|champagne|crystal|water|shot
 // suspenders, bodysuits etc. are clothing and stay in the catalogue.
 const ADULT_RE = /\b(?:vibrator|dildo|butt[\s-]?plug|anal|sex\s*toys?|adult\s+(?:toy|toys|product|products|novelt\w+|dvd|video)|sexual\s+wellness|masturbat\w*|fleshlight|cock\s*ring|strapon|strap-on|bdsm|nipple\s+clamp|ball\s+gag|gag\s+ball|lubricant|lube|condoms?|prostate|g[\s-]?spot|clitoral|clitoris|erotica?|aphrodisiac|dominatrix|penis|(?:wand|personal|intimate|clitoral)\s+massager|pleasure\s+(?:toy|wand|ring|bead))s?\b/i;
 
+// Unambiguous garment words. If any appears, the product is clothing even if
+// it also contains a shoe/bag/jewellery substring. NOTE: deliberately omits
+// 'dress', 'top', 'suit', 'polo', 'socks' (all ambiguous with shoes/bags/
+// jewellery or brand names) to avoid new mis-tags.
+const STRONG_CLOTHING_RE = /\b(jeans|chinos?|trousers?|leggings?|joggers?|sweatpants?|tracksuits?|t-?shirts?|shirts?|sweatshirts?|hoodies?|sweaters?|jumpers?|cardigans?|knitwear|pullovers?|blouses?|blazers?|waistcoats?|jumpsuits?|rompers?|dungarees?|overalls?|jackets?|coats?|skirts?|\bshorts\b|gowns?|nightgowns?|pyjamas?|pajamas?)\b/i;
+
+// Perfume / fragrance -> beauty (checked before jewellery brand words).
+const PERFUME_RE = /\b(perfume|fragrances?|cologne|after\s?shave|eau de (parfum|toilette|cologne)|\bparfum\b|body mist|body spray)\b/i;
+
 function mapCategory(typeText, genderText, genderHint, advertiser) {
   const n = (typeText || '').toLowerCase();
   if (NON_FASHION_RE.test(n)) return 'excluded';
@@ -73,6 +82,13 @@ function mapCategory(typeText, genderText, genderHint, advertiser) {
   // so garments that merely contain 'tie'/'belt'/'cap' are NOT mis-tagged as
   // accessories; then accessories/beauty; finally gender default.
   if (hit(byCat.kids)) return 'kids';
+  // Unambiguous garments win over shoe/bag/jewellery SUBSTRINGS, so
+  // "Oxford Shirt", "Bootcut Jeans", "Ring-detail Blouse" are clothing, not
+  // shoes/jewellery. Deliberately excludes ambiguous words like 'dress'/'top'
+  // so "Dress Shoes" and "Dress Ring" still classify correctly below.
+  if (STRONG_CLOTHING_RE.test(n)) return genderCat();
+  // Perfume/fragrance -> beauty before it can hit a jewellery brand word.
+  if (PERFUME_RE.test(n)) return 'beauty';
   if (hit(byCat.shoes)) return 'shoes';
   if (hit(byCat.bags)) return 'bags';
   if (hit(byCat.jewellery)) return 'jewellery';
