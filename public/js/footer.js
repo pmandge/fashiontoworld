@@ -15,9 +15,9 @@
   var brands = ['Valentino','Prada','Balenciaga','Max Mara','Bottega Veneta','Jimmy Choo','Balmain','Dolce & Gabbana','The Row','Brunello Cucinelli'];
 
   var shopLinks = link(P+'women.html','Women')+link(P+'men.html','Men')+link(P+'kids.html','Kids')+link(P+'shoes.html','Shoes')+link(P+'bags.html','Bags')+link(SEARCH+'?q=watch','Watches')+link(P+'jewellery.html','Jewellery')+link(P+'accessories.html','Accessories')+link(P+'beauty.html','Beauty');
-  var storeLinks = stores.map(function(s){return link(SEARCH+'?advertiser='+enc(s), s);}).join('');
-  var brandLinks = brands.map(function(b){return link(P+'women.html?brand='+enc(b), b);}).join('');
-  var editLinks = link(P+'women.html?cat=Swimwear','Vacation')+link(P+'women.html?cat=Dresses','Wedding Guest')+link(P+'men.html','Workwear')+link(P+'women.html?cat=Dresses','Date Night')+link(P+'women.html','Athleisure')+link(P+'women.html?maxprice=50','Under $50')+link(P+'women.html?sale=true','On Sale')+link(P+'women.html','New In');
+  var storeLinks = stores.map(function(s){return link(P+'go.html?store='+enc(s), s);}).join('');
+  var brandLinks = brands.map(function(b){return link(P+'go.html?brand='+enc(b), b);}).join('');
+  var editLinks = link(SEARCH+'?q='+enc('swimwear'),'Vacation')+link(SEARCH+'?q='+enc('occasion dress'),'Wedding Guest')+link(SEARCH+'?q='+enc('tailored blazer'),'Workwear')+link(SEARCH+'?q='+enc('evening dress'),'Date Night')+link(SEARCH+'?q='+enc('activewear'),'Athleisure')+link(SEARCH+'?maxprice=50','Under $50')+link(SEARCH+'?sale=true','On Sale')+link(P+'women.html','New In');
   var companyLinks = link(P+'about.html','About Us')+link(P+'blog.html','Style Blog')+link(P+'contact.html','Contact')+link(P+'affiliate-disclosure.html','Affiliate Disclosure')+link(P+'privacy.html','Privacy Policy')+link(P+'terms.html','Terms');
 
   var html = '<div class="container">' +
@@ -43,7 +43,7 @@
         .then(function (list) {
           if (!list || !list.length) return;
           var el = document.getElementById('footBrands'); if (!el) return;
-          el.innerHTML = list.map(function (b) { return link(SEARCH + '?q=' + enc(b.name), b.name); }).join('');
+          el.innerHTML = list.map(function (b) { return link(P + 'go.html?brand=' + enc(b.name), b.name); }).join('');
         }).catch(function () {});
     } catch (e) {}
   }
