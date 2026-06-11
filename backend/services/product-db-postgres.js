@@ -95,7 +95,16 @@ async function query({ category, subcategory, gender, brand, advertiser, color, 
   if (onSale)      { where.push(`on_sale = true`); }
   if (minprice != null) { where.push(`price >= $${i++}`); vals.push(minprice); }
   if (maxprice != null) { where.push(`price <= $${i++}`); vals.push(maxprice); }
-  if (q)           { where.push(`(name ILIKE $${i} OR brand ILIKE $${i})`); vals.push(`%${q}%`); i++; }
+  let qWords = [];
+  if (q) {
+    // Require every word of the query to appear (so "summer dress" matches
+    // "Summer Floral Dress", not only the exact phrase).
+    qWords = String(q).trim().split(/\s+/).filter(Boolean).slice(0, 6);
+    qWords.forEach(function (word) {
+      where.push(`(name ILIKE $${i} OR brand ILIKE $${i})`);
+      vals.push(`%${word}%`); i++;
+    });
+  }
   const w = where.length ? 'WHERE ' + where.join(' AND ') : '';
   let order = 'updated_at DESC';
   if (sort === 'price_asc') order = 'price ASC';
@@ -104,8 +113,20 @@ async function query({ category, subcategory, gender, brand, advertiser, color, 
   else if (sort === 'discount') order = 'on_sale DESC, updated_at DESC';
   const lim = Math.min(parseInt(limit) || 24, 100);
   const off = ((parseInt(page) || 1) - 1) * lim;
+  // COUNT uses the WHERE params only
   const totalR = await pool.query(`SELECT COUNT(*)::int n FROM products ${w}`, vals);
-  const rowsR = await pool.query(`SELECT * FROM products ${w} ORDER BY ${order} LIMIT ${lim} OFFSET ${off}`, vals);
+  // For text search (with no explicit price/discount sort) rank by relevance:
+  // full-phrase match first, then name starting with the first word, then recency.
+  const selVals = vals.slice();
+  let selOrder = order;
+  if (qWords.length && (!sort || sort === 'popularity')) {
+    const p1 = selVals.length + 1, p2 = selVals.length + 2;
+    selOrder = `(CASE WHEN name ILIKE $${p1} OR brand ILIKE $${p1} THEN 0 ELSE 1 END), ` +
+               `(CASE WHEN name ILIKE $${p2} THEN 0 ELSE 1 END), updated_at DESC`;
+    selVals.push(`%${q}%`);
+    selVals.push(`${qWords[0]}%`);
+  }
+  const rowsR = await pool.query(`SELECT * FROM products ${w} ORDER BY ${selOrder} LIMIT ${lim} OFFSET ${off}`, selVals);
   return {
     total: totalR.rows[0].n, page: parseInt(page) || 1,
     products: rowsR.rows.map(r => ({ ...r, images: Array.isArray(r.images) ? r.images : [] })),
