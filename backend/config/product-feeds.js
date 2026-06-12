@@ -86,7 +86,21 @@ const HARDCODED = [
 
 function getFeeds() {
   const env = fromEnv();
-  return [...env, ...awinFromEnv(), ...HARDCODED];
+  return [...env, ...awinFromEnv(), ...admitadFromEnv(), ...HARDCODED];
+}
+
+// Extra Admitad feeds added via env (avoids editing the long PRODUCT_FEEDS line).
+// Format: ADMITAD_EXTRA_FEEDS=Alibaba|https://export.admitad.com/...;AliExpress|https://...
+// Each entry is "Store Name|feed_url"; separate multiple feeds with ';'.
+function admitadFromEnv() {
+  const raw = process.env.ADMITAD_EXTRA_FEEDS;
+  if (!raw) return [];
+  return raw.split(';').map(s => s.trim()).filter(Boolean).map(entry => {
+    const idx = entry.indexOf('|');
+    const advertiser = idx > 0 ? entry.slice(0, idx).trim() : 'Admitad Feed';
+    const url = (idx > 0 ? entry.slice(idx + 1) : entry).trim();
+    return { network: 'admitad', advertiser, format: 'admitad-yml', url };
+  }).filter(f => f.url);
 }
 
 module.exports = { getFeeds };
