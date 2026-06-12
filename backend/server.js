@@ -299,20 +299,19 @@ async function refreshTopDeals() {
       for (const pr of (list || [])) {
         if (out.length >= TARGET) break;
         if (!pr || seen[pr.id]) continue;
+        // hard guards: must have a real price and a genuine markdown
+        if (!(pr.price > 0) || !(pr.price_old > pr.price)) continue;
+        const disc = (pr.price_old - pr.price) / pr.price_old;
+        if (disc < 0.1 || disc > 0.9) continue;        // 10%–90% only
         const store = pr.advertiser_name || '';
-        if ((perStore[store] || 0) >= 2) continue;   // max 2 per store for variety
+        if ((perStore[store] || 0) >= 2) continue;     // max 2 per store
         seen[pr.id] = 1; perStore[store] = (perStore[store] || 0) + 1;
         out.push(pr);
       }
     }
-    // 1) genuine markdowns (price_old > price), biggest discount first
-    const md = await productDb.query({ markdown: true, sort: 'discount', limit: 150 });
+    // genuine markdowns only, biggest discount first (no on-sale-flag fill)
+    const md = await productDb.query({ markdown: true, sort: 'discount', limit: 250 });
     take((md && md.products) || []);
-    // 2) if still short, top up with flagged-on-sale items
-    if (out.length < TARGET) {
-      const os = await productDb.query({ onSale: true, sort: 'discount', limit: 150 });
-      take((os && os.products) || []);
-    }
     _topDeals = { at: Date.now(), data: out };
   } catch (e) { console.error('[top-deals]', e.message); }
   finally { _tdFetching = false; }
