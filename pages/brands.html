@@ -107,6 +107,7 @@
 .brand-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 16px 38px rgba(0,0,0,.4)}
 .brand-card-header{height:84px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:14px;font-family:var(--font-serif);font-size:22px;color:#1a1410;margin-bottom:12px}
 .brand-card-header img{max-width:84%;max-height:54px;object-fit:contain}
+.brand-card-header .mono,.fbrand .lg .mono{font-family:var(--font-serif);font-weight:600;font-size:30px;line-height:1;color:#1a1410;letter-spacing:.02em}
 .brand-card-body{padding:0}
 .brand-card-name{font-family:var(--font-serif);font-size:18px;margin:0 0 3px;color:#faf8f3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand-card-meta{font-size:11px;color:#c9a84c;letter-spacing:.04em;margin:0}
@@ -259,7 +260,7 @@
 // Real product brands from the catalogue (data-driven; stores are listed separately under Featured Stores).
 let allBrands = [];
 function ftwDom(n){return (n||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]/g,'')+'.com';}
-function logoImg(n){var i=((n||'?')[0]||'?').toUpperCase();return '<img src="https://logo.clearbit.com/'+ftwDom(n)+'" alt="'+n+'" loading="lazy" onerror="this.remove();this.parentNode.textContent=\''+i+'\'" style="max-width:84%;max-height:50px;object-fit:contain">';}
+function logoImg(n){var i=((n||'?').trim()[0]||'?').toUpperCase();return '<span class="mono">'+i+'</span><img src="https://logo.clearbit.com/'+ftwDom(n)+'" alt="'+(n||'')+'" loading="lazy" style="display:none;max-width:84%;max-height:50px;object-fit:contain" onload="if(this.naturalWidth>16){this.style.display=\'block\';var m=this.parentNode.querySelector(\'.mono\');if(m)m.remove();}else{this.remove();}" onerror="this.remove()">';}
 async function loadBrandList() {
   try {
     const base = window.API_BASE || '';
