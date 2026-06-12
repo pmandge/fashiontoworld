@@ -77,7 +77,7 @@ async function pruneOld(runStamp) {
   return r.rowCount;
 }
 
-async function query({ category, subcategory, gender, brand, advertiser, color, size, onSale, minprice, maxprice, q, sort, limit = 24, page = 1 } = {}) {
+async function query({ category, subcategory, gender, brand, advertiser, color, size, onSale, markdown, minprice, maxprice, q, sort, limit = 24, page = 1 } = {}) {
   const where = []; const vals = []; let i = 1;
   // Always require a real image — products with no picture are hidden site-wide.
   where.push(`image_url IS NOT NULL AND image_url <> ''`);
@@ -93,6 +93,7 @@ async function query({ category, subcategory, gender, brand, advertiser, color, 
   if (color)       { const cs = String(color).split(',').map(s => s.trim()).filter(Boolean); if (cs.length) { where.push(`color = ANY($${i++})`); vals.push(cs); } }
   if (size)        { const ss = String(size).split(',').map(s => s.trim()).filter(Boolean); if (ss.length) { where.push(`size = ANY($${i++})`); vals.push(ss); } }
   if (onSale)      { where.push(`on_sale = true`); }
+  if (markdown)    { where.push(`price_old IS NOT NULL AND price_old > price`); }
   if (minprice != null) { where.push(`price >= $${i++}`); vals.push(minprice); }
   if (maxprice != null) { where.push(`price <= $${i++}`); vals.push(maxprice); }
   let qWords = [];
@@ -110,7 +111,7 @@ async function query({ category, subcategory, gender, brand, advertiser, color, 
   if (sort === 'price_asc') order = 'price ASC';
   else if (sort === 'price_desc') order = 'price DESC';
   else if (sort === 'sale') order = 'on_sale DESC, price ASC';
-  else if (sort === 'discount') order = 'on_sale DESC, updated_at DESC';
+  else if (sort === 'discount') order = "CASE WHEN price_old IS NOT NULL AND price_old > 0 THEN (price_old - price) / price_old ELSE 0 END DESC, on_sale DESC, updated_at DESC";
   const lim = Math.min(parseInt(limit) || 24, 100);
   const off = ((parseInt(page) || 1) - 1) * lim;
   // COUNT uses the WHERE params only
