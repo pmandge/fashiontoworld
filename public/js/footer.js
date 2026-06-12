@@ -9,7 +9,7 @@
   var HOME = inPages ? '../index.html' : 'index.html';
   var SEARCH = P + 'search.html';
   var enc = encodeURIComponent;
-  function link(href, label) { return '<a href="' + href + '">' + label + '</a>'; }
+  function link(href, label) { var ext = href.indexOf('go.html') !== -1 ? ' target="_blank" rel="noopener"' : ''; return '<a href="' + href + '"' + ext + '>' + label + '</a>'; }
 
   var stores = ['The Luxury Closet','Stylewe','AliExpress','Noracora','Justfashionnow','ChicMe','Glasseslit','Italo Jewelry','Wayrates','Symbol Fashion','Alibaba','Hacoo'];
   var brands = ['Valentino','Prada','Balenciaga','Max Mara','Bottega Veneta','Jimmy Choo','Balmain','Dolce & Gabbana','The Row','Brunello Cucinelli'];
