@@ -295,17 +295,23 @@ async function refreshTopDeals() {
   try {
     const TARGET = 15;                 // ~3 rows
     const out = []; const seen = {}; const perStore = {};
-    // Pull a large batch of the most-discounted products, then enforce variety
-    // (max 2 per store) and keep only genuine old-price discounts.
-    const r = await productDb.query({ onSale: true, sort: 'discount', limit: 150 });
-    for (const pr of ((r && r.products) || [])) {
-      if (out.length >= TARGET) break;
-      if (!pr || !pr.price_old || pr.price_old <= pr.price) continue;
-      if (seen[pr.id]) continue;
-      const store = pr.advertiser_name || '';
-      if ((perStore[store] || 0) >= 2) continue;
-      seen[pr.id] = 1; perStore[store] = (perStore[store] || 0) + 1;
-      out.push(pr);
+    function take(list) {
+      for (const pr of (list || [])) {
+        if (out.length >= TARGET) break;
+        if (!pr || seen[pr.id]) continue;
+        const store = pr.advertiser_name || '';
+        if ((perStore[store] || 0) >= 2) continue;   // max 2 per store for variety
+        seen[pr.id] = 1; perStore[store] = (perStore[store] || 0) + 1;
+        out.push(pr);
+      }
+    }
+    // 1) genuine markdowns (price_old > price), biggest discount first
+    const md = await productDb.query({ markdown: true, sort: 'discount', limit: 150 });
+    take((md && md.products) || []);
+    // 2) if still short, top up with flagged-on-sale items
+    if (out.length < TARGET) {
+      const os = await productDb.query({ onSale: true, sort: 'discount', limit: 150 });
+      take((os && os.products) || []);
     }
     _topDeals = { at: Date.now(), data: out };
   } catch (e) { console.error('[top-deals]', e.message); }
