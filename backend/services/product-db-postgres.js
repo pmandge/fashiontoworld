@@ -93,7 +93,7 @@ async function query({ category, subcategory, gender, brand, advertiser, color, 
   if (color)       { const cs = String(color).split(',').map(s => s.trim()).filter(Boolean); if (cs.length) { where.push(`color = ANY($${i++})`); vals.push(cs); } }
   if (size)        { const ss = String(size).split(',').map(s => s.trim()).filter(Boolean); if (ss.length) { where.push(`size = ANY($${i++})`); vals.push(ss); } }
   if (onSale)      { where.push(`on_sale = true`); }
-  if (markdown)    { where.push(`price_old IS NOT NULL AND price_old > price`); }
+  if (markdown)    { where.push(`price_old IS NOT NULL AND price > 0 AND price_old > price AND price >= price_old * 0.1 AND price <= price_old * 0.9`); }
   if (minprice != null) { where.push(`price >= $${i++}`); vals.push(minprice); }
   if (maxprice != null) { where.push(`price <= $${i++}`); vals.push(maxprice); }
   let qWords = [];
