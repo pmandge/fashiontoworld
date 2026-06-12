@@ -21,7 +21,7 @@
   h1 .store{color:var(--gold);font-style:italic}
   p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:8px}
   .bar{height:4px;background:var(--cream);border-radius:4px;margin:26px 0 10px;overflow:hidden}
-  .bar i{display:block;height:100%;width:0;background:var(--gold);border-radius:4px;animation:fill 1.6s ease forwards}
+  .bar i{display:block;height:100%;width:0;background:var(--gold);border-radius:4px;animation:fill 0.7s ease forwards}
   @keyframes fill{to{width:100%}}
   .fine{font-size:12px;color:#9a9a9a;margin-top:18px}
   .manual{margin-top:20px;font-size:13px}
@@ -57,7 +57,7 @@
     function go(url) {
       if (!url || !/^https?:/i.test(url)) { location.replace(fallback); return; }
       document.getElementById('manualLink').href = url;
-      setTimeout(function () { location.replace(url); }, 1600);
+      setTimeout(function () { location.replace(url); }, 700);
     }
 
     if (directUrl && /^https?:/i.test(directUrl)) { go(directUrl); return; }
