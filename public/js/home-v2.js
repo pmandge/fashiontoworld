@@ -126,7 +126,7 @@
       rail.innerHTML = STORES.filter(function (s) { return cat === 'all' || (s.cats || []).indexOf(cat) > -1; }).map(function (s) {
         var logo = s.d ? ('<img alt="' + esc(s.name) + '" loading="lazy" src="https://logo.clearbit.com/' + s.d + '" onerror="this.onerror=null;this.src=\'https://www.google.com/s2/favicons?domain=' + s.d + '&sz=128\'">') : s.name.trim()[0];
         var cta = (s.count != null) ? (s.count.toLocaleString() + ' items &#8250;') : 'Visit store &#8250;';
-        return '<a class="store" href="pages/go.html?store=' + encodeURIComponent(s.name) + '">' +
+        return '<a class="store" target="_blank" rel="noopener" href="pages/go.html?store=' + encodeURIComponent(s.name) + '">' +
           '<div class="store-logo">' + logo + '</div>' +
           '<div class="store-name">' + esc(s.name) + '</div><div class="store-tag">' + esc(s.t) + '</div>' +
           '<div class="store-count">' + cta + '</div></a>';
