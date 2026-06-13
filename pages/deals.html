@@ -132,7 +132,19 @@
   margin-bottom: 8px;
   line-height: 1.25;
 }
-.deal-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; flex: 1 1 auto; }
+.deal-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+/* CTA cluster pinned to the bottom of every card → buttons always align */
+.deal-foot { margin-top: auto; }
 
 .deal-expires { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
 .deal-expires span { color: #c0392b; }
@@ -404,6 +416,16 @@ function formatDiscount(d) {
   return d;
 }
 
+/* Feeds pour raw T&C text with ○ / ● / • bullet artifacts and hard line
+   breaks into the description. Strip those so the 3-line clamp reads cleanly. */
+function cleanDesc(s) {
+  if (!s) return '';
+  return s
+    .replace(/[○●◦•▪‣·]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function escAttr(s) { return (s || '').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
 
 function renderGrid() {
@@ -437,15 +459,17 @@ function renderGrid() {
         </div>
       </div>
       <h3 class="deal-title">${title}</h3>
-      <p class="deal-desc">${c.description || 'Limited-time offer — shop and save.'}</p>
-      ${c.date_end ? `<p class="deal-expires">Expires <span>${formatDate(c.date_end)}</span></p>` : ''}
-      ${code
-        ? `<div class="deal-code-box" onclick="copyCode('${escAttr(c.promocode)}', this)">
-             <span class="deal-code-text">${c.promocode}</span>
-             <button class="deal-copy-btn">Copy</button>
-           </div>`
-        : `<p class="no-code-note">✓ No code needed — discount applied at checkout</p>`}
-      <a href="${c.url || '#'}" class="deal-action" target="_blank" rel="noopener sponsored">Get Deal</a>
+      <p class="deal-desc">${cleanDesc(c.description) || 'Limited-time offer — shop and save.'}</p>
+      <div class="deal-foot">
+        ${c.date_end ? `<p class="deal-expires">Expires <span>${formatDate(c.date_end)}</span></p>` : ''}
+        ${code
+          ? `<div class="deal-code-box" onclick="copyCode('${escAttr(c.promocode)}', this)">
+               <span class="deal-code-text">${c.promocode}</span>
+               <button class="deal-copy-btn">Copy</button>
+             </div>`
+          : `<p class="no-code-note">✓ No code needed — discount applied at checkout</p>`}
+        <a href="${c.url || '#'}" class="deal-action" target="_blank" rel="noopener sponsored">Get Deal</a>
+      </div>
     </div>`;
   }).join('');
 }
