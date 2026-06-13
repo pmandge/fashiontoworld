@@ -2,26 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- Google tag (gtag.js) - GA4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-T7SK34MMHV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-T7SK34MMHV');
-</script>
-<!-- end Google tag -->
-<!-- Microsoft Clarity -->
-<script type="text/javascript">
-  (function(c,l,a,r,i,t,y){
-    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-  })(window, document, "clarity", "script", "x4x3qstcpo");
-</script>
-<!-- end Microsoft Clarity -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fashion Deals &amp; Promo Codes — Updated Daily | Fashion to World</title>
+<title>Fashion Deals & Coupons — FashionToWorld</title>
 <meta name="description" content="The best fashion deals, promo codes, and discount vouchers from top brands. Updated daily.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -34,7 +16,6 @@
 }
 .page-hero h1 { font-size: clamp(40px, 6vw, 80px); }
 .page-hero p { font-size: 18px; color: var(--text-muted); margin-top: 16px; }
-
 .deals-filters {
   display: flex;
   gap: 12px;
@@ -53,19 +34,25 @@
   cursor: pointer;
   border-radius: 100px;
   transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 .filter-btn:hover, .filter-btn.active {
   background: var(--black);
   color: var(--white);
   border-color: var(--black);
 }
-
+.filter-count {
+  font-size: 11px;
+  opacity: 0.6;
+  font-weight: 400;
+}
 .deals-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 20px;
 }
-
 .deal-card {
   border: 1.5px solid var(--border);
   border-radius: var(--radius-lg);
@@ -74,6 +61,8 @@
   transition: all 0.25s;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 .deal-card::before {
   content: '';
@@ -86,15 +75,16 @@
 }
 .deal-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.1); border-color: var(--gold); }
 .deal-card:hover::before { transform: scaleX(1); }
-
 .deal-card-head {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 12px;
   margin-bottom: 16px;
 }
 .deal-store { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
-.deal-store-row { display: flex; align-items: center; gap: 10px; }
+.deal-store-row { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.deal-store-row .deal-store { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .deal-logo {
   width: 40px; height: 40px;
   border-radius: 8px;
@@ -107,6 +97,21 @@
   border: 1px solid var(--border);
 }
 .deal-logo-img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+.deal-head-tags {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.deal-discount {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--gold);
+  white-space: nowrap;
+  line-height: 1;
+}
 .deal-type {
   font-size: 11px;
   font-weight: 500;
@@ -127,7 +132,7 @@
   margin-bottom: 8px;
   line-height: 1.25;
 }
-.deal-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+.deal-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; flex: 1 1 auto; }
 
 .deal-expires { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
 .deal-expires span { color: #c0392b; }
@@ -151,6 +156,9 @@
   letter-spacing: 0.15em;
   color: var(--black);
   flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .deal-copy-btn {
   font-size: 12px;
@@ -161,6 +169,7 @@
   background: none;
   border: none;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .deal-action {
@@ -175,6 +184,7 @@
   text-transform: uppercase;
   border-radius: var(--radius);
   transition: background 0.2s;
+  margin-top: auto;
 }
 .deal-action:hover { background: var(--gold); color: var(--black); }
 
@@ -183,6 +193,15 @@
   color: var(--text-muted);
   margin-bottom: 16px;
   font-style: italic;
+}
+
+.deals-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--text-muted);
 }
 
 .deals-stats {
@@ -199,40 +218,11 @@
 }
 .deals-stat-num { font-family: var(--font-serif); font-size: 40px; color: var(--black); }
 .deals-stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+@media (max-width: 640px) {
+  .deals-stats { grid-template-columns: repeat(2, 1fr); }
+}
 </style>
-  <link rel="icon" type="image/svg+xml" href="/public/images/favicon.svg">
-  <link rel="alternate icon" href="/public/images/favicon.svg">
-  <link rel="canonical" href="https://fashiontoworld.co/pages/deals.html">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Fashion to World">
-  <meta property="og:title" content="Fashion Deals &amp; Promo Codes — Updated Daily | Fashion to World">
-  <meta property="og:description" content="The best fashion deals, promo codes, and discount vouchers from top brands. Updated daily.">
-  <meta property="og:url" content="https://fashiontoworld.co/pages/deals.html">
-  <meta property="og:image" content="https://fashiontoworld.co/public/images/og-cover.jpg">
-  <meta property="og:locale" content="en_US">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Fashion Deals &amp; Promo Codes — Updated Daily | Fashion to World">
-  <meta name="twitter:description" content="The best fashion deals, promo codes, and discount vouchers from top brands. Updated daily.">
-  <meta name="twitter:image" content="https://fashiontoworld.co/public/images/og-cover.jpg">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://fashiontoworld.co/"},{"@type":"ListItem","position":2,"name":"Deals","item":"https://fashiontoworld.co/pages/deals.html"}]}</script>
-  <meta name="p:domain_verify" content="661d8a8320ccc55e6fcb78c7beae954b"/>
-  <!-- Pinterest Tag -->
-  <script>
-  !function(e){if(!window.pintrk){window.pintrk = function () {
-  window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
-    n=window.pintrk;n.queue=[],n.version="3.0";var
-    t=document.createElement("script");t.async=!0,t.src=e;var
-    r=document.getElementsByTagName("script")[0];
-    r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
-  pintrk('load', '2614290053907');
-  pintrk('page');
-  </script>
-  <noscript>
-  <img height="1" width="1" style="display:none;" alt="" src="https://ct.pinterest.com/v3/?event=init&tid=2614290053907&noscript=1" />
-  </noscript>
-  <!-- end Pinterest Tag -->
-  <meta name="verification" content="cf132f0c2e555d4546f62085865b208a" />
-<link rel="stylesheet" href="../public/css/responsive-fixes.css">
 </head>
 <body>
 
@@ -242,16 +232,15 @@
         <ul class="nav-links">
       <li><a href="women.html">Women</a></li>
       <li><a href="men.html">Men</a></li>
-      <li><a href="shoes.html">Shoes</a></li>
-      <li><a href="bags.html">Bags</a></li>
-      <li><a href="jewellery.html">Jewellery &amp; Watches</a></li>
-      <li><a href="accessories.html">Accessories</a></li>
+      <li><a href="women.html?cat=shoes">Shoes</a></li>
+      <li><a href="women.html?cat=bags">Bags</a></li>
+      <li><a href="women.html?cat=jewellery">Jewellery &amp; Watches</a></li>
+      <li><a href="women.html?cat=accessories">Accessories</a></li>
       <li><a href="brands.html">Brands</a></li>
-      
+      <li><a href="deals.html">Deals</a></li>
     </ul>
     <div class="nav-spacer"></div>
     <div class="nav-actions">
-      <form class="nav-search" onsubmit="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search 169,000+ products…" aria-label="Search products" autocomplete="off"></form>
       <a href="deals.html" class="btn-nav-cta">Deals</a>
     </div>
   </div>
@@ -279,7 +268,7 @@
         <div class="deals-stat-label">Stores</div>
       </div>
       <div class="deals-stat">
-        <div class="deals-stat-num" id="stat-savings">60%</div>
+        <div class="deals-stat-num" id="stat-savings">—</div>
         <div class="deals-stat-label">Max Discount</div>
       </div>
       <div class="deals-stat">
@@ -288,15 +277,8 @@
       </div>
     </div>
 
-    <!-- Filters -->
-    <div class="deals-filters">
-      <button class="filter-btn active" onclick="filterDeals('all', this)">All Deals</button>
-      <button class="filter-btn" onclick="filterDeals('code', this)">Promo Codes</button>
-      <button class="filter-btn" onclick="filterDeals('sale', this)">Sales</button>
-      <button class="filter-btn" onclick="filterDeals('freeship', this)">Free Shipping</button>
-      <button class="filter-btn" onclick="filterDeals('luxury', this)">Luxury</button>
-      <button class="filter-btn" onclick="filterDeals('highstreet', this)">High Street</button>
-    </div>
+    <!-- Filters (rendered dynamically; only tabs with results appear) -->
+    <div class="deals-filters" id="dealsFilters"></div>
 
     <!-- Deals Grid -->
     <div class="deals-grid" id="dealsGrid">
@@ -309,104 +291,163 @@
 <footer class="footer">
   <div class="container">
     <div class="footer-bottom">
-      <p>© 2026 FashionToWorld. Affiliate Disclosure: We earn a commission on qualifying purchases. Deals verified daily but may expire — always check the brand's site for current pricing.</p>
+      <p>© 2025 FashionToWorld. Affiliate Disclosure: We earn a commission on qualifying purchases. Deals verified daily but may expire — always check the brand's site for current pricing.</p>
     </div>
   </div>
 </footer>
 
 <script src="../public/js/api-config.js"></script>
-  <script src="../public/js/admitad-api.js"></script>
+<script src="../public/js/admitad-api.js"></script>
 <script>
-async function loadDeals(filter = 'all') {
+/* ---- Coupons load once, all filtering happens client-side ---- */
+const API_LIMIT = 60;
+let ALL_COUPONS = [];
+let activeFilter = 'all';
+
+/* Tier maps derived from advertiser name (substring, case-insensitive). */
+const LUXURY_STORES = ['luxury closet', 'italo', 'silverbene', 'jewel'];
+const HIGHSTREET_STORES = ['glasseslit', 'noracora', 'chicme', 'wayrates', 'justfashionnow', 'stylewe', 'stylevana', 'symbol', 'metro'];
+
+const FILTERS = [
+  { key: 'all',        label: 'All Deals' },
+  { key: 'code',       label: 'Promo Codes' },
+  { key: 'sale',       label: 'Sales' },
+  { key: 'freeship',   label: 'Free Shipping' },
+  { key: 'luxury',     label: 'Luxury' },
+  { key: 'highstreet', label: 'High Street' },
+];
+
+/* A coupon is a real "code" only if it has a usable promocode.
+   Admitad sends "Not required" for code-less deals — treat those as sales. */
+function isCode(c) {
+  const code = (c.promocode || '').trim().toLowerCase();
+  return !!code && code !== 'not required' && code !== 'no code';
+}
+function hasFreeShip(c) {
+  const t = ((c.name || '') + ' ' + (c.description || '')).toLowerCase();
+  return t.includes('free ship') || t.includes('free deliver');
+}
+function inTier(c, list) {
+  const n = (c.advertiser_name || '').toLowerCase();
+  return list.some(s => n.includes(s));
+}
+function matchesFilter(c, f) {
+  switch (f) {
+    case 'all':        return true;
+    case 'code':       return isCode(c);
+    case 'sale':       return !isCode(c);
+    case 'freeship':   return hasFreeShip(c);
+    case 'luxury':     return inTier(c, LUXURY_STORES);
+    case 'highstreet': return inTier(c, HIGHSTREET_STORES);
+    default:           return true;
+  }
+}
+
+async function loadDeals() {
   const grid = document.getElementById('dealsGrid');
-  grid.innerHTML = '<div class="loading-skeleton" style="height:200px"></div>'.repeat(6);
+  grid.innerHTML = '<div class="loading-skeleton" style="height:240px"></div>'.repeat(6);
+  let data = null;
+  try {
+    data = await AdmitadAPI.getCoupons({ limit: API_LIMIT });
+  } catch (e) {
+    console.error('[deals] load failed', e);
+  }
+  ALL_COUPONS = (data && Array.isArray(data.coupons)) ? data.coupons : [];
+  renderStats();
+  renderFilters();
+  renderGrid();
+}
 
-  const [cData, pData] = await Promise.all([
-    AdmitadAPI.getCoupons({ limit: 60 }).catch(() => null),
-    fetch((window.API_BASE || '') + '/api/products/top-deals').then(r => r.ok ? r.json() : null).catch(() => null)
-  ]);
-  const coupons = (cData && cData.coupons) || [];
-  const products = (pData && pData.products) || [];
+function renderStats() {
+  document.getElementById('stat-deals').textContent = ALL_COUPONS.length || '—';
 
-  // ---- data-driven stats ----
-  const advSet = new Set();
-  coupons.forEach(c => { if (c.advertiser_name) advSet.add(c.advertiser_name.replace(/\s*WW$/i, '').trim()); });
-  products.forEach(p => { if (p.advertiser) advSet.add(p.advertiser); });
-  let maxDisc = 0;
-  coupons.forEach(c => { const m = (c.discount || '').match(/(\d+)\s*%/); if (m) maxDisc = Math.max(maxDisc, +m[1]); });
-  products.forEach(p => { if (p.price_old && p.price_old > p.price) maxDisc = Math.max(maxDisc, Math.round((1 - p.price / p.price_old) * 100)); });
-  document.getElementById('stat-deals').textContent = (coupons.length + products.length) || '—';
-  const sb = document.getElementById('stat-brands'); if (sb) sb.textContent = advSet.size || '—';
-  const ss = document.getElementById('stat-savings'); if (ss) ss.textContent = maxDisc ? (maxDisc + '%') : '—';
+  const stores = new Set(ALL_COUPONS.map(c => c.advertiser_name).filter(Boolean));
+  const sb = document.getElementById('stat-brands');
+  if (sb) sb.textContent = stores.size || '—';
 
-  // ---- filter -> items ----
-  let items = [];
-  if (filter === 'code') items = coupons.map(couponCard);
-  else if (filter === 'sale') items = products.map(productCard);
-  else if (filter === 'freeship') items = coupons.filter(c => /free ship|free deliver|shipping/.test((c.name || '').toLowerCase())).map(couponCard);
-  else if (filter === 'luxury') items = products.filter(p => /luxury closet|symbol|italo/.test((p.advertiser || '').toLowerCase())).map(productCard).concat(coupons.filter(c => /luxury|designer|premium/.test((c.name || '').toLowerCase())).map(couponCard));
-  else if (filter === 'highstreet') items = products.filter(p => !/luxury closet|symbol|italo/.test((p.advertiser || '').toLowerCase())).map(productCard);
-  else items = products.map(productCard).concat(coupons.map(couponCard));
+  let max = 0;
+  ALL_COUPONS.forEach(c => {
+    const m = (c.discount || '').match(/(\d+)\s*%/);
+    if (m) max = Math.max(max, parseInt(m[1], 10));
+  });
+  const sv = document.getElementById('stat-savings');
+  if (sv) sv.textContent = max ? max + '%' : '—';
+}
 
-  if (!items.length) {
-    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:60px;text-align:center;color:#888"><p>No deals in this category right now. Try another filter — we update deals daily.</p></div>';
+function renderFilters() {
+  const wrap = document.getElementById('dealsFilters');
+  const tabs = FILTERS
+    .map(f => ({ ...f, count: ALL_COUPONS.filter(c => matchesFilter(c, f.key)).length }))
+    .filter(f => f.key === 'all' || f.count > 0);
+
+  // If the active filter no longer has results, fall back to All.
+  if (!tabs.some(t => t.key === activeFilter)) activeFilter = 'all';
+
+  wrap.innerHTML = tabs.map(f => `
+    <button class="filter-btn${f.key === activeFilter ? ' active' : ''}" onclick="setFilter('${f.key}')">
+      ${f.label}${f.key !== 'all' ? `<span class="filter-count">${f.count}</span>` : ''}
+    </button>`).join('');
+}
+
+function setFilter(key) {
+  activeFilter = key;
+  renderFilters();
+  renderGrid();
+}
+
+/* "20%" -> "20% OFF", "20 $" -> "$20 OFF", leaves anything unexpected alone. */
+function formatDiscount(d) {
+  if (!d) return '';
+  d = d.trim();
+  if (/^\d+\s*%$/.test(d)) return d.replace(/\s+/g, '') + ' OFF';
+  if (/^\d+\s*\$$/.test(d)) return '$' + d.replace(/[\s$]/g, '') + ' OFF';
+  return d;
+}
+
+function escAttr(s) { return (s || '').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
+function renderGrid() {
+  const grid = document.getElementById('dealsGrid');
+  const list = ALL_COUPONS.filter(c => matchesFilter(c, activeFilter));
+
+  if (!list.length) {
+    grid.innerHTML = '<div class="deals-empty">No deals in this category right now — we refresh daily, so check back soon.</div>';
     return;
   }
-  grid.innerHTML = items.join('');
-}
 
-function productCard(p) {
-  const disc = (p.price_old && p.price_old > p.price) ? Math.round((1 - p.price / p.price_old) * 100) : 0;
-  const img = p.image_url || '';
-  const price = p.price_display || (p.price ? ('$' + p.price) : '');
-  const was = p.price_old ? (p.price_old_display || ('$' + p.price_old)) : '';
-  const link = p.affiliate_url || p.url || '';
-  const href = /^https?:/i.test(link) ? link : '#';
-  const title = (p.name || '').length > 88 ? p.name.slice(0, 86) + '…' : (p.name || '');
-  return `
-    <div class="deal-card" data-type="sale">
-      <div class="deal-card-head">
-        <div class="deal-store-row"><span class="deal-store">${p.advertiser || ''}</span></div>
-        <span class="deal-type sale">${disc ? '-' + disc + '%' : 'Sale'}</span>
-      </div>
-      <div style="height:160px;border-radius:10px;margin:6px 0 12px;background:#efe9df center/contain no-repeat${img ? ` url('${img}')` : ''}"></div>
-      <h3 class="deal-title" style="font-size:16px">${title}</h3>
-      <p class="deal-desc">${price}${was ? ` <s style="color:#aaa">${was}</s>` : ''}</p>
-      ${href !== '#' ? `<a href="${href}" class="deal-action" target="_blank" rel="noopener sponsored nofollow">Shop ›</a>` : `<span class="deal-action" style="opacity:.55;cursor:default">Unavailable</span>`}
-    </div>`;
-}
+  grid.innerHTML = list.map(c => {
+    const code = isCode(c);
+    const title = (c.name || '').length > 90 ? c.name.slice(0, 88) + '…' : (c.name || 'Special Offer');
+    const initial = (c.advertiser_name || '?').trim().charAt(0).toUpperCase();
+    const logoHtml = c.logo
+      ? `<img src="${c.logo}" alt="${escAttr(c.advertiser_name)}" class="deal-logo-img" loading="lazy" onerror="this.parentNode.textContent='${initial}'">`
+      : initial;
+    const disc = formatDiscount(c.discount);
 
-function couponCard(c) {
-  const title = (c.name || '').length > 90 ? c.name.slice(0, 88) + '…' : c.name;
-  const initial = (c.advertiser_name || '?').trim().charAt(0).toUpperCase();
-  const logoHtml = c.logo
-    ? `<img src="${c.logo}" alt="${c.advertiser_name}" class="deal-logo-img" loading="lazy" onerror="this.parentNode.textContent='${initial}'">`
-    : initial;
-  return `
-    <div class="deal-card" data-type="${c.type || 'code'}">
+    return `
+    <div class="deal-card">
       <div class="deal-card-head">
         <div class="deal-store-row">
           <span class="deal-logo">${logoHtml}</span>
-          <span class="deal-store">${c.advertiser_name}</span>
+          <span class="deal-store">${c.advertiser_name || ''}</span>
         </div>
-        <span class="deal-type ${c.type || 'code'}">${c.type === 'sale' ? 'Sale' : c.promocode ? 'Code' : 'Deal'}</span>
+        <div class="deal-head-tags">
+          ${disc ? `<span class="deal-discount">${disc}</span>` : ''}
+          <span class="deal-type ${code ? 'code' : 'sale'}">${code ? 'Code' : 'Deal'}</span>
+        </div>
       </div>
       <h3 class="deal-title">${title}</h3>
-      <p class="deal-desc">${c.description || 'Limited time offer. Shop and save now.'}</p>
-      ${c.expires_at ? `<p class="deal-expires">Expires: <span>${formatDate(c.expires_at)}</span></p>` : ''}
-      ${c.promocode
-        ? `<div class="deal-code-box" onclick="copyCode('${c.promocode}', this)"><span class="deal-code-text">${c.promocode}</span><button class="deal-copy-btn">Copy</button></div>`
-        : `<p class="no-code-note">✓ No code needed — discount applied automatically</p>`}
-      ${/^https?:/i.test(c.url || '')
-        ? `<a href="${c.url}" class="deal-action" target="_blank" rel="noopener sponsored nofollow">Get Deal ›</a>`
-        : `<span class="deal-action" style="opacity:.55;cursor:default">Deal Unavailable</span>`}
+      <p class="deal-desc">${c.description || 'Limited-time offer — shop and save.'}</p>
+      ${c.date_end ? `<p class="deal-expires">Expires <span>${formatDate(c.date_end)}</span></p>` : ''}
+      ${code
+        ? `<div class="deal-code-box" onclick="copyCode('${escAttr(c.promocode)}', this)">
+             <span class="deal-code-text">${c.promocode}</span>
+             <button class="deal-copy-btn">Copy</button>
+           </div>`
+        : `<p class="no-code-note">✓ No code needed — discount applied at checkout</p>`}
+      <a href="${c.url || '#'}" class="deal-action" target="_blank" rel="noopener sponsored">Get Deal</a>
     </div>`;
-}
-
-function filterDeals(type, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  loadDeals(type);
+  }).join('');
 }
 
 function copyCode(code, el) {
@@ -419,9 +460,10 @@ function copyCode(code, el) {
 }
 
 function formatDate(d) {
-  return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const dt = new Date((d || '').replace(' ', 'T'));
+  if (isNaN(dt.getTime())) return d;
+  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
-
 
 loadDeals();
 </script>
@@ -430,9 +472,5 @@ loadDeals();
 <script src="../public/js/site-content.js"></script>
 <script src="../public/js/footer.js"></script>
 <script src="../public/js/mobile-menu.js"></script>
-  <script src="/public/js/cookie-consent.js" defer></script>
-  <script src="/public/js/hero-search.js" defer></script>
-  <script src="/public/js/nav-speed.js" defer></script>
-  <script src="/public/js/pin-events.js" defer></script>
 </body>
 </html>
