@@ -99,7 +99,7 @@ function admitadFromEnv() {
     const idx = entry.indexOf('|');
     const advertiser = idx > 0 ? entry.slice(0, idx).trim() : 'Admitad Feed';
     const url = (idx > 0 ? entry.slice(idx + 1) : entry).trim();
-    return { network: 'admitad', advertiser, format: 'admitad-yml', url };
+    return { network: 'admitad', advertiser, format: 'google-xml', url };
   }).filter(f => f.url);
 }
 
