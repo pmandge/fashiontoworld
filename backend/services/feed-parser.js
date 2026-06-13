@@ -23,6 +23,7 @@ function register(adapter) { ADAPTERS[adapter.format] = adapter; }
 
 register(require('./parsers/admitad-yml'));
 register(require('./parsers/generic-csv'));
+register(require('./parsers/google-xml'));
 
 /**
  * Parse any feed, dispatching by format.
