@@ -10,12 +10,28 @@
 <link rel="stylesheet" href="../public/css/main.css">
 <style>
 .page-hero {
-  padding: calc(var(--nav-h) + 60px) 0 60px;
-  background: var(--cream);
+  position: relative;
+  padding: calc(var(--nav-h) + 90px) 0 90px;
   text-align: center;
+  /* Top layer: dark overlay for text contrast.
+     Middle: the banner photo (drop it at public/images/deals-hero.jpg).
+     Bottom: a gradient fallback so the hero looks intentional if the
+     image is missing or still loading — never a broken box. */
+  background:
+    linear-gradient(rgba(26, 21, 17, 0.5), rgba(26, 21, 17, 0.7)),
+    url('../public/images/deals-hero.jpg') center / cover no-repeat,
+    linear-gradient(135deg, #2c2620 0%, #4a3d30 100%);
+  background-color: #2c2620;
 }
-.page-hero h1 { font-size: clamp(40px, 6vw, 80px); }
-.page-hero p { font-size: 18px; color: var(--text-muted); margin-top: 16px; }
+.page-hero .section-eyebrow { color: var(--gold); }
+.page-hero h1 { font-size: clamp(40px, 6vw, 80px); color: #fff; }
+.page-hero h1 em { color: var(--gold); font-style: italic; }
+.page-hero p { font-size: 18px; color: rgba(255, 255, 255, 0.82); margin-top: 16px; }
+
+@media (max-width: 640px) {
+  .page-hero { padding: calc(var(--nav-h) + 54px) 0 54px; }
+  .page-hero p { font-size: 16px; padding: 0 18px; }
+}
 .deals-filters {
   display: flex;
   gap: 12px;
@@ -96,7 +112,7 @@
   overflow: hidden;
   border: 1px solid var(--border);
 }
-.deal-logo-img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+.deal-logo-img { width: 100%; height: 100%; object-fit: contain; background: #fff; padding: 3px; }
 .deal-head-tags {
   display: flex;
   flex-direction: column;
@@ -426,6 +442,45 @@ function cleanDesc(s) {
     .trim();
 }
 
+/* Store logos: try the feed's own logo first, then Clearbit by domain,
+   then fall back to a lettermark. Domains are matched by substring so
+   "Alibaba WW" / "The Luxury Closet WW" etc. all resolve. */
+const STORE_DOMAINS = [
+  ['alibaba', 'alibaba.com'], ['aliexpress', 'aliexpress.com'], ['chicme', 'chicme.com'],
+  ['drippy', 'drippycustom.com'], ['glasseslit', 'glasseslit.com'], ['italo', 'italojewelry.com'],
+  ['justfashionnow', 'justfashionnow.com'], ['noracora', 'noracora.com'], ['stylevana', 'stylevana.com'],
+  ['stylewe', 'stylewe.com'], ['luxury closet', 'theluxurycloset.com'], ['wayrates', 'wayrates.com'],
+  ['symbol', 'symbolfashion.com'], ['metro', 'metrobrazil.com'], ['silverbene', 'silverbene.com'],
+];
+function storeDomain(name) {
+  const n = (name || '').toLowerCase();
+  const hit = STORE_DOMAINS.find(([k]) => n.includes(k));
+  return hit ? hit[1] : '';
+}
+function logoMarkup(c) {
+  const initial = (c.advertiser_name || '?').trim().charAt(0).toUpperCase();
+  const cands = [];
+  if (c.logo) cands.push(c.logo);
+  const dom = storeDomain(c.advertiser_name);
+  if (dom) cands.push('https://logo.clearbit.com/' + dom);
+  if (!cands.length) return initial;
+  const rest = JSON.stringify(cands.slice(1)).replace(/"/g, '&quot;');
+  return `<img src="${cands[0]}" alt="${escAttr(c.advertiser_name)}" class="deal-logo-img" loading="lazy" data-rest="${rest}" data-initial="${initial}" onerror="nextLogo(this)">`;
+}
+function nextLogo(img) {
+  try {
+    const rest = JSON.parse((img.getAttribute('data-rest') || '[]').replace(/&quot;/g, '"'));
+    if (rest.length) {
+      img.src = rest[0];
+      img.setAttribute('data-rest', JSON.stringify(rest.slice(1)).replace(/"/g, '&quot;'));
+    } else {
+      img.parentNode.textContent = img.getAttribute('data-initial') || '?';
+    }
+  } catch (e) {
+    img.parentNode.textContent = img.getAttribute('data-initial') || '?';
+  }
+}
+
 function escAttr(s) { return (s || '').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
 
 function renderGrid() {
@@ -440,10 +495,7 @@ function renderGrid() {
   grid.innerHTML = list.map(c => {
     const code = isCode(c);
     const title = (c.name || '').length > 90 ? c.name.slice(0, 88) + '…' : (c.name || 'Special Offer');
-    const initial = (c.advertiser_name || '?').trim().charAt(0).toUpperCase();
-    const logoHtml = c.logo
-      ? `<img src="${c.logo}" alt="${escAttr(c.advertiser_name)}" class="deal-logo-img" loading="lazy" onerror="this.parentNode.textContent='${initial}'">`
-      : initial;
+    const logoHtml = logoMarkup(c);
     const disc = formatDiscount(c.discount);
 
     return `
