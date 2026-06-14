@@ -278,7 +278,7 @@ const AdmitadAPI = (() => {
     // For variety, over-fetch a larger pool then randomly pick `want` items
     // (the API has no true popularity metric, so this keeps the row fresh).
     const fetchLimit = opts.random ? Math.max(want * 6, 48) : want;
-    const data = await getProducts({ sort: opts.sort || 'popularity', limit: fetchLimit });
+   const data = await getProducts({ sort: opts.sort || 'discount', limit: fetchLimit, markdown: true, minprice: 8 });
     let prods = (data?.products || []).filter(p =>
       p.image_url && /^https?:/i.test(p.affiliate_url || p.url || '')
     );
