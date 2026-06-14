@@ -87,6 +87,7 @@ const AdmitadAPI = (() => {
       sale: opts.sale || '',
       minprice: opts.minprice || '',
       maxprice: opts.maxprice || '',
+      markdown: opts.markdown || '',
       page: opts.page || 1,
       limit: opts.limit || CONFIG.pageSize,
       sort: opts.sort || 'popularity',
