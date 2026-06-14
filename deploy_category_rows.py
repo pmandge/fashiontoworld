@@ -32,19 +32,15 @@ j_new1 = """  async function getProducts(opts = {}) {
   }"""
 
 # Edit 2: add populateCategoryRow + dedupe right after populateTrending
-j_old2 = """    container.innerHTML = data.products.map(renderProductCard).join('');
-  }
-  async function populateCoupons(containerId, limit = 3) {"""
-j_new2 = """    container.innerHTML = data.products.map(renderProductCard).join('');
-  }
-  // Normalise a product name so size/colour variants collapse to one card:
+j_old2 = """  async function populateCoupons(containerId, limit = 3) {"""
+j_new2 = """  // Normalise a product name so size/colour variants collapse to one card:
   // "Kim Dress (Storm) | size: XS" -> "kim dress"
   function dedupeKey(p) {
     return (p.name || '')
       .toLowerCase()
-      .replace(/\\|\\s*size:.*$/i, '')
-      .replace(/\\([^)]*\\)/g, '')
-      .replace(/\\s*-\\s*(xs|s|m|l|xl|xxl|\\d+[a-z]{0,2})\\s*$/i, '')
+      .replace(/\|\s*size:.*$/i, '')
+      .replace(/\([^)]*\)/g, '')
+      .replace(/\s*-\s*(xs|s|m|l|xl|xxl|\d+[a-z]{0,2})\s*$/i, '')
       .replace(/[^a-z0-9]+/g, ' ')
       .trim();
   }
