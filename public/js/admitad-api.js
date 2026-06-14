@@ -238,7 +238,6 @@ const AdmitadAPI = (() => {
       style: 'currency',
       currency: currency,
       minimumFractionDigits: 2,
-      minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
   }
