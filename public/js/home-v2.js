@@ -200,9 +200,9 @@
     }, { rootMargin: '900px 0px' });
     io.observe(target);
   }
-  fillProducts('prods', { sort: 'discount', limit: 8, page: 1 });                       // Trending — near top, load now
-  lazyFill('prodsBig', { sort: 'discount', limit: 8, page: 2 });                        // Biggest Discounts — on scroll
-  lazyFill('prods2', { sort: 'popularity', limit: 8, page: 1 }, { newBadge: true });    // New In — on scroll
+  fillProducts('prods', { sort: 'discount', limit: 8, page: 1, minprice: 8 });                       // Trending — near top, load now
+  lazyFill('prodsBig', { sort: 'discount', limit: 8, page: 2, minprice: 8 });                        // Biggest Discounts — on scroll
+  lazyFill('prods2', { sort: 'popularity', limit: 8, page: 1, minprice: 8 }, { newBadge: true });    // New In — on scroll
 
   /* ---------------- live: ticker + today's deals (coupons) ---------------- */
   function shortOffer(c) {
