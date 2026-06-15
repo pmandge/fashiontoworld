@@ -28,7 +28,7 @@
 
   var state = {
     sub: '', sale: false, brands: new Set(), advertiser: '', colors: new Set(), sizes: new Set(),
-    minp: '', maxp: '', sort: 'popularity', page: 1
+    minp: '', maxp: '', sort: 'popularity', markdown: false, page: 1
   };
 
   (function () {
