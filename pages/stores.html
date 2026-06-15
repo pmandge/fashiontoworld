@@ -101,6 +101,15 @@
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
   .st-items { font-family: var(--font-sans); font-size: 13px; color: var(--gold); font-weight: 500; letter-spacing: .02em; }
+  .st-visit {
+    margin-top: 14px; display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--font-sans); font-size: 12.5px; font-weight: 500;
+    color: var(--black); background: var(--cream); border: 1px solid #e6dec9;
+    padding: 8px 14px; border-radius: 999px; text-decoration: none;
+    transition: background .18s, border-color .18s, color .18s;
+  }
+  .st-visit:hover { background: var(--black); color: #fff; border-color: var(--black); }
+  .st-card { position: relative; }
   .st-empty { grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 60px 0; font-family: var(--font-serif); font-size: 20px; }
   .st-disc { text-align: center; color: var(--text-muted); font-size: 12px; padding: 0 0 48px; }
 </style>
@@ -210,11 +219,17 @@ function card(s){
   var logo = s.d
     ? '<img src="https://logo.clearbit.com/' + s.d + '" alt="' + esc(s.name) + '" loading="lazy" onerror="this.onerror=null;this.src=\'https://www.google.com/s2/favicons?domain=' + s.d + '&sz=128\'">'
     : letter;
-  return '<a class="st-card" href="search.html?advertiser=' + encodeURIComponent(s.name) + '">' +
-           '<div class="st-logo">' + logo + '</div>' +
-           '<p class="st-name">' + esc(s.name) + '</p>' +
-           '<span class="st-items">' + s.count.toLocaleString() + ' items</span>' +
-         '</a>';
+  var enc = encodeURIComponent(s.name);
+  // Card body links to the on-site product grid (browse). The Visit-store button
+  // goes through the affiliate handshake (go.html) straight out to the merchant.
+  return '<div class="st-card">' +
+           '<a class="st-card-main" href="search.html?advertiser=' + enc + '" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center">' +
+             '<div class="st-logo">' + logo + '</div>' +
+             '<p class="st-name">' + esc(s.name) + '</p>' +
+             '<span class="st-items">' + s.count.toLocaleString() + ' items</span>' +
+           '</a>' +
+           '<a class="st-visit" href="go.html?store=' + enc + '" target="_blank" rel="sponsored nofollow noopener">Visit store <span aria-hidden="true">&#8599;</span></a>' +
+         '</div>';
 }
 var activeCat = 'all';
 function applyFilters(){
