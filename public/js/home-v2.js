@@ -116,7 +116,7 @@
       'metro brazil': { d: 'metrobrazil.com', t: 'Global marketplace', cats: ['market', 'women'] },
       'watch home': { d: 'watchhome.com', t: 'Watches', cats: ['luxury'] },
       'silverbene': { d: 'silverbene.com', t: 'Jewellery', cats: ['luxury'] },
-      ''watch enclave': { d: 'watchenclave.co.uk', t: 'Watches', cats: ['watches', 'luxury'] },
+      'watch enclave': { d: 'watchenclave.co.uk', t: 'Watches', cats: ['watches', 'luxury'] },
       'watches of usa': { d: 'watchesofusa.com', t: 'Watches', cats: ['watches', 'luxury'] },
       'watch home': { d: 'watchhome.com', t: 'Watches', cats: ['watches', 'luxury'] },
       'paul smith': { d: 'paulsmith.com', t: 'Designer', cats: ['luxury', 'women'] },
