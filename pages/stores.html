@@ -10,7 +10,6 @@
   gtag('js', new Date());
   gtag('config', 'G-T7SK34MMHV');
 </script>
-<!-- end Google tag -->
 <!-- Microsoft Clarity -->
 <script type="text/javascript">
   (function(c,l,a,r,i,t,y){
@@ -19,330 +18,232 @@
     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
   })(window, document, "clarity", "script", "x4x3qstcpo");
 </script>
-<!-- end Microsoft Clarity -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Our Stores — Worldwide-Shipping Fashion | Fashion to World</title>
-<meta name="description" content="Shop from 200+ fashion brands worldwide. Luxury, premium, high street and sport brands with global delivery.">
+<meta name="description" content="Browse every worldwide-shipping store on Fashion to World — marketplaces, luxury resale, watches, eyewear and more, with live product counts and verified deals.">
+<link rel="canonical" href="https://fashiontoworld.co/pages/stores.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FashionToWorld">
+<meta property="og:title" content="Our Stores — Worldwide-Shipping Fashion | Fashion to World">
+<meta property="og:description" content="Browse every worldwide-shipping store on Fashion to World, with live product counts.">
+<meta property="og:url" content="https://fashiontoworld.co/pages/stores.html">
+<meta property="og:image" content="https://fashiontoworld.co/public/images/og-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Our Stores — Worldwide-Shipping Fashion | Fashion to World">
+<meta name="twitter:description" content="Browse every worldwide-shipping store on Fashion to World, with live product counts.">
+<meta name="twitter:image" content="https://fashiontoworld.co/public/images/og-cover.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://fashiontoworld.co/"},{"@type":"ListItem","position":2,"name":"Stores","item":"https://fashiontoworld.co/pages/stores.html"}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../public/css/main.css">
+<link rel="stylesheet" href="../public/css/home.css">
 <style>
-.page-hero { padding: calc(var(--nav-h) + 60px) 0 60px; text-align: center; }
-.page-hero h1 { font-size: clamp(40px, 6vw, 80px); }
+  /* ── Stores directory ─────────────────────────────────────── */
+  .st-hero {
+    background: radial-gradient(120% 140% at 50% 0%, #1a1712 0%, #0a0a0a 60%);
+    padding: 96px 0 84px; text-align: center; color: #fff;
+  }
+  .st-hero .eyebrow {
+    font-family: var(--font-sans); font-size: 12px; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 18px;
+  }
+  .st-hero h1 { font-size: clamp(44px, 7vw, 78px); margin: 0; color: #fff; line-height: 1.05; }
+  .st-hero h1 em { font-style: italic; color: var(--gold-light); display: block; }
+  .st-hero .sub { color: rgba(255,255,255,.62); max-width: 560px; margin: 22px auto 0; font-size: 16px; line-height: 1.6; }
 
-.brands-search {
-  max-width: 480px;
-  margin: 32px auto 0;
-  position: relative;
-}
-.brands-search input {
-  width: 100%;
-  padding: 16px 52px 16px 20px;
-  border: 2px solid var(--black);
-  border-radius: var(--radius);
-  font-family: var(--font-sans);
-  font-size: 16px;
-  outline: none;
-}
-.brands-search svg {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-}
+  .st-tools { display: flex; flex-direction: column; gap: 18px; align-items: center; margin: 28px 0 8px; }
+  .st-search { position: relative; width: min(440px, 90%); }
+  .st-search input {
+    width: 100%; padding: 15px 18px 15px 46px; border: 1px solid rgba(255,255,255,.16);
+    border-radius: 999px; font-family: var(--font-sans); font-size: 15px;
+    background: rgba(255,255,255,.06); color: #fff; transition: border-color .2s, box-shadow .2s, background .2s;
+  }
+  .st-search input::placeholder { color: rgba(255,255,255,.5); }
+  .st-search input:focus { outline: none; border-color: var(--gold); background: rgba(255,255,255,.1); box-shadow: 0 0 0 3px rgba(201,168,76,.2); }
+  .st-search svg { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,.55); }
 
-.tier-tabs {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin: 48px 0 40px;
-  flex-wrap: wrap;
-}
-.tier-tab {
-  padding: 10px 28px;
-  border: 1.5px solid var(--border);
-  background: var(--white);
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: 100px;
-  transition: all 0.2s;
-}
-.tier-tab:hover, .tier-tab.active { background: var(--black); color: var(--white); border-color: var(--black); }
+  .st-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .st-chip {
+    border: 1px solid rgba(255,255,255,.2); background: transparent; color: rgba(255,255,255,.85);
+    font-family: var(--font-sans); font-size: 13px; padding: 8px 16px;
+    border-radius: 999px; cursor: pointer; transition: all .18s;
+  }
+  .st-chip:hover { border-color: var(--gold); color: #fff; }
+  .st-chip.on { background: var(--gold); color: var(--black); border-color: var(--gold); font-weight: 500; }
 
-.brands-a-z {
-  margin-bottom: 48px;
-}
-.alpha-nav {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-.alpha-btn {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 500;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  cursor: pointer;
-  background: var(--white);
-  transition: all 0.15s;
-}
-.alpha-btn:hover, .alpha-btn.active {
-  background: var(--black);
-  color: var(--white);
-  border-color: var(--black);
-}
+  .st-count { text-align: center; color: var(--text-muted); font-size: 13px; margin: 22px 0 26px; }
+  .st-count strong { color: var(--black); }
 
-.brand-card {
-  display: block;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  transition: all 0.25s;
-  background: var(--white);
-}
-.brand-card:hover {
-  border-color: var(--gold);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(201,168,76,0.15);
-}
-.brand-card-header {
-  height: 100px;
-  background: var(--cream);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-serif);
-  font-size: 28px;
-  color: var(--black);
-}
-.brand-card-body { padding: 16px; }
-.brand-card-name { font-family: var(--font-serif); font-size: 18px; margin-bottom: 4px; }
-.brand-card-meta { font-size: 12px; color: var(--text-muted); }
-.brand-card-tier {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 3px 10px;
-  border-radius: 100px;
-  margin-top: 8px;
-}
-.tier-luxury { background: #f5f0e5; color: #8b6914; }
-.tier-premium { background: #e8f5f0; color: #1a7a5e; }
-.tier-highstreet { background: #e8edf5; color: #1a3d7a; }
-.tier-sport { background: #f5e8e8; color: #7a1a1a; }
+  .st-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px; padding-bottom: 64px;
+  }
+  @media (min-width: 1000px) { .st-grid { grid-template-columns: repeat(5, 1fr); } }
+  @media (max-width: 999px) and (min-width: 640px) { .st-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 639px) { .st-grid { grid-template-columns: repeat(2, 1fr); } }
 
-.brands-count-bar {
-  background: var(--cream);
-  padding: 20px;
-  border-radius: var(--radius-lg);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-}
-.brands-count-bar p { font-size: 14px; color: var(--text-muted); }
-.brands-count-bar strong { color: var(--black); }
+  .st-card {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    background: #fff; border: 1px solid #eee7d9; border-radius: 16px;
+    padding: 32px 20px 26px; text-decoration: none; color: inherit;
+    transition: transform .18s, box-shadow .18s, border-color .18s;
+  }
+  .st-card:hover { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(0,0,0,.07); border-color: #e0d8c4; }
+  .st-logo {
+    width: 80px; height: 80px; border-radius: 16px; background: var(--cream);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+    font-family: var(--font-serif); font-size: 34px; color: var(--gold); overflow: hidden;
+  }
+  .st-logo img { max-width: 74%; max-height: 74%; object-fit: contain; }
+  .st-name {
+    font-family: var(--font-serif); font-size: 19px; line-height: 1.25; margin: 0 0 6px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .st-items { font-family: var(--font-sans); font-size: 13px; color: var(--gold); font-weight: 500; letter-spacing: .02em; }
+  .st-empty { grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 60px 0; font-family: var(--font-serif); font-size: 20px; }
+  .st-disc { text-align: center; color: var(--text-muted); font-size: 12px; padding: 0 0 48px; }
 </style>
-  <link rel="icon" type="image/svg+xml" href="/public/images/favicon.svg">
-  <link rel="alternate icon" href="/public/images/favicon.svg">
-  <link rel="canonical" href="https://fashiontoworld.co/pages/stores.html">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Fashion to World">
-  <meta property="og:title" content="Our Stores — Worldwide-Shipping Fashion | Fashion to World">
-  <meta property="og:description" content="Shop from 200+ fashion brands worldwide. Luxury, premium, high street and sport brands with global delivery.">
-  <meta property="og:url" content="https://fashiontoworld.co/pages/stores.html">
-  <meta property="og:image" content="https://fashiontoworld.co/public/images/og-cover.jpg">
-  <meta property="og:locale" content="en_US">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Our Stores — Worldwide-Shipping Fashion | Fashion to World">
-  <meta name="twitter:description" content="Shop from 200+ fashion brands worldwide. Luxury, premium, high street and sport brands with global delivery.">
-  <meta name="twitter:image" content="https://fashiontoworld.co/public/images/og-cover.jpg">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://fashiontoworld.co/"},{"@type":"ListItem","position":2,"name":"Brands","item":"https://fashiontoworld.co/pages/stores.html"}]}</script>
-  <meta name="p:domain_verify" content="661d8a8320ccc55e6fcb78c7beae954b"/>
-  <!-- Pinterest Tag -->
-  <script>
-  !function(e){if(!window.pintrk){window.pintrk = function () {
-  window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
-    n=window.pintrk;n.queue=[],n.version="3.0";var
-    t=document.createElement("script");t.async=!0,t.src=e;var
-    r=document.getElementsByTagName("script")[0];
-    r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
-  pintrk('load', '2614290053907');
-  pintrk('page');
-  </script>
-  <noscript>
-  <img height="1" width="1" style="display:none;" alt="" src="https://ct.pinterest.com/v3/?event=init&tid=2614290053907&noscript=1" />
-  </noscript>
-  <!-- end Pinterest Tag -->
-  <meta name="verification" content="cf132f0c2e555d4546f62085865b208a" />
-<link rel="stylesheet" href="../public/css/responsive-fixes.css">
 </head>
 <body>
-
 <nav class="nav" id="nav">
   <div class="nav-inner">
     <a href="../index.html" class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span></a>
-        <ul class="nav-links">
+    <ul class="nav-links">
       <li><a href="women.html">Women</a></li>
       <li><a href="men.html">Men</a></li>
       <li><a href="shoes.html">Shoes</a></li>
       <li><a href="bags.html">Bags</a></li>
       <li><a href="jewellery.html">Jewellery &amp; Watches</a></li>
       <li><a href="accessories.html">Accessories</a></li>
-      <li><a href="brands.html">Brands</a></li>
-      
+      <li><a href="stores.html">Stores</a></li>
     </ul>
     <div class="nav-spacer"></div>
     <div class="nav-actions">
-      <form class="nav-search" onsubmit="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search 169,000+ products…" aria-label="Search products" autocomplete="off"></form>
+      <form class="nav-search" onsubmit="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search products…" aria-label="Search products" autocomplete="off"></form>
       <a href="deals.html" class="btn-nav-cta">Deals</a>
     </div>
   </div>
 </nav>
 
-<section class="page-hero">
+<section class="st-hero">
   <div class="container">
-    <p class="section-eyebrow" style="justify-content:center;display:flex">200+ Partners</p>
-    <h1>Shop the World's<br><em>Best Brands</em></h1>
-    <div class="brands-search">
-      <input type="text" placeholder="Search brands..." id="brandSearch" oninput="filterBrands(this.value)">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
+    <p class="eyebrow">Worldwide Partners</p>
+    <h1>Browse Every<em>Worldwide Store</em></h1>
+    <p class="sub">Every store on Fashion to World ships worldwide. Browse them all below — sorted by catalogue size, with live product counts updated daily.</p>
+    <div class="st-tools">
+      <div class="st-search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="stSearch" placeholder="Search stores…" oninput="applyFilters()" aria-label="Search stores">
+      </div>
+      <div class="st-chips" id="stChips">
+        <button class="st-chip on" data-c="all">All</button>
+        <button class="st-chip" data-c="market">Marketplaces</button>
+        <button class="st-chip" data-c="luxury">Luxury</button>
+        <button class="st-chip" data-c="women">Women</button>
+        <button class="st-chip" data-c="watches">Watches</button>
+        <button class="st-chip" data-c="eyewear">Eyewear</button>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="section" style="padding-top:0">
   <div class="container">
-
-    <div class="tier-tabs">
-      <button class="tier-tab active" onclick="filterTier('all', this)">All Stores</button>
-      <button class="tier-tab" onclick="filterTier('luxury', this)">Luxury</button>
-      <button class="tier-tab" onclick="filterTier('premium', this)">Premium</button>
-      <button class="tier-tab" onclick="filterTier('highstreet', this)">High Street</button>
-      <button class="tier-tab" onclick="filterTier('sport', this)">Sport & Active</button>
+    <p class="st-count">Showing <strong id="stCount">—</strong> stores</p>
+    <div class="st-grid" id="stGrid">
+      <p class="st-empty">Loading stores…</p>
     </div>
-
-    <!-- A-Z Navigation -->
-    <div class="alpha-nav" id="alphaNav"></div>
-
-    <div class="brands-count-bar">
-      <p>Showing <strong id="brandCount">—</strong> brands</p>
-      <p style="font-size:12px">Commissions earned on qualifying purchases</p>
-    </div>
-
-    <div class="brands-grid" id="brandsDirectory" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
-      <!-- Populated by JS -->
-    </div>
-
+    <p class="st-disc">Affiliate disclosure: we earn a commission on qualifying purchases. Store logos and trademarks belong to their respective owners.</p>
   </div>
 </section>
 
-<footer class="footer">
-  <div class="container">
-    <div class="footer-bottom">
-      <p>© 2026 FashionToWorld. Affiliate Disclosure: We earn a commission on qualifying purchases. Brand logos and trademarks belong to their respective owners.</p>
-    </div>
-  </div>
-</footer>
-
 <script src="../public/js/api-config.js"></script>
-  <script src="../public/js/admitad-api.js"></script>
 <script>
-// Real product brands from the catalogue (data-driven; stores are listed separately under Featured Stores).
-let allBrands = [];
-function ftwDom(n){return (n||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]/g,'')+'.com';}
-function logoImg(n){var i=((n||'?')[0]||'?').toUpperCase();return '<img src="https://logo.clearbit.com/'+ftwDom(n)+'" alt="'+n+'" loading="lazy" onerror="this.remove();this.parentNode.textContent=\''+i+'\'" style="max-width:74%;max-height:74%;object-fit:contain">';}
-async function loadBrandList() {
-  try {
-    const base = window.API_BASE || '';
-    const r = await fetch(base + '/api/admitad/stores');
-    const d = r.ok ? await r.json() : {};
-    allBrands = ((d && d.stores) || []).map(function (b) { return { name: b.name, count: b.count }; });
-  } catch (e) { allBrands = []; }
-  filtered = [...allBrands];
-  renderBrands(allBrands);
+/* Store metadata: domain (for logo) + category chips. Names matched loosely
+   (lowercased substring), so "Watch Enclave UK" matches "watch enclave".
+   Unknown stores still appear, with a lettermark logo and the "all" chip. */
+var META = {
+  'the luxury closet': { d: 'theluxurycloset.com', cats: ['luxury', 'women'] },
+  'cerqular':          { d: 'cerqular.com',        cats: ['women', 'luxury'] },
+  'alibaba':           { d: 'alibaba.com',         cats: ['market'] },
+  'aliexpress':        { d: 'aliexpress.com',      cats: ['market'] },
+  'symbol':            { d: 'symbol.fashion',      cats: ['women', 'market'] },
+  'paul smith':        { d: 'paulsmith.com',       cats: ['luxury', 'women'] },
+  'noracora':          { d: 'noracora.com',        cats: ['women'] },
+  'justfashionnow':    { d: 'justfashionnow.com',  cats: ['women'] },
+  'stylewe':           { d: 'stylewe.com',         cats: ['luxury', 'women'] },
+  'chicme':            { d: 'chicme.com',          cats: ['women'] },
+  'glasseslit':        { d: 'glasseslit.com',      cats: ['eyewear'] },
+  'italo':             { d: 'italojewelry.com',    cats: ['luxury'] },
+  'silverbene':        { d: 'silverbene.com',      cats: ['luxury'] },
+  'wayrates':          { d: 'wayrates.com',        cats: ['market'] },
+  'metro brazil':      { d: 'metrobrazil.com',     cats: ['market', 'women'] },
+  'luxefashion':       { d: 'luxefashion.com',     cats: ['luxury', 'women'] },
+  'ecom deal':         { d: '',                    cats: ['women'] },
+  'niidor':            { d: 'niidor.com',          cats: ['women'] },
+  'nadula':            { d: 'nadula.com',          cats: ['women'] },
+  'watch enclave':     { d: 'watchenclave.co.uk',  cats: ['watches', 'luxury'] },
+  'watches of usa':    { d: 'watchesofusa.com',    cats: ['watches', 'luxury'] },
+  'watch home':        { d: 'watchhome.com',       cats: ['watches', 'luxury'] }
+};
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function metaFor(name){ var n = (name || '').toLowerCase(); for (var k in META) { if (n.indexOf(k) > -1) return META[k]; } return { d: '', cats: [] }; }
+
+var ALL = [];
+function loadStores(){
+  var base = window.API_BASE || '';
+  fetch(base + '/api/admitad/stores')
+    .then(function(r){ return r.ok ? r.json() : {}; })
+    .then(function(d){
+      var rows = (d && d.stores) || [];
+      ALL = rows.map(function(s){ var m = metaFor(s.name); return { name: s.name, count: s.count || 0, d: m.d, cats: m.cats }; })
+                .sort(function(a,b){ return b.count - a.count; });
+      applyFilters();
+    })
+    .catch(function(){
+      document.getElementById('stGrid').innerHTML = '<p class="st-empty">Stores are taking a moment to load. Please refresh.</p>';
+    });
 }
-
-let filtered = [...allBrands];
-let currentTier = 'all';
-
-function renderBrands(brands) {
-  const grid = document.getElementById('brandsDirectory');
-  document.getElementById('brandCount').textContent = brands.length;
-
-  if (!brands.length) {
-    grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:40px">No brands found.</p>';
-    return;
-  }
-
-  grid.innerHTML = brands.map(b => `
-    <a href="search.html?advertiser=${encodeURIComponent(b.name)}" class="brand-card">
-      <div class="brand-card-header">${logoImg(b.name)}</div>
-      <div class="brand-card-body">
-        <p class="brand-card-name">${b.name}</p>
-        <p class="brand-card-meta">${(b.count||0).toLocaleString()} items</p>
-      </div>
-    </a>
-  `).join('');
+function card(s){
+  var letter = (s.name.trim()[0] || '?').toUpperCase();
+  var logo = s.d
+    ? '<img src="https://logo.clearbit.com/' + s.d + '" alt="' + esc(s.name) + '" loading="lazy" onerror="this.onerror=null;this.src=\'https://www.google.com/s2/favicons?domain=' + s.d + '&sz=128\'">'
+    : letter;
+  return '<a class="st-card" href="search.html?advertiser=' + encodeURIComponent(s.name) + '">' +
+           '<div class="st-logo">' + logo + '</div>' +
+           '<p class="st-name">' + esc(s.name) + '</p>' +
+           '<span class="st-items">' + s.count.toLocaleString() + ' items</span>' +
+         '</a>';
 }
-
-function filterBrands(q) {
-  const base = currentTier === 'all' ? allBrands : allBrands.filter(b => b.tier === currentTier);
-  filtered = q ? base.filter(b => b.name.toLowerCase().includes(q.toLowerCase())) : base;
-  renderBrands(filtered);
+var activeCat = 'all';
+function applyFilters(){
+  var q = (document.getElementById('stSearch').value || '').trim().toLowerCase();
+  var list = ALL.filter(function(s){
+    var okCat = activeCat === 'all' || (s.cats || []).indexOf(activeCat) > -1;
+    var okQ = !q || s.name.toLowerCase().indexOf(q) > -1;
+    return okCat && okQ;
+  });
+  var grid = document.getElementById('stGrid');
+  document.getElementById('stCount').textContent = list.length;
+  grid.innerHTML = list.length ? list.map(card).join('') : '<p class="st-empty">No stores match that filter.</p>';
 }
-
-function filterTier(tier, btn) {
-  document.querySelectorAll('.tier-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentTier = tier;
-  const q = document.getElementById('brandSearch').value;
-  filterBrands(q);
-}
-
-// Build A-Z nav
-const alphaNav = document.getElementById('alphaNav');
-'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('').forEach(letter => {
-  const btn = document.createElement('button');
-  btn.className = 'alpha-btn';
-  btn.textContent = letter;
-  btn.onclick = () => {
-    document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    if (letter === '#') {
-      renderBrands(allBrands.filter(b => /^[^a-z]/i.test(b.name)));
-    } else {
-      renderBrands(allBrands.filter(b => b.name.toUpperCase().startsWith(letter)));
-    }
-  };
-  alphaNav.appendChild(btn);
+document.getElementById('stChips').addEventListener('click', function(e){
+  var b = e.target.closest('.st-chip'); if (!b) return;
+  this.querySelectorAll('.st-chip').forEach(function(c){ c.classList.remove('on'); });
+  b.classList.add('on');
+  activeCat = b.getAttribute('data-c') || 'all';
+  applyFilters();
 });
-
-loadBrandList();
+loadStores();
 </script>
 <script src="../public/js/categories.js"></script>
 <script src="../public/js/i18n.js"></script>
 <script src="../public/js/site-content.js"></script>
 <script src="../public/js/footer.js"></script>
 <script src="../public/js/mobile-menu.js"></script>
-  <script src="/public/js/cookie-consent.js" defer></script>
-  <script src="/public/js/hero-search.js" defer></script>
-  <script src="/public/js/nav-speed.js" defer></script>
-  <script src="/public/js/pin-events.js" defer></script>
+<script src="/public/js/cookie-consent.js" defer></script>
+<script src="/public/js/nav-speed.js" defer></script>
+<script src="/public/js/pin-events.js" defer></script>
 </body>
 </html>
