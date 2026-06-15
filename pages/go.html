@@ -140,9 +140,15 @@
       setTimeout(function () { location.replace(url); }, 700);
     }
     if (directUrl && /^https?:/i.test(directUrl)) { go(directUrl); return; }
-    if (window.AdmitadAPI && (store || brand)) {
-      var opts = store ? { advertiser: store, limit: 1 } : { brand: brand, limit: 1 };
-      window.AdmitadAPI.getProducts(opts).then(function (d) {
+    var base = window.API_BASE || '';
+    if (store) {
+      // Fast, count-free affiliate lookup (see /api/store-link).
+      fetch(base + '/api/store-link?store=' + encodeURIComponent(store))
+        .then(function (r) { return r.ok ? r.json() : {}; })
+        .then(function (d) { go(d && d.url); })
+        .catch(function () { go(''); });
+    } else if (window.AdmitadAPI && brand) {
+      window.AdmitadAPI.getProducts({ brand: brand, limit: 1 }).then(function (d) {
         var prod = (d && d.products && d.products[0]) || null;
         go(prod && (prod.affiliate_url || prod.url));
       }).catch(function () { go(''); });
