@@ -182,8 +182,8 @@
   const currentQuery = (params.get('q') || '').trim();
   const currentAdvertiser = (params.get('advertiser') || '').trim();
   // Activate the filter for text searches AND for filter-only links (On Sale, Under $X, brand, etc.)
-  const hasFilter = currentQuery || currentAdvertiser || params.get('sale') ||
-    params.get('minprice') || params.get('maxprice') || params.get('brand') || params.get('cat');
+  const hasFilter = currentQuery || currentAdvertiser || params.get('sale') || params.get('markdown') ||
+   params.get('minprice') || params.get('maxprice') || params.get('brand') || params.get('cat');
   document.getElementById('searchInput').value = currentQuery;
   var label = currentAdvertiser || (currentQuery ? '"' + currentQuery + '"' : '');
   if (!label) {
