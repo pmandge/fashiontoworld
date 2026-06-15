@@ -37,6 +37,8 @@
     if (q.get('advertiser')) state.advertiser = q.get('advertiser');
     if (q.get('cat')) state.sub = q.get('cat');
     if (q.get('sale')) state.sale = true;
+    if (q.get('markdown')) state.markdown = true;
+    if (q.get('sort')) state.sort = q.get('sort');
     if (q.get('minprice')) state.minp = q.get('minprice');
     if (q.get('maxprice')) state.maxp = q.get('maxprice');
   })();
@@ -207,7 +209,7 @@
       category: CATEGORY, gender: GENDER, q: QUERY, subcategory: state.sub,
       brand: Array.from(state.brands).join(','), advertiser: state.advertiser,
       color: Array.from(state.colors).join(','), size: Array.from(state.sizes).join(','),
-      sale: state.sale ? 'true' : '', minprice: state.minp, maxprice: state.maxp,
+      sale: state.sale ? 'true' : '', markdown: state.markdown ? 'true' : '', minprice: state.minp, maxprice: state.maxp,
       page: state.page, limit: 24, sort: state.sort
     });
     var products = (data && data.products) || [];
