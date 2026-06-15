@@ -116,11 +116,49 @@
       'metro brazil': { d: 'metrobrazil.com', t: 'Global marketplace', cats: ['market', 'women'] },
       'watch home': { d: 'watchhome.com', t: 'Watches', cats: ['luxury'] },
       'silverbene': { d: 'silverbene.com', t: 'Jewellery', cats: ['luxury'] },
-      'watch enclave': { d: 'watchenclave.co.uk', t: 'Watches', cats: ['luxury'] },
+      ''watch enclave': { d: 'watchenclave.co.uk', t: 'Watches', cats: ['watches', 'luxury'] },
+      'watches of usa': { d: 'watchesofusa.com', t: 'Watches', cats: ['watches', 'luxury'] },
+      'watch home': { d: 'watchhome.com', t: 'Watches', cats: ['watches', 'luxury'] },
+      'paul smith': { d: 'paulsmith.com', t: 'Designer', cats: ['luxury', 'women'] },
+      'luxefashion': { d: 'luxefashion.com', t: "Women's fashion", cats: ['women'] },
+      'niidor': { d: 'niidor.com', t: "Women's fashion", cats: ['women'] },
+      'nadula': { d: 'nadula.com', t: "Women's fashion", cats: ['women'] },
+      'ecom deal': { d: '', t: "Women's fashion", cats: ['women'] },
+      'silverbene': { d: 'silverbene.com', t: 'Jewellery', cats: ['jewellery', 'luxury'] },
+      'italo': { d: 'italojewelry.com', t: 'Jewellery', cats: ['jewellery', 'luxury'] },
       'drippy': { d: '', t: 'Custom', cats: ['market'] }
     };
     function metaFor(name) { var n = (name || '').toLowerCase(); for (var k in META) { if (n.indexOf(k) > -1) return META[k]; } return { d: '', t: 'Worldwide store', cats: ['all'] }; }
     function build(name, count) { var m = metaFor(name); return { name: name, count: count, d: m.d, t: m.t, cats: m.cats }; }
+// Choose up to `max` stores with a balanced spread across categories so the
+    // homepage rail shows variety (marketplaces, women, luxury, watches,
+    // jewellery, eyewear) rather than just the biggest few. Stores are already
+    // sorted by size; we round-robin the category buckets, biggest-first.
+    function pickBalanced(all, max) {
+      var order = ['market', 'women', 'luxury', 'watches', 'jewellery', 'eyewear'];
+      var buckets = {}; order.forEach(function (c) { buckets[c] = []; });
+      var other = [];
+      all.forEach(function (s) {
+        var cats = s.cats || [];
+        var placed = false;
+        for (var i = 0; i < order.length; i++) { if (cats.indexOf(order[i]) > -1) { buckets[order[i]].push(s); placed = true; break; } }
+        if (!placed) other.push(s);
+      });
+      var out = [], seen = {};
+      function take(s) { if (s && !seen[s.name]) { seen[s.name] = 1; out.push(s); } }
+      var idx = {}; order.forEach(function (c) { idx[c] = 0; });
+      var progress = true;
+      while (out.length < max && progress) {
+        progress = false;
+        for (var j = 0; j < order.length && out.length < max; j++) {
+          var c = order[j], list = buckets[c];
+          if (idx[c] < list.length) { take(list[idx[c]++]); progress = true; }
+        }
+      }
+      for (var k = 0; k < other.length && out.length < max; k++) take(other[k]);
+      for (var m2 = 0; m2 < all.length && out.length < max; m2++) take(all[m2]);
+      return out;
+    }
     var STORES = ['The Luxury Closet', 'AliExpress', 'Stylewe', 'Noracora', 'Justfashionnow', 'ChicMe', 'Glasseslit', 'Italo Jewelry', 'Wayrates'].map(function (n) { return build(n, null); });
     function draw(cat) {
       rail.innerHTML = STORES.filter(function (s) { return cat === 'all' || (s.cats || []).indexOf(cat) > -1; }).map(function (s) {
@@ -137,7 +175,12 @@
     if (API && API.getStores) {
       API.getStores().then(function (data) {
         var rows = (data && data.stores) || [];
-        if (rows.length) { STORES = rows.slice(0, 12).map(function (r) { return build(r.name, r.count); }); var on = chips && chips.querySelector('.schip.on'); draw(on ? (on.getAttribute('data-cat') || on.getAttribute('data-c') || 'all') : 'all'); }
+        if (rows.length) {
+          var built = rows.map(function (r) { return build(r.name, r.count); });
+          STORES = pickBalanced(built, 15);
+          var on = chips && chips.querySelector('.schip.on');
+          draw(on ? (on.getAttribute('data-cat') || on.getAttribute('data-c') || 'all') : 'all');
+        }
         var cnt = (data && data.count) || rows.length;
         if (cnt) setTrustStores(cnt);
         if (data && data.total_products && window.__ftwTotal) window.__ftwTotal(data.total_products);
