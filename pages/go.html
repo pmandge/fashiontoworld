@@ -7,35 +7,85 @@
 <title>Redirecting… — FashionToWorld</title>
 <link rel="icon" type="image/svg+xml" href="/public/images/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--black:#0a0a0a;--gold:#c9a84c;--cream:#f5f2ec;--ink:#1a1410;--muted:#6b6b6b;--serif:'Cormorant Garamond',serif;--sans:'DM Sans',sans-serif;}
+  :root{
+    --black:#0a0a0a;--gold:#c9a84c;--gold-light:#e8d5a3;--cream:#f5f2ec;
+    --serif:'Cormorant Garamond',serif;--sans:'DM Sans',sans-serif;
+  }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:var(--sans);background:#e9e7e2;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
-  .card{background:#fff;max-width:440px;width:100%;border-radius:18px;padding:48px 38px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.12)}
-  .logo{font-family:var(--serif);font-size:24px;margin-bottom:30px}
-  .logo b{font-weight:600}.logo .g{color:var(--gold);font-style:italic;font-size:15px}.logo .w{color:var(--gold)}
-  .spinner{width:54px;height:54px;margin:0 auto 26px;border:3px solid var(--cream);border-top-color:var(--gold);border-radius:50%;animation:spin 0.9s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  h1{font-family:var(--serif);font-size:30px;font-weight:400;color:var(--ink);margin-bottom:8px}
-  h1 .store{color:var(--gold);font-style:italic}
-  p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:8px}
-  .bar{height:4px;background:var(--cream);border-radius:4px;margin:26px 0 10px;overflow:hidden}
-  .bar i{display:block;height:100%;width:0;background:var(--gold);border-radius:4px;animation:fill 0.7s ease forwards}
+  body{
+    font-family:var(--sans);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:radial-gradient(130% 130% at 50% 0%, #1c1813 0%, #0a0a0a 62%);color:#fff;
+  }
+  .wrap{max-width:480px;width:100%;text-align:center}
+
+  /* brand line at top */
+  .brand{font-family:var(--serif);font-size:18px;letter-spacing:.01em;color:rgba(255,255,255,.7);margin-bottom:40px}
+  .brand b{font-weight:600;color:#fff}.brand .to{color:var(--gold);font-style:italic;font-size:13px}.brand .w{color:var(--gold)}
+
+  /* handoff: FTW mark → store logo */
+  .handoff{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:34px}
+  .node{display:flex;align-items:center;justify-content:center}
+  .ftw-mark{
+    width:60px;height:60px;border-radius:16px;border:1px solid rgba(255,255,255,.16);
+    background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;
+  }
+  .ftw-mark svg{width:30px;height:30px}
+  .arrow{display:flex;flex-direction:column;align-items:center;gap:5px}
+  .arrow .dots{display:flex;gap:5px}
+  .arrow .dots i{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.35;animation:pulse 1.1s ease-in-out infinite}
+  .arrow .dots i:nth-child(2){animation-delay:.18s}.arrow .dots i:nth-child(3){animation-delay:.36s}
+  @keyframes pulse{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-2px)}}
+  .arrow svg{width:22px;height:22px;color:var(--gold)}
+
+  .store-logo{
+    width:108px;height:108px;border-radius:22px;background:#fff;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    box-shadow:0 16px 44px rgba(0,0,0,.4);animation:rise .5s cubic-bezier(.2,.7,.3,1) both;
+  }
+  .store-logo img{max-width:72%;max-height:72%;object-fit:contain}
+  .store-logo .letter{font-family:var(--serif);font-size:48px;color:var(--gold);font-weight:500}
+  @keyframes rise{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+
+  h1{font-family:var(--serif);font-size:32px;font-weight:400;line-height:1.2;margin-bottom:12px}
+  h1 .store{color:var(--gold-light);font-style:italic}
+  .sub{color:rgba(255,255,255,.6);font-size:14px;line-height:1.65;max-width:380px;margin:0 auto}
+
+  .bar{height:2px;background:rgba(255,255,255,.12);border-radius:2px;margin:34px auto 0;max-width:240px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-light));animation:fill .7s ease forwards}
   @keyframes fill{to{width:100%}}
-  .fine{font-size:12px;color:#9a9a9a;margin-top:18px}
-  .manual{margin-top:20px;font-size:13px}
-  .manual a{color:var(--black);font-weight:500}
+
+  .fine{font-size:12px;color:rgba(255,255,255,.4);margin-top:22px;line-height:1.6}
+  .manual{margin-top:18px;font-size:13px}
+  .manual a{color:var(--gold-light);font-weight:500;text-decoration:none}
+  .manual a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
-  <div class="card">
-    <div class="logo"><b>Fashion</b> <span class="g">to</span> <span class="w">World</span></div>
-    <div class="spinner"></div>
+  <div class="wrap">
+    <div class="brand"><b>Fashion</b> <span class="to">to</span> <span class="w">World</span></div>
+
+    <div class="handoff">
+      <div class="node">
+        <div class="ftw-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+        </div>
+      </div>
+      <div class="arrow">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>
+      <div class="node">
+        <div class="store-logo" id="storeLogo"><span class="letter" id="storeLetter">S</span></div>
+      </div>
+    </div>
+
     <h1>Taking you to <span class="store" id="storeName">the store</span></h1>
-    <p>You're being securely handed over to complete your purchase. The store's own checkout, shipping &amp; returns apply.</p>
+    <p class="sub">You're being securely handed over to complete your purchase. The store's own checkout, shipping &amp; returns apply.</p>
     <div class="bar"><i></i></div>
-    <p class="fine">Your order is placed directly with the store. FashionToWorld may earn a commission at no extra cost to you.</p>
+    <p class="fine">Your order is placed directly with the store.<br>FashionToWorld may earn a commission at no extra cost to you.</p>
     <div class="manual">Not redirected? <a id="manualLink" href="#">Continue &#8594;</a></div>
   </div>
 
@@ -43,6 +93,18 @@
   <script src="../public/js/admitad-api.js"></script>
   <script>
   (function () {
+    // Name -> domain map for the store logo (Clearbit). Loose substring match.
+    var DOMAINS = {
+      'the luxury closet':'theluxurycloset.com','cerqular':'cerqular.com','alibaba':'alibaba.com',
+      'aliexpress':'aliexpress.com','symbol':'symbol.fashion','paul smith':'paulsmith.com',
+      'noracora':'noracora.com','justfashionnow':'justfashionnow.com','stylewe':'stylewe.com',
+      'chicme':'chicme.com','glasseslit':'glasseslit.com','italo':'italojewelry.com',
+      'silverbene':'silverbene.com','wayrates':'wayrates.com','metro brazil':'metrobrazil.com',
+      'luxefashion':'luxefashion.com','niidor':'niidor.com','nadula':'nadula.com',
+      'watch enclave':'watchenclave.co.uk','watches of usa':'watchesofusa.com','watch home':'watchhome.com'
+    };
+    function domainFor(name){ var n=(name||'').toLowerCase(); for (var k in DOMAINS){ if (n.indexOf(k)>-1) return DOMAINS[k]; } return ''; }
+
     var p = new URLSearchParams(location.search);
     var store = (p.get('store') || '').trim();
     var brand = (p.get('brand') || '').trim();
@@ -51,17 +113,33 @@
     document.getElementById('storeName').textContent = label;
     document.title = 'Redirecting to ' + label + ' — FashionToWorld';
 
+    // Store logo: Clearbit by domain, fallback to favicon, then gold lettermark.
+    (function setLogo(){
+      var box = document.getElementById('storeLogo');
+      var letterEl = document.getElementById('storeLetter');
+      letterEl.textContent = (label.trim()[0] || 'S').toUpperCase();
+      var dom = domainFor(label);
+      if (!dom) return; // keep lettermark
+      var img = new Image();
+      img.alt = label; img.loading = 'eager';
+      img.onload = function(){ box.innerHTML = ''; box.appendChild(img); };
+      img.onerror = function(){
+        var fav = new Image();
+        fav.onload = function(){ box.innerHTML=''; box.appendChild(fav); };
+        fav.onerror = function(){ /* keep lettermark */ };
+        fav.src = 'https://www.google.com/s2/favicons?domain=' + dom + '&sz=128';
+      };
+      img.src = 'https://logo.clearbit.com/' + dom;
+    })();
+
     var fallback = 'search.html?' + (store ? 'advertiser=' + encodeURIComponent(store)
                                    : brand ? 'brand=' + encodeURIComponent(brand) : '');
-
     function go(url) {
       if (!url || !/^https?:/i.test(url)) { location.replace(fallback); return; }
       document.getElementById('manualLink').href = url;
       setTimeout(function () { location.replace(url); }, 700);
     }
-
     if (directUrl && /^https?:/i.test(directUrl)) { go(directUrl); return; }
-
     if (window.AdmitadAPI && (store || brand)) {
       var opts = store ? { advertiser: store, limit: 1 } : { brand: brand, limit: 1 };
       window.AdmitadAPI.getProducts(opts).then(function (d) {
