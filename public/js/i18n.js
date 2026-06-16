@@ -29,7 +29,7 @@ const I18N = (() => {
   const DICT = {
     en: {
       nav_women: 'Women', nav_men: 'Men', nav_brands: 'Brands',
-      nav_deals: 'Deals', nav_blog: 'Style Blog', nav_cta: 'Shop Deals',
+      nav_deals: 'Deals', nav_blog: 'Style Blog', nav_cta: 'Coupons',
       hero_eyebrow: 'New Season · Global Delivery',
       hero_title_1: "The World's", hero_title_2: 'Best Fashion', hero_title_3: 'In One Place',
       hero_sub: '10,000+ products from 200+ premium brands. Curated collections, real-time deals, and worldwide shipping.',
