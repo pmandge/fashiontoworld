@@ -94,7 +94,7 @@
           '<input id="mmSearch" type="text" placeholder="Search products & brands…" style="flex:1;border:none;padding:11px 14px;font-size:14px;outline:none;font-family:inherit">' +
           '<button id="mmSearchBtn" aria-label="Search" style="background:#0f0f0f;color:#fff;border:none;padding:0 16px;cursor:pointer;font-size:15px">⌕</button>' +
         '</div>' +
-        '<a href="' + root + 'deals.html" style="display:block;background:#c9a84c;color:#0f0f0f;text-align:center;padding:12px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;margin-bottom:8px">Shop Deals</a>' +
+        '<a href="' + root + 'coupons.html" style="display:block;background:#c9a84c;color:#0f0f0f;text-align:center;padding:12px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;margin-bottom:8px">Coupons</a>' +
         '<button onclick="FTWSubscribe.open()" style="width:100%;background:#0f0f0f;color:#fafaf8;border:none;padding:12px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;margin-bottom:16px">Subscribe</button>' +
         '<div id="mmCats">' + cats + '</div>' +
         '<a href="' + root + 'brands.html" style="display:block;padding:14px 0;font-family:Georgia,serif;font-size:18px;color:#0f0f0f;text-decoration:none;border-bottom:1px solid rgba(0,0,0,.08)">All Brands</a>' +
@@ -106,13 +106,13 @@
     getFacets().then(function (f) { var el = document.getElementById('mmCats'); if (el && f) el.innerHTML = renderCats(tax, f); });
     drawer.querySelector('#mmClose').addEventListener('click', close);
 
-    // ---- Floating "Shop Deals" CTA (appears after scrolling) ----
+    // ---- Floating "Coupons" CTA (appears after scrolling) ----
     if (!document.getElementById('floatCta')) {
       var fc = document.createElement('a');
       fc.id = 'floatCta';
       fc.className = 'float-cta';
-      fc.href = root + 'deals.html';
-      fc.innerHTML = '<span class="fc-ico">🔥</span> Shop Deals';
+      fc.href = root + 'coupons.html';
+      fc.innerHTML = '<span class="fc-ico">🔥</span> Coupons';
       document.body.appendChild(fc);
       var onScroll = function () {
         if (window.scrollY > 600) fc.classList.add('visible');
