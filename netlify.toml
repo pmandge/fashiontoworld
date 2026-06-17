@@ -5,10 +5,18 @@
 # or connect a GitHub repo. Then add the 3 ADMITAD_* env vars
 # under Site settings → Environment variables.
 # ============================================================
-
 [build]
   publish = "."
   functions = "netlify/functions"
+
+# Serve the dynamic, self-updating sitemap from the backend at the
+# canonical URL (fashiontoworld.co/sitemap.xml). force=true so it wins
+# even though a static sitemap.xml file may exist in the repo.
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "https://api.fashiontoworld.co/api/sitemap.xml"
+  status = 200
+  force = true
 
 # Send all /api/* calls to the serverless function
 [[redirects]]
