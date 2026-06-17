@@ -128,7 +128,7 @@ const FEEDS = {
   },
   sunglasses: {
     title: 'Sunglasses & Eyewear | Fashion to World',
-    query: { category: 'eyewear', sort: 'popularity', limit: 400 },
+    query: { q: 'sunglasses', sort: 'popularity', limit: 400 },
     landing: 'pages/search.html?q=sunglasses',
     keywords: 'sunglasses, designer eyewear, cat-eye, aviator, round frames.',
     suffix: 'Ships Worldwide',
