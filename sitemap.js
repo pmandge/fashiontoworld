@@ -84,10 +84,18 @@ let _cache = { at: 0, xml: null };
 // getSitemap(cleanedBrands): cleanedBrands is the array from _brandsDirCache.data.
 // Cached 6h; rebuilds (cheap string work) when stale or when brand count changed.
 function getSitemap(cleanedBrands) {
+  const brands = cleanedBrands || [];
   const fresh = _cache.xml && (Date.now() - _cache.at) < CACHE_MS;
   if (fresh) return _cache.xml;
-  const xml = build(cleanedBrands || []);
-  _cache = { at: Date.now(), xml: xml };
+  const xml = build(brands);
+  // Only CACHE the result once brands are actually loaded; otherwise serve the
+  // freshly-built XML but don't cache it, so the next request rebuilds with
+  // brands once the brands cache is ready (avoids caching a brandless sitemap).
+  if (brands.length > 0) {
+    _cache = { at: Date.now(), xml: xml };
+  } else {
+    _cache = { at: 0, xml: null };
+  }
   return xml;
 }
 
