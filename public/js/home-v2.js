@@ -254,8 +254,8 @@
   // Trending + Biggest Discounts use the store-diversified discount pool (max
   // 2 per store) so no single store floods the rail. Biggest Discounts takes a
   // later slice so it shows different products than Trending.
-  fillProducts('prods', { endpoint: '/api/products/diverse-discounts', limit: 32, slice: [0, 8] });   // Trending — diverse, first 8
-  lazyFill('prodsBig', { endpoint: '/api/products/diverse-discounts', limit: 32, slice: [8, 16] });    // Biggest Discounts — diverse, next 8
+  fillProducts('prods', { endpoint: '/api/products/trending', limit: 16 });                       // Trending — premium mix (watches/bags/dresses/jewellery)
+  lazyFill('prodsBig', { endpoint: '/api/products/diverse-discounts', limit: 8 });                    // Biggest Discounts — diverse markdowns
   lazyFill('prods2', { sort: 'popularity', limit: 8, page: 1, minprice: 8 }, { newBadge: true });      // New In — on scroll
 
   /* ---------------- live: ticker + today's deals (coupons) ---------------- */
