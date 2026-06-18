@@ -24,7 +24,6 @@ else:
     ORDER BY updated_at DESC, discount DESC
     LIMIT 4000
   `);
-  // bucket per store, then round-robin interleave for variety
   const byStore = {}; const order = [];
   for (const row of r.rows) {
     const a = row.advertiser || '';
@@ -45,17 +44,17 @@ async function diverseDiscounts("""
     s1 = s1.replace("diverseDiscounts, trendingMix, brandCountsRaw };",
                     "diverseDiscounts, trendingMix, freshDeals, brandCountsRaw };")
     io.open(p1, 'w', encoding='utf-8').write(s1)
-    print('OK: added freshDeals() (recency-sorted) + export')
+    print('OK: added freshDeals recency-sorted plus export')
 
 # 2) Point refreshTopDeals at freshDeals instead of topDealsPerStore
 p2 = 'backend/server.js'
 s2 = io.open(p2, encoding='utf-8').read()
 
 old = "const deals = await productDb.topDealsPerStore(TARGET);"
-new = "const deals = await productDb.freshDeals(TARGET, 2);  // recency-sorted, 2/store — distinct from Biggest Discounts"
+new = "const deals = await productDb.freshDeals(TARGET, 2);  // recency-sorted, distinct from Biggest Discounts"
 if old in s2:
     s2 = s2.replace(old, new)
     io.open(p2, 'w', encoding='utf-8').write(s2)
-    print('OK: Today\\'s Top Deals now uses freshDeals (recency)')
+    print('OK: Top Deals now uses freshDeals recency')
 else:
-    print('WARN: topDealsPerStore call in refreshTopDeals not found')
+    print('WARN: topDealsPerStore call not found')
