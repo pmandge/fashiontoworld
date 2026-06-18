@@ -117,23 +117,15 @@
       'watch home': { d: 'watchhome.com', t: 'Watches', cats: ['luxury'] },
       'silverbene': { d: 'silverbene.com', t: 'Jewellery', cats: ['luxury'] },
       'watch enclave': { d: 'watchenclave.co.uk', t: 'Watches', cats: ['watches', 'luxury'] },
-      'watches of usa': { d: 'watchesofusa.com', t: 'Watches', cats: ['watches', 'luxury'] },
-      'watch home': { d: 'watchhome.com', t: 'Watches', cats: ['watches', 'luxury'] },
       'paul smith': { d: 'paulsmith.com', t: 'Designer', cats: ['luxury', 'women'] },
       'luxefashion': { d: 'luxefashion.com', t: "Women's fashion", cats: ['women'] },
       'niidor': { d: 'niidor.com', t: "Women's fashion", cats: ['women'] },
       'nadula': { d: 'nadula.com', t: "Women's fashion", cats: ['women'] },
       'ecom deal': { d: '', t: "Women's fashion", cats: ['women'] },
-      'silverbene': { d: 'silverbene.com', t: 'Jewellery', cats: ['jewellery', 'luxury'] },
-      'italo': { d: 'italojewelry.com', t: 'Jewellery', cats: ['jewellery', 'luxury'] },
       'drippy': { d: '', t: 'Custom', cats: ['market'] }
     };
     function metaFor(name) { var n = (name || '').toLowerCase(); for (var k in META) { if (n.indexOf(k) > -1) return META[k]; } return { d: '', t: 'Worldwide store', cats: ['all'] }; }
     function build(name, count) { var m = metaFor(name); return { name: name, count: count, d: m.d, t: m.t, cats: m.cats }; }
-// Choose up to `max` stores with a balanced spread across categories so the
-    // homepage rail shows variety (marketplaces, women, luxury, watches,
-    // jewellery, eyewear) rather than just the biggest few. Stores are already
-    // sorted by size; we round-robin the category buckets, biggest-first.
     function pickBalanced(all, max) {
       var order = ['market', 'women', 'luxury', 'watches', 'jewellery', 'eyewear'];
       var buckets = {}; order.forEach(function (c) { buckets[c] = []; });
@@ -222,12 +214,28 @@
       '<div class="pcard-foot"><a class="pcard-btn" href="' + href + '"' + (out ? ' target="_blank" rel="sponsored nofollow noopener"' : '') + '>Shop <span class="store">at ' + esc(p.advertiser_name || 'store') + '</span> &#8599;</a></div></article>';
   }
 
+  // Fetch helper: supports a custom `endpoint` (e.g. diverse-discounts) with
+  // limit + offset, otherwise falls back to the standard products API.
+  async function fetchProducts(opts) {
+    if (opts && opts.endpoint) {
+      var base = window.API_BASE || '';
+      var qs = [];
+      if (opts.limit) qs.push('limit=' + encodeURIComponent(opts.limit));
+      if (opts.offset) qs.push('offset=' + encodeURIComponent(opts.offset));
+      var url = base + opts.endpoint + (qs.length ? ('?' + qs.join('&')) : '');
+      var r = await fetch(url);
+      return r.ok ? await r.json() : { products: [] };
+    }
+    return await API.getProducts(opts);
+  }
+
   async function fillProducts(id, opts, cardOpts) {
     var el = document.getElementById(id); if (!el || !API) return;
     el.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8);
     try {
-      var data = await API.getProducts(opts);
+      var data = await fetchProducts(opts);
       var items = (data && data.products) || [];
+      if (opts && opts.slice) items = items.slice(opts.slice[0], opts.slice[1]);
       if (!items.length) { hideSection(el); return; }
       el.innerHTML = items.map(function (p) { return pcard(p, cardOpts); }).join('');
     } catch (e) { hideSection(el); }
@@ -243,9 +251,12 @@
     }, { rootMargin: '900px 0px' });
     io.observe(target);
   }
-  fillProducts('prods', { sort: 'discount', limit: 8, page: 1, minprice: 8 });                       // Trending — near top, load now
-  lazyFill('prodsBig', { sort: 'discount', limit: 8, page: 2, minprice: 8 });                        // Biggest Discounts — on scroll
-  lazyFill('prods2', { sort: 'popularity', limit: 8, page: 1, minprice: 8 }, { newBadge: true });    // New In — on scroll
+  // Trending + Biggest Discounts use the store-diversified discount pool (max
+  // 2 per store) so no single store floods the rail. Biggest Discounts takes a
+  // later slice so it shows different products than Trending.
+  fillProducts('prods', { endpoint: '/api/products/diverse-discounts', limit: 32, slice: [0, 8] });   // Trending — diverse, first 8
+  lazyFill('prodsBig', { endpoint: '/api/products/diverse-discounts', limit: 32, slice: [8, 16] });    // Biggest Discounts — diverse, next 8
+  lazyFill('prods2', { sort: 'popularity', limit: 8, page: 1, minprice: 8 }, { newBadge: true });      // New In — on scroll
 
   /* ---------------- live: ticker + today's deals (coupons) ---------------- */
   function shortOffer(c) {
@@ -258,19 +269,17 @@
     var deals = document.getElementById('todaysDeals');
     if (!API || (!tick && !deals)) return;
 
-    // Ticker: real promo codes from the coupon feed
     if (tick) {
       try {
         var data = await API.getCoupons({ limit: 12 });
         var cs = (data && data.coupons) || [];
         if (cs.length) {
-          var items = cs.map(function (c) { var u = c.url || 'pages/deals.html'; var out = /^https?:/i.test(u); return '<a class="ticker-item" href="' + u + '"' + (out ? ' target="_blank" rel="sponsored nofollow noopener"' : '') + '><b>' + esc(shortOffer(c)) + '</b> at ' + esc(c.advertiser_name || 'a worldwide store') + '</a>'; });
+          var items = cs.map(function (c) { var u = c.url || 'pages/coupons.html'; var out = /^https?:/i.test(u); return '<a class="ticker-item" href="' + u + '"' + (out ? ' target="_blank" rel="sponsored nofollow noopener"' : '') + '><b>' + esc(shortOffer(c)) + '</b> at ' + esc(c.advertiser_name || 'a worldwide store') + '</a>'; });
           tick.innerHTML = items.concat(items).join('');
         } else { tickFallback(tick); }
       } catch (e) { tickFallback(tick); }
     }
 
-    // Today's Top Deals: one top-discounted product per store (variety across all 13 stores)
     if (deals) {
       deals.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8);
       try {
@@ -285,6 +294,6 @@
   })();
   function tickFallback(tick) {
     var f = ['New season knitwear at <b>Stylewe</b>', 'Free shipping worldwide on <b>Noracora</b>', 'Up to <b>70% off</b> at The Luxury Closet', 'Verified deals, updated daily'];
-    tick.innerHTML = f.concat(f).map(function (x) { return '<a class="ticker-item" href="pages/deals.html">' + x + '</a>'; }).join('');
+    tick.innerHTML = f.concat(f).map(function (x) { return '<a class="ticker-item" href="pages/coupons.html">' + x + '</a>'; }).join('');
   }
 })();
