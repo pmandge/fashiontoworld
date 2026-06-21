@@ -290,7 +290,7 @@
       '<a href="#" data-key="cats" aria-label="Categories">' + ICON.cats + 'Categories</a>' +
       a('search','/pages/search','Search',ICON.search,false) +
       a('saved','/pages/saved','Saved',ICON.saved,true) +
-      a('deals','/pages/coupons','Deals',ICON.deals,false);
+      a('deals','/pages/coupons','Coupons',ICON.deals,false);
     document.body.appendChild(nav);
 
     var catBtn = nav.querySelector('[data-key="cats"]');
