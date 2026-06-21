@@ -108,18 +108,18 @@
       <span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span>
     </a>
     <ul class="nav-links">
-      <li><a href="pages/women.html">Women</a></li>
-      <li><a href="pages/men.html">Men</a></li>
-      <li><a href="pages/shoes.html">Shoes</a></li>
-      <li><a href="pages/bags.html">Bags</a></li>
-      <li><a href="pages/search.html?q=watch">Watches</a></li>
-      <li><a href="pages/jewellery.html">Jewellery</a></li>
-      <li><a href="pages/accessories.html">Accessories</a></li>
+      <li><a href='/pages/women'>Women</a></li>
+      <li><a href='/pages/men'>Men</a></li>
+      <li><a href='/pages/shoes'>Shoes</a></li>
+      <li><a href='/pages/bags'>Bags</a></li>
+      <li><a href='/pages/search?q=watch'>Watches</a></li>
+      <li><a href='/pages/jewellery'>Jewellery</a></li>
+      <li><a href='/pages/accessories'>Accessories</a></li>
     </ul>
     <div class="nav-spacer"></div>
     <div class="nav-actions">
       <form class="nav-search" onsubmit="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search products…" aria-label="Search products" autocomplete="off"></form>
-      <a href="pages/coupons.html" class="btn-nav-cta">Coupons</a>
+      <a class='btn-nav-cta' href='/pages/coupons'>Coupons</a>
     </div>
     <button class="nav-burger" onclick="toggleMenu()" aria-label="Menu">
       <span class="burger-lines"><span></span><span></span><span></span></span>
@@ -144,16 +144,16 @@
       <button><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>Search</span></button>
     </div>
     <div class="hero-chips">
-      <a class="hero-chip" href="pages/search.html?q=summer%20dress">Summer dresses</a><a class="hero-chip" href="pages/search.html?q=white%20sneakers">White sneakers</a>
-      <a class="hero-chip" href="pages/search.html?q=watch">Luxury watches</a><a class="hero-chip" href="pages/search.html?maxprice=50">Under $50</a><a class="hero-chip" href="pages/bags.html">Designer bags</a>
+      <a class='hero-chip' href='/pages/search?q=summer%20dress'>Summer dresses</a><a class='hero-chip' href='/pages/search?q=white%20sneakers'>White sneakers</a>
+      <a class='hero-chip' href='/pages/search?q=watch'>Luxury watches</a><a class='hero-chip' href='/pages/search?maxprice=50'>Under $50</a><a class='hero-chip' href='/pages/bags'>Designer bags</a>
     </div>
     <div class="hero-cats">
-      <a class="hero-cat" href="pages/women.html"><span class="ic">👗</span>Women</a>
-      <a class="hero-cat" href="pages/men.html"><span class="ic">👔</span>Men</a>
-      <a class="hero-cat" href="pages/shoes.html"><span class="ic">👟</span>Shoes</a>
-      <a class="hero-cat" href="pages/bags.html"><span class="ic">👜</span>Bags</a>
-      <a class="hero-cat" href="pages/search.html?q=watch"><span class="ic">⌚</span>Watches</a>
-      <a class="hero-cat" href="pages/jewellery.html"><span class="ic">💍</span>Jewellery</a>
+      <a class='hero-cat' href='/pages/women'><span class="ic">👗</span>Women</a>
+      <a class='hero-cat' href='/pages/men'><span class="ic">👔</span>Men</a>
+      <a class='hero-cat' href='/pages/shoes'><span class="ic">👟</span>Shoes</a>
+      <a class='hero-cat' href='/pages/bags'><span class="ic">👜</span>Bags</a>
+      <a class='hero-cat' href='/pages/search?q=watch'><span class="ic">⌚</span>Watches</a>
+      <a class='hero-cat' href='/pages/jewellery'><span class="ic">💍</span>Jewellery</a>
     </div>
     <a class="hero-dealhook" href="#deals">🔥 See today's top deals →</a>
   </div>
@@ -175,7 +175,7 @@
   <div class="ticker">
     <span class="ticker-flag">🔥 Live Deals</span>
     <div class="ticker-vp"><div class="ticker-track" id="tick"></div></div>
-    <a class="ticker-cta" href="pages/coupons.html">View all &#8250;</a>
+    <a class='ticker-cta' href='/pages/coupons'>View all &#8250;</a>
   </div>
 </div></section>
 
@@ -184,7 +184,7 @@
   <div class="container">
     <div class="sec-head row">
       <div><p class="eyebrow">Up to 60% off</p><h2>Trending This Week</h2></div>
-      <a href="pages/search.html?markdown=true&sort=discount" class="link-more">See more ›</a>
+      <a class='link-more' href='/pages/search?markdown=true&sort=discount'>See more ›</a>
     </div>
     <div class="prod-grid" id="prods"></div>
   </div>
@@ -203,7 +203,7 @@
   <div class="container">
     <div class="sec-head row">
       <div><p class="eyebrow">Worldwide partners</p><h2>Featured Stores</h2></div>
-      <a href="pages/stores.html" class="link-more">All stores ›</a>
+      <a class='link-more' href='/pages/stores'>All stores ›</a>
     </div>
     <div class="store-chips" id="schips">
       <button class="schip on" data-c="all">All</button>
@@ -227,7 +227,7 @@
 <!-- NEW IN THIS WEEK (freshness + more outbound clicks) -->
 <section class="section">
   <div class="container">
-    <div class="sec-head row"><div><p class="eyebrow">Just landed</p><h2>New In This Week</h2></div><a href="pages/women.html" class="link-more">See all new &#8250;</a></div>
+    <div class="sec-head row"><div><p class="eyebrow">Just landed</p><h2>New In This Week</h2></div><a class='link-more' href='/pages/women'>See all new &#8250;</a></div>
     <div class="prod-grid" id="prods2"></div>
   </div>
 </section>
@@ -246,7 +246,7 @@
       <span class="brand-word" style="font-weight:600">BALMAIN</span>
       <span class="brand-word">Dolce &amp; Gabbana</span>
     </div>
-    <a href="pages/brands.html" class="btn-outline">All brands →</a>
+    <a class='btn-outline' href='/pages/brands'>All brands →</a>
   </div>
 </section>
 
@@ -261,7 +261,7 @@
 <!-- TODAYS TOP DEALS (compact, more cards) -->
 <section class="section deals-hub" id="deals">
   <div class="container">
-    <div class="sec-head row"><div><p class="eyebrow">Limited time</p><h2>Today's Top Deals</h2></div><a href="pages/search.html?markdown=true&sort=discount" class="link-more">All deals &#8250;</a></div>
+    <div class="sec-head row"><div><p class="eyebrow">Limited time</p><h2>Today's Top Deals</h2></div><a class='link-more' href='/pages/search?markdown=true&sort=discount'>All deals &#8250;</a></div>
     <div class="deal-grid" id="todaysDeals"></div>
   </div>
 </section>
@@ -271,11 +271,11 @@
   <div class="container price-strip-inner">
     <div class="ps-label"><span class="eyebrow" style="color:var(--gold-light)">Shop your budget</span><span class="ps-h">Pieces at every price</span></div>
     <div class="ps-chips">
-      <a href="pages/search.html?maxprice=10" class="ps-chip">Under $10</a>
-      <a href="pages/search.html?maxprice=25" class="ps-chip">Under $25</a>
-      <a href="pages/search.html?maxprice=50" class="ps-chip">Under $50</a>
-      <a href="pages/search.html?maxprice=100" class="ps-chip">Under $100</a>
-      <a href="pages/search.html?minprice=300" class="ps-chip">Luxury $300+</a>
+      <a class='ps-chip' href='/pages/search?maxprice=10'>Under $10</a>
+      <a class='ps-chip' href='/pages/search?maxprice=25'>Under $25</a>
+      <a class='ps-chip' href='/pages/search?maxprice=50'>Under $50</a>
+      <a class='ps-chip' href='/pages/search?maxprice=100'>Under $100</a>
+      <a class='ps-chip' href='/pages/search?minprice=300'>Luxury $300+</a>
     </div>
   </div>
 </section>
@@ -314,7 +314,7 @@
   <div class="container">
     <div class="sec-head row">
       <div><p class="eyebrow">Style notes</p><h2>From the Style Blog</h2></div>
-      <a href="pages/blog.html" class="link-more">Read all ›</a>
+      <a class='link-more' href='/pages/blog'>Read all ›</a>
     </div>
     <div class="blog-grid" id="blog"></div>
   </div>
@@ -345,5 +345,13 @@
   <script src="/public/js/cookie-consent.js" defer></script>
   <script src="/public/js/nav-speed.js" defer></script>
   <script src="/public/js/pin-events.js" defer></script>
+<!-- ===== STICKY BOTTOM NAV (mobile only) ===== -->
+<nav class="botnav" aria-label="Quick navigation">
+  <a href="/" class="on" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Home</a>
+  <a href="/pages/search" aria-label="Categories"><svg viewBox="0 0 24 24"><path d="M3 5h18M3 12h18M3 19h18"/></svg>Categories</a>
+  <a href="/pages/search" aria-label="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Search</a>
+  <a href="/pages/saved" aria-label="Saved"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>Saved<span class="botnav-saved-badge"></span></a>
+  <a href="/pages/coupons" aria-label="Deals"><svg viewBox="0 0 24 24"><path d="M6 2h12l-1 7H7L6 2zM4 9h16l-1 13H5L4 9z"/></svg>Deals</a>
+</nav>
 </body>
 </html>
