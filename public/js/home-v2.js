@@ -7,6 +7,31 @@
  */
 (function () {
   var API = window.AdmitadAPI;
+
+  /* ---------------- wishlist (localStorage) ---------------- */
+  var WISH_KEY = 'ftw_saved';
+  function wishGet() { try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch (e) { return []; } }
+  function wishHas(id) { return wishGet().some(function (x) { return x.id === id; }); }
+  function wishToggle(item) {
+    var list = wishGet(); var i = list.findIndex(function (x) { return x.id === item.id; });
+    if (i > -1) { list.splice(i, 1); } else { list.unshift(item); }
+    try { localStorage.setItem(WISH_KEY, JSON.stringify(list.slice(0, 200))); } catch (e) {}
+    updateWishBadges();
+    return i === -1; // true if now saved
+  }
+  function updateWishBadges() {
+    var n = wishGet().length;
+    document.querySelectorAll('.botnav-saved-badge').forEach(function (b) {
+      if (n > 0) { b.textContent = n > 99 ? '99+' : n; b.style.display = 'flex'; }
+      else { b.style.display = 'none'; }
+    });
+  }
+  function productKey(p) {
+    return (p.id || p.product_id || p.affiliate_url || p.url || p.name || '').toString();
+  }
+  // expose for other pages (saved.html)
+  window.FTWWish = { get: wishGet, has: wishHas, toggle: wishToggle, key: productKey };
+
   function esc(s) { return (s || '').toString().replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function hideSection(el) { if (!el) return; var s = el.closest('section'); if (s) s.style.display = 'none'; }
 
@@ -248,7 +273,10 @@
     var was = p.price_old ? (p.price_old_display || ('$' + p.price_old)) : '';
     var img = p.image_url || '';
     var badge = disc ? '<span class="pcard-badge">-' + disc + '%</span>' : (opts.newBadge ? '<span class="pcard-badge" style="background:var(--gold-deep)">New</span>' : '');
-    return '<article class="pcard"><div class="pcard-img" style="background:#efe9df center/cover no-repeat' + (img ? (" url('" + esc(img) + "')") : '') + '">' + badge + '</div>' +
+    var _wid = productKey(p);
+    var _saved = wishHas(_wid);
+    var _heart = '<button class="pcard-heart' + (_saved ? ' on' : '') + '" data-wid="' + esc(_wid) + '" aria-label="Save item" onclick="return false;"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>';
+    return '<article class="pcard" data-wid="' + esc(_wid) + '" data-name="' + esc(p.name || '') + '" data-brand="' + esc(p.brand || p.advertiser_name || '') + '" data-price="' + esc(price) + '" data-img="' + esc(img) + '" data-href="' + esc(href) + '"><div class="pcard-img" style="background:#efe9df center/cover no-repeat' + (img ? (" url('" + esc(img) + "')") : '') + '">' + badge + _heart + '</div>' +
       '<div class="pcard-body"><p class="pcard-brand">' + esc(p.brand || p.advertiser_name || '') + '</p>' +
       '<h3 class="pcard-name">' + esc(p.name || '') + '</h3>' +
       '<p class="pcard-price">' + esc(price) + (was ? '<span class="was">' + esc(was) + '</span>' : '') + '</p></div>' +
@@ -337,4 +365,24 @@
     var f = ['New season knitwear at <b>Stylewe</b>', 'Free shipping worldwide on <b>Noracora</b>', 'Up to <b>70% off</b> at The Luxury Closet', 'Verified deals, updated daily'];
     tick.innerHTML = f.concat(f).map(function (x) { return '<a class="ticker-item" href="pages/coupons.html">' + x + '</a>'; }).join('');
   }
+  /* ---------------- wishlist click handling (event delegation) ---------------- */
+  document.addEventListener('click', function (e) {
+    var h = e.target.closest('.pcard-heart');
+    if (!h) return;
+    e.preventDefault(); e.stopPropagation();
+    var card = h.closest('.pcard'); if (!card) return;
+    var item = {
+      id: card.getAttribute('data-wid'),
+      name: card.getAttribute('data-name'),
+      brand: card.getAttribute('data-brand'),
+      price: card.getAttribute('data-price'),
+      img: card.getAttribute('data-img'),
+      href: card.getAttribute('data-href')
+    };
+    var nowSaved = wishToggle(item);
+    h.classList.toggle('on', nowSaved);
+  });
+  // initialise the Saved badge count on load
+  if (document.readyState !== 'loading') updateWishBadges();
+  else document.addEventListener('DOMContentLoaded', updateWishBadges);
 })();
