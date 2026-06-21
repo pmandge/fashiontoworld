@@ -257,3 +257,63 @@
     init();
   }
 })();
+
+/* ===== Sticky mobile bottom nav (injected site-wide) ===== */
+(function () {
+  function build() {
+    if (document.querySelector('.botnav')) return;
+    var path = location.pathname;
+    function activeKey() {
+      if (path === '/' || /\/index(\.html)?$/.test(path)) return 'home';
+      if (/saved/.test(path)) return 'saved';
+      if (/coupons|deals/.test(path)) return 'deals';
+      if (/search/.test(path)) return 'search';
+      return '';
+    }
+    var active = activeKey();
+    var ICON = {
+      home:'<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>',
+      cats:'<svg viewBox="0 0 24 24"><path d="M3 5h18M3 12h18M3 19h18"/></svg>',
+      search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+      saved:'<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
+      deals:'<svg viewBox="0 0 24 24"><path d="M6 2h12l-1 7H7L6 2zM4 9h16l-1 13H5L4 9z"/></svg>'
+    };
+    function a(key, href, label, icon, badge) {
+      var on = active === key ? ' class="on"' : '';
+      return '<a href="' + href + '"' + on + ' data-key="' + key + '" aria-label="' + label + '">' + icon + label + (badge ? '<span class="botnav-saved-badge"></span>' : '') + '</a>';
+    }
+    var nav = document.createElement('nav');
+    nav.className = 'botnav';
+    nav.setAttribute('aria-label', 'Quick navigation');
+    nav.innerHTML =
+      a('home','/','Home',ICON.home,false) +
+      '<a href="#" data-key="cats" aria-label="Categories">' + ICON.cats + 'Categories</a>' +
+      a('search','/pages/search','Search',ICON.search,false) +
+      a('saved','/pages/saved','Saved',ICON.saved,true) +
+      a('deals','/pages/coupons','Deals',ICON.deals,false);
+    document.body.appendChild(nav);
+
+    var catBtn = nav.querySelector('[data-key="cats"]');
+    if (catBtn) catBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var burger = document.querySelector('.nav-burger');
+      if (burger) { burger.click(); return; }
+      var drawer = document.getElementById('mmDrawer');
+      if (drawer) drawer.style.transform = 'translateX(0)';
+    });
+
+    function paintBadge() {
+      var n = 0;
+      try { n = (JSON.parse(localStorage.getItem('ftw_saved') || '[]')).length; } catch (e) {}
+      document.querySelectorAll('.botnav-saved-badge').forEach(function (b) {
+        if (n > 0) { b.textContent = n > 99 ? '99+' : n; b.style.display = 'flex'; }
+        else { b.style.display = 'none'; }
+      });
+    }
+    paintBadge();
+    window.addEventListener('storage', function (e) { if (e.key === 'ftw_saved') paintBadge(); });
+    window.FTWBotnavBadge = paintBadge;
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
+  else build();
+})();
