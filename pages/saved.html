@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Google tag (gtag.js) - GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T7SK34MMHV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-T7SK34MMHV');
+</script>
+<!-- end Google tag -->
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "x4x3qstcpo");
+</script>
+<!-- end Microsoft Clarity -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saved Items — Your Wishlist | Fashion to World</title>
+<meta name="description" content="Your saved fashion finds from worldwide-shipping stores. Tap the heart on any product to save it here.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../public/css/main.css">
+<link rel="stylesheet" href="../public/css/home.css">
+<style>
+  .saved-wrap{max-width:1280px;margin:0 auto;padding:120px 24px 80px;min-height:70vh}
+  .saved-head{text-align:center;margin-bottom:36px}
+  .saved-head .eyebrow{font-family:var(--font-sans,'DM Sans');font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-deep,#a8862f);font-weight:500}
+  .saved-head h1{font-family:var(--font-serif,'Cormorant Garamond');font-size:clamp(34px,5vw,52px);font-weight:500;margin-top:8px;color:var(--ink,#1a1410)}
+  .saved-head p{color:var(--text-muted,#6b6b6b);margin-top:10px;font-size:15px}
+  .saved-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  @media(max-width:980px){.saved-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.saved-grid{grid-template-columns:1fr 1fr;gap:11px}}
+  /* empty state */
+  .saved-empty{text-align:center;padding:40px 20px 60px;max-width:440px;margin:0 auto}
+  .saved-empty .heart-ic{width:70px;height:70px;margin:0 auto 22px;border-radius:50%;background:var(--cream,#f5f2ec);display:flex;align-items:center;justify-content:center}
+  .saved-empty .heart-ic svg{width:32px;height:32px;fill:none;stroke:var(--gold-deep,#a8862f);stroke-width:1.5}
+  .saved-empty h2{font-family:var(--font-serif,'Cormorant Garamond');font-size:28px;font-weight:500;color:var(--ink,#1a1410);margin-bottom:10px}
+  .saved-empty p{color:var(--text-muted,#6b6b6b);font-size:15px;line-height:1.6;margin-bottom:26px}
+  .saved-empty .btn-shop{display:inline-flex;align-items:center;gap:9px;background:var(--ink,#1a1410);color:#fff;padding:13px 28px;border-radius:30px;font-size:14px;font-weight:500;letter-spacing:.03em;text-decoration:none;transition:background .2s}
+  .saved-empty .btn-shop:hover{background:var(--gold-deep,#a8862f)}
+  .saved-count{font-size:13px;color:var(--text-muted,#6b6b6b);text-align:center;margin-bottom:24px}
+  .saved-clear{display:inline-block;margin-left:10px;color:var(--deal,#c0492f);cursor:pointer;text-decoration:underline;font-size:13px}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span></a>
+    <ul class="nav-links">
+      <li><a href="women.html">Women</a></li>
+      <li><a href="men.html">Men</a></li>
+      <li><a href="shoes.html">Shoes</a></li>
+      <li><a href="bags.html">Bags</a></li>
+      <li><a href="jewellery.html">Jewellery</a></li>
+      <li><a href="accessories.html">Accessories</a></li>
+    </ul>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <a href="coupons.html" class="btn-nav-cta">Coupons</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <span class="burger-lines"><span></span><span></span><span></span></span>
+      <span class="burger-label">Menu</span>
+    </button>
+  </div>
+</nav>
+
+<div class="saved-wrap">
+  <div class="saved-head">
+    <p class="eyebrow">Your Collection</p>
+    <h1>Saved Items</h1>
+    <p>Your hand-picked finds, ready when you are.</p>
+  </div>
+
+  <div id="savedCount" class="saved-count" style="display:none"></div>
+  <div id="savedContent"></div>
+</div>
+
+<!-- ===== STICKY BOTTOM NAV (mobile only) ===== -->
+<nav class="botnav" aria-label="Quick navigation">
+  <a href="../index.html" aria-label="Home">
+    <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Home
+  </a>
+  <a href="search.html" aria-label="Categories">
+    <svg viewBox="0 0 24 24"><path d="M3 5h18M3 12h18M3 19h18"/></svg>Categories
+  </a>
+  <a href="search.html" aria-label="Search">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Search
+  </a>
+  <a href="saved.html" class="on" aria-label="Saved">
+    <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>Saved
+    <span class="botnav-saved-badge"></span>
+  </a>
+  <a href="coupons.html" aria-label="Deals">
+    <svg viewBox="0 0 24 24"><path d="M6 2h12l-1 7H7L6 2zM4 9h16l-1 13H5L4 9z"/></svg>Deals
+  </a>
+</nav>
+
+<script>
+(function () {
+  var WISH_KEY = 'ftw_saved';
+  function wishGet() { try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch (e) { return []; } }
+  function wishSet(list) { try { localStorage.setItem(WISH_KEY, JSON.stringify(list)); } catch (e) {} }
+  function esc(s) { return (s || '').toString().replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); }
+
+  function updateBadge() {
+    var n = wishGet().length;
+    document.querySelectorAll('.botnav-saved-badge').forEach(function (b) {
+      if (n > 0) { b.textContent = n > 99 ? '99+' : n; b.style.display = 'flex'; }
+      else { b.style.display = 'none'; }
+    });
+  }
+
+  function card(p) {
+    var href = /^https?:/i.test(p.href || '') ? p.href : '#';
+    var out = /^https?:/i.test(p.href || '');
+    var imgStyle = "background:#efe9df center/cover no-repeat" + (p.img ? (" url('" + esc(p.img) + "')") : '');
+    return '<article class="pcard" data-wid="' + esc(p.id) + '">' +
+      '<div class="pcard-img" style="' + imgStyle + '">' +
+      '<button class="pcard-heart on" data-wid="' + esc(p.id) + '" aria-label="Remove from saved"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>' +
+      '</div>' +
+      '<div class="pcard-body"><p class="pcard-brand">' + esc(p.brand || '') + '</p>' +
+      '<h3 class="pcard-name">' + esc(p.name || '') + '</h3>' +
+      '<p class="pcard-price">' + esc(p.price || '') + '</p></div>' +
+      '<div class="pcard-foot"><a class="pcard-btn" href="' + href + '"' + (out ? ' target="_blank" rel="sponsored nofollow noopener"' : '') + '>Shop Now &#8594;</a></div></article>';
+  }
+
+  function render() {
+    var list = wishGet();
+    var countEl = document.getElementById('savedCount');
+    var content = document.getElementById('savedContent');
+    updateBadge();
+
+    if (!list.length) {
+      countEl.style.display = 'none';
+      content.innerHTML =
+        '<div class="saved-empty">' +
+        '<div class="heart-ic"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></div>' +
+        '<h2>No saved items yet</h2>' +
+        '<p>Tap the &#9825; on any product to save it here. Build your wishlist and come back anytime &mdash; your picks stay on this device.</p>' +
+        '<a class="btn-shop" href="../index.html">Start browsing &#8594;</a>' +
+        '</div>';
+      return;
+    }
+
+    countEl.style.display = 'block';
+    countEl.innerHTML = list.length + (list.length === 1 ? ' saved item' : ' saved items') +
+      '<span class="saved-clear" id="clearAll">Clear all</span>';
+    content.innerHTML = '<div class="saved-grid">' + list.map(card).join('') + '</div>';
+
+    var clear = document.getElementById('clearAll');
+    if (clear) clear.addEventListener('click', function () {
+      if (confirm('Remove all saved items?')) { wishSet([]); render(); }
+    });
+  }
+
+  // remove individual item when its heart is tapped
+  document.addEventListener('click', function (e) {
+    var h = e.target.closest('.pcard-heart');
+    if (!h) return;
+    e.preventDefault();
+    var id = h.getAttribute('data-wid');
+    var list = wishGet().filter(function (x) { return x.id !== id; });
+    wishSet(list);
+    render();
+  });
+
+  render();
+})();
+</script>
+
+<script src="../public/js/footer.js"></script>
+<script src="../public/js/main.js"></script>
+<script src="../public/js/mobile-menu.js"></script>
+<script src="/public/js/cookie-consent.js" defer></script>
+</body>
+</html>
