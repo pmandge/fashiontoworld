@@ -38,25 +38,65 @@
     window.__ftwTotal = function (val) { if (cnt && val) cnt.textContent = val.toLocaleString(); if (val) setTrustProducts(val); };
   })();
 
-  /* ---------------- static: Find Your Style ---------------- */
+  /* ---------------- dynamic: Find Your Style (live categories) ---------------- */
   (function () {
     var el = document.getElementById('cats'); if (!el) return;
-    var cats = [
-      { n: 'Women', img: '1529139574466-a303027c1d8b', href: 'pages/women.html' },
-      { n: 'Men', img: '1507003211169-0a1dd7228f2d', href: 'pages/men.html' },
-      { n: 'Kids', img: '1503454537195-1dcabb73ffb9', href: 'pages/kids.html' },
-      { n: 'Shoes', img: '1595950653106-6c9ebd614d3a', href: 'pages/shoes.html' },
-      { n: 'Bags', img: '1584917865442-de89df76afd3', href: 'pages/bags.html' },
-      { n: 'Jewellery', img: '1515562141207-7a88fb7ce338', href: 'pages/jewellery.html' },
-      { n: 'Accessories', img: '1511499767150-a48a237f0083', href: 'pages/accessories.html' },
-      { n: 'Beauty', img: '1596462502278-27bfdc403348', href: 'pages/beauty.html' },
-      { n: 'Watches', img: '1523275335684-37898b6baf30', href: 'pages/search.html?q=watch', isNew: true },
-      { n: 'On Sale', img: '1445205170230-053b83016050', href: 'pages/search.html?sale=true' }
-    ];
-    el.innerHTML = cats.map(function (c) {
-      return '<a class="cat-tile' + (c.isNew ? ' new' : '') + '" href="' + c.href + '"><div class="ph" data-img="' + c.img + '"></div><div class="shade"></div><span class="lbl">' + c.n + '</span></a>';
-    }).join('');
-    bgFill(el.querySelectorAll('.ph'), 600);
+
+    // Curated images + page links per known category. The LIST and ORDER come
+    // from the live /api/categories endpoint (auto-updates as stores are added);
+    // this map only supplies the visual + destination for each category slug.
+    var MAP = {
+      women:       { img: '1529139574466-a303027c1d8b', href: 'pages/women.html' },
+      men:         { img: '1507003211169-0a1dd7228f2d', href: 'pages/men.html' },
+      kids:        { img: '1503454537195-1dcabb73ffb9', href: 'pages/kids.html' },
+      shoes:       { img: '1595950653106-6c9ebd614d3a', href: 'pages/shoes.html' },
+      bags:        { img: '1584917865442-de89df76afd3', href: 'pages/bags.html' },
+      jewellery:   { img: '1515562141207-7a88fb7ce338', href: 'pages/jewellery.html' },
+      accessories: { img: '1511499767150-a48a237f0083', href: 'pages/accessories.html' },
+      beauty:      { img: '1596462502278-27bfdc403348', href: 'pages/beauty.html' },
+      watches:     { img: '1523275335684-37898b6baf30', href: 'pages/search.html?q=watch' }
+    };
+    var FALLBACK_IMG = '1445205170230-053b83016050';
+
+    function slugHref(slug) {
+      // default destination if a brand-new category appears with no mapping
+      return 'pages/search.html?category=' + encodeURIComponent(slug);
+    }
+
+    function render(cats) {
+      // cats: [{slug,name,count}] from API, already sorted biggest-first
+      var tiles = cats.map(function (c) {
+        var m = MAP[c.slug] || {};
+        var img = m.img || FALLBACK_IMG;
+        var href = m.href || slugHref(c.slug);
+        return '<a class="cat-tile" href="' + href + '"><div class="ph" data-img="' + img + '"></div><div class="shade"></div><span class="lbl">' + c.name + '</span></a>';
+      });
+      // Always append an "On Sale" tile at the end (not a catalogue category)
+      tiles.push('<a class="cat-tile" href="pages/search.html?sale=true"><div class="ph" data-img="' + FALLBACK_IMG + '"></div><div class="shade"></div><span class="lbl">On Sale</span></a>');
+      el.innerHTML = tiles.join('');
+      bgFill(el.querySelectorAll('.ph'), 600);
+    }
+
+    // static fallback if the API is unreachable, so the section never breaks
+    function renderFallback() {
+      render([
+        { slug:'women', name:'Women' }, { slug:'shoes', name:'Shoes' },
+        { slug:'men', name:'Men' }, { slug:'bags', name:'Bags' },
+        { slug:'jewellery', name:'Jewellery' }, { slug:'kids', name:'Kids' },
+        { slug:'accessories', name:'Accessories' }, { slug:'watches', name:'Watches' }
+      ]);
+    }
+
+    fetch((window.API_BASE || '') + '/api/categories')
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var cats = (d && d.categories) || [];
+        // hide tiny/noise categories (e.g. beauty with 28) below a threshold
+        cats = cats.filter(function (c) { return (c.count || 0) >= 200; });
+        if (!cats.length) { renderFallback(); return; }
+        render(cats);
+      })
+      .catch(function () { renderFallback(); });
   })();
 
   /* ---------------- static: Shop the Edit ---------------- */
