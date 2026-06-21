@@ -120,6 +120,7 @@
       'paul smith': { d: 'paulsmith.com', t: 'Designer', cats: ['luxury', 'women'] },
       'luxefashion': { d: 'luxefashion.com', t: "Women's fashion", cats: ['women'] },
       'niidor': { d: 'niidor.com', t: "Women's fashion", cats: ['women'] },
+      'lichi': { d: 'lichi.com', t: "Women's fashion", cats: ['women'] },
       'nadula': { d: 'nadula.com', t: "Women's fashion", cats: ['women'] },
       'ecom deal': { d: '', t: "Women's fashion", cats: ['women'] },
       'drippy': { d: '', t: 'Custom', cats: ['market'] }
@@ -211,7 +212,7 @@
       '<div class="pcard-body"><p class="pcard-brand">' + esc(p.brand || p.advertiser_name || '') + '</p>' +
       '<h3 class="pcard-name">' + esc(p.name || '') + '</h3>' +
       '<p class="pcard-price">' + esc(price) + (was ? '<span class="was">' + esc(was) + '</span>' : '') + '</p></div>' +
-      '<div class="pcard-foot"><a class="pcard-btn" href="' + href + '"' + (out ? ' target="_blank" rel="sponsored nofollow noopener"' : '') + '>Shop <span class="store">at ' + esc(p.advertiser_name || 'store') + '</span> &#8599;</a></div></article>';
+      '<div class="pcard-foot"><a class="pcard-btn" href="' + href + '"' + (out ? ' target="_blank" rel="sponsored nofollow noopener"' : '') + '>Shop Now &#8594;</a></div></article>';
   }
 
   // Fetch helper: supports a custom `endpoint` (e.g. diverse-discounts) with
