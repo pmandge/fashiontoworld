@@ -939,3 +939,6 @@ img, video { max-width: 100%; }
     display:none;align-items:center;justify-content:center;line-height:1}
   body{padding-bottom:62px}
 }
+
+/* Hide the floating Coupons CTA on mobile — the bottom nav already has Deals */
+@media(max-width:768px){ .float-cta{ display:none !important } }
