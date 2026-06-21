@@ -910,3 +910,32 @@ img, video { max-width: 100%; }
 
 /* Empty results message (never a blank gap) */
 .empty-state{grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--text-muted,#6b6b6b);font-size:15px;line-height:1.6}
+
+/* ===== WISHLIST HEART (on product cards) ===== */
+.pcard-img{position:relative}
+.pcard-heart{position:absolute;top:9px;right:9px;width:32px;height:32px;border:none;border-radius:50%;
+  background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  z-index:3;box-shadow:0 1px 4px rgba(0,0,0,.12);transition:transform .15s,background .2s;padding:0}
+.pcard-heart:hover{transform:scale(1.08)}
+.pcard-heart:active{transform:scale(.92)}
+.pcard-heart svg{width:17px;height:17px;fill:none;stroke:#555;stroke-width:1.8}
+.pcard-heart.on{background:#fff}
+.pcard-heart.on svg{fill:#c0492f;stroke:#c0492f}
+
+/* ===== STICKY BOTTOM NAV (mobile only) ===== */
+.botnav{display:none}
+@media(max-width:768px){
+  .botnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:90;
+    background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    border-top:1px solid rgba(0,0,0,.1);padding:7px 2px calc(7px + env(safe-area-inset-bottom,0px));
+    justify-content:space-around;align-items:stretch}
+  .botnav a{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;
+    text-decoration:none;color:#9a9182;font-size:10px;letter-spacing:.02em;position:relative;padding:2px 0}
+  .botnav a.on{color:#1a1410}
+  .botnav svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7}
+  .botnav a.on svg{stroke:#a8862f}
+  .botnav-saved-badge{position:absolute;top:-2px;left:calc(50% + 6px);min-width:15px;height:15px;
+    padding:0 3px;background:#c0492f;color:#fff;border-radius:9px;font-size:9px;font-weight:600;
+    display:none;align-items:center;justify-content:center;line-height:1}
+  body{padding-bottom:62px}
+}
