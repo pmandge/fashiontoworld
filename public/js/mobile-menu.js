@@ -340,15 +340,20 @@
   }
   window.FTWWish = { get: wishGet, has: wishHas, toggle: wishToggle, key: function (p) { return (p.id || p.url || p.name || '').toString(); } };
 
-  // Mark already-saved hearts on load (so they show filled)
+  // Mark already-saved hearts (idempotent; only touches hearts not yet marked)
   function paintHearts() {
-    document.querySelectorAll('.card-heart[data-wid]').forEach(function (h) {
+    document.querySelectorAll('.card-heart[data-wid]:not(.checked)').forEach(function (h) {
+      h.classList.add('checked');
       if (wishHas(h.getAttribute('data-wid'))) h.classList.add('on');
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ paintHearts(); updateWishBadges(); });
   else { paintHearts(); updateWishBadges(); }
-  // Re-paint after async product loads (category/search render later)
-  var _mo = new MutationObserver(function () { paintHearts(); });
-  _mo.observe(document.body, { childList: true, subtree: true });
+  // Re-paint after async product loads, on a gentle timer (no MutationObserver
+  // loop — products render after fetch, so a few polls catch them safely).
+  var _tries = 0;
+  var _iv = setInterval(function () {
+    paintHearts();
+    if (++_tries >= 10) clearInterval(_iv);   // ~5s of polling then stop
+  }, 500);
 })();
