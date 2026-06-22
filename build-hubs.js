@@ -58,6 +58,10 @@ function card(p) {
   const wasPrice = hasDisc ? fmtPrice(p.price_old, p.currency) : '';
   const brand = p.brand || p.advertiser || '';
   const img = p.image_url || '';
+  const heart = `<button class="card-heart" type="button" aria-label="Save"
+        data-wid="${attr(p.id)}" data-wname="${attr(p.name)}" data-wimg="${attr(img)}"
+        data-wprice="${attr(price)}" data-wbrand="${attr(brand)}" data-wurl="${attr(link)}"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>`;
   return `
       <a class="product-card product-card-link" href="${attr(link)}"
          target="_blank" rel="noopener sponsored nofollow"
@@ -66,6 +70,7 @@ function card(p) {
           <img src="${attr(img)}" alt="${attr(p.name)}" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           ${hasDisc ? `<span class="product-badge sale">-${disc}%</span>` : ''}
+          ${heart}
         </div>
         <div class="product-body">
           <p class="product-brand">${esc(brand)}</p>
@@ -177,23 +182,56 @@ function pageHtml(hub, products) {
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../public/css/main.css">
 <style>
-.hub-hero { padding: calc(var(--nav-h) + 48px) 0 0; background: #f5f0ea; }
-.hub-hero-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 40px 48px; }
-.hub-hero h1 { font-size: clamp(36px, 5vw, 64px); line-height: 1; }
-.hub-hero h1 em { color: var(--gold); font-style: italic; }
-.hub-intro { max-width: 720px; margin: 20px 0 0; font-size: 16px; color: var(--text-muted); }
+.hub-hero { position: relative; padding: calc(var(--nav-h) + 72px) 0 64px; background: #14110e; color: #f5f0ea; overflow: hidden; }
+.hub-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 100% at 80% 0%, rgba(201,168,76,0.18) 0%, rgba(20,17,14,0) 55%); pointer-events: none; }
+.hub-hero-inner { position: relative; max-width: var(--max-w); margin: 0 auto; padding: 0 40px; }
+.hub-eyebrow { display: inline-block; font-family: var(--font-sans); font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold, #c9a84c); margin-bottom: 18px; }
+.hub-hero h1 { font-size: clamp(40px, 7vw, 84px); line-height: 0.98; margin: 0; color: #fff; font-weight: 400; }
+.hub-hero h1 em { color: var(--gold, #c9a84c); font-style: italic; }
+.hub-intro { max-width: 640px; margin: 22px 0 0; font-size: 16px; line-height: 1.7; color: rgba(245,240,234,0.78); }
 .hub-intro p { margin: 0 0 12px; }
-.hub-products { max-width: var(--max-w); margin: 0 auto; padding: 48px 40px 80px; }
+.hub-products { max-width: var(--max-w); margin: 0 auto; padding: 56px 40px 80px; }
 .hub-products h2 { font-size: 24px; margin: 0 0 24px; }
-.cat-seo { max-width: var(--max-w); margin: 0 auto; padding: 0 40px 64px; color: var(--text-muted); font-size: 15px; }
+.cat-seo { max-width: var(--max-w); margin: 0 auto; padding: 0 40px 64px; color: var(--text-muted); font-size: 15px; line-height: 1.7; }
+@media (max-width: 640px) {
+  .hub-hero { padding: calc(var(--nav-h) + 40px) 0 40px; }
+  .hub-hero-inner { padding: 0 20px; }
+  .hub-eyebrow { font-size: 11px; letter-spacing: 0.18em; margin-bottom: 12px; }
+  .hub-intro { font-size: 15px; margin-top: 16px; }
+  .hub-products { padding: 36px 16px 60px; }
+  .hub-products h2 { font-size: 20px; }
+  .cat-seo { padding: 0 16px 48px; }
+}
 </style>
 <script type="application/ld+json">${ld}</script>
 </head>
 <body>
-<nav class="nav" id="nav"></nav>
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class='logo' href='/'><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span></a>
+    <ul class="nav-links">
+      <li><a href='/pages/women'>Women</a></li>
+      <li><a href='/pages/men'>Men</a></li>
+      <li><a href='/pages/shoes'>Shoes</a></li>
+      <li><a href='/pages/bags'>Bags</a></li>
+      <li><a href='/pages/jewellery'>Jewellery</a></li>
+      <li><a href='/pages/accessories'>Accessories</a></li>
+    </ul>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <form class="nav-search" onsubmit="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search products…" aria-label="Search products" autocomplete="off"></form>
+      <a class='btn-nav-cta' href='/pages/deals'>Shop Deals</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <span class="burger-lines"><span></span><span></span><span></span></span>
+      <span class="burger-label">Menu</span>
+    </button>
+  </div>
+</nav>
 
 <section class="hub-hero">
   <div class="hub-hero-inner">
+    <span class="hub-eyebrow">Ships Worldwide</span>
     <h1>${esc(hub.h1html)}</h1>
     <div class="hub-intro">${introCopy(hub, products)}</div>
   </div>
