@@ -368,7 +368,14 @@
   /* ---------------- wishlist click handling (event delegation) ---------------- */
   document.addEventListener('click', function (e) {
     var h = e.target.closest('.pcard-heart');
-    if (!h) return;
+    if (!h) {
+      var pc = e.target.closest('.pcard');
+      if (pc && !e.target.closest('.pcard-btn')) {
+        var d = pc.getAttribute('data-href');
+        if (d && d !== '#') window.open(d, '_blank', 'noopener');
+      }
+      return;
+    }
     e.preventDefault(); e.stopPropagation();
     var card = h.closest('.pcard'); if (!card) return;
     var item = {
@@ -379,7 +386,7 @@
       img: card.getAttribute('data-img'),
       href: card.getAttribute('data-href')
     };
-    var nowSaved = wishToggle(item);
+    var nowSaved = wishToggle(item); /*pcard-click-nav-v2*/
     h.classList.toggle('on', nowSaved);
   });
   // initialise the Saved badge count on load
