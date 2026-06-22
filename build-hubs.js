@@ -237,10 +237,20 @@ function pageHtml(hub, products) {
   </div>
 </section>
 
-<section class="hub-products">
-  <h2>${esc(hub.gridHeading)}</h2>
-  <div class="products-grid" id="productsGrid">
+<section class="hub-products" id="products">
+  <div class="container">
+    <div class="shop-layout">
+      <aside class="sidebar mf-sidebar" id="filterSidebar"></aside>
+      <main>
+        <div class="products-toolbar">
+          <span id="productsCount">${products.length} products</span>
+        </div>
+        <div class="products-grid" id="productsGrid">
 ${cards}
+        </div>
+        <button class="btn-load" id="loadMoreBtn" onclick="loadMore()" style="display:none">Load More</button>
+      </main>
+    </div>
   </div>
 </section>
 
@@ -250,8 +260,10 @@ ${cards}
 
 <footer class="footer" id="footer"></footer>
 
+${hub.filterConfig}
 <script src="../public/js/api-config.js"></script>
 <script src="../public/js/admitad-api.js"></script>
+${hub.filterConfig ? '<script src="../public/js/product-filter.js"></script>' : ''}
 <script src="../public/js/categories.js"></script>
 <script src="../public/js/i18n.js"></script>
 <script src="../public/js/site-content.js"></script>
@@ -271,6 +283,8 @@ function categoryHub(slug, title) {
     metaDesc: `Shop ${title.toLowerCase()} from worldwide-shipping stores. Hand-picked pieces, prices in your currency, updated daily. Direct links to global retailers.`,
     h1html: title,
     gridHeading: `Featured ${title}`,
+    // category pages get the full filter engine (product-filter.js reads this)
+    filterConfig: `<script>window.FILTER_CONFIG={category:"${slug}",gender:""};</script>`,
     footerCopy: `<p>Fashion to World curates ${title.toLowerCase()} from retailers that ship internationally, so you can shop global brands wherever you live. Every product links directly to the store's own checkout.</p>`
   };
 }
@@ -283,6 +297,9 @@ function storeHub(name, count) {
     metaDesc: `Shop ${name} with worldwide delivery. Browse current pieces with prices in your currency, updated daily. Direct links to ${name}.`,
     h1html: name,
     gridHeading: `Current picks from ${name}`,
+    // store pages keep the curated baked set (product-filter.js can't filter by
+    // advertiser, so we don't load it here — the baked products are the page)
+    filterConfig: '',
     footerCopy: `<p>${esc(name)} is one of many worldwide-shipping stores featured on Fashion to World. We track its catalogue and surface current pieces here, each linking straight to ${esc(name)}.</p>`
   };
 }
