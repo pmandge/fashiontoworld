@@ -171,8 +171,39 @@ const AdmitadAPI = (() => {
     const link = product.affiliate_url || product.url || '';
     const isRealLink = /^https?:\/\//i.test(link);
 
-    return `
+    var _wn = (product.name || '').replace(/"/g, '&quot;');
+    var _wimg = (product.image_url || '').replace(/"/g, '&quot;');
+    var _wprice = (product.price_display || formatPrice(product.price, product.currency) || '').replace(/"/g, '&quot;');
+    var _wbrand = (product.brand || product.advertiser_name || '').replace(/"/g, '&quot;');
+    var _heart = `<button class="card-heart" type="button" aria-label="Save"
+        data-wid="${product.id}" data-wname="${_wn}" data-wimg="${_wimg}"
+        data-wprice="${_wprice}" data-wbrand="${_wbrand}" data-wurl="${link}"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+      </button>`;
+    if (!isRealLink) {
+      return `
       <article class="product-card">
+        <div class="product-img">
+          <img src="${product.image_url || ''}" alt="${product.name}" loading="lazy" decoding="async"
+               onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
+          ${_heart}
+        </div>
+        <div class="product-body">
+          <p class="product-brand">${product.brand || product.advertiser_name}</p>
+          <h3 class="product-name">${product.name}</h3>
+          <div class="product-price-row">
+            <span class="product-price">${product.price_display || formatPrice(product.price, product.currency)}</span>
+          </div>
+        </div>
+        <div class="product-footer"><span class="btn-product btn-disabled">Unavailable</span></div>
+      </article>`;
+    }
+    return `
+      <a class="product-card product-card-link" href="${link}"
+         target="_blank" rel="noopener sponsored nofollow"
+         data-product-id="${product.id}"
+         onclick="trackClick('${product.id}', '${product.advertiser_name}')">
         <div class="product-img">
           <img src="${product.image_url || ''}"
                alt="${product.name}"
@@ -181,6 +212,7 @@ const AdmitadAPI = (() => {
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           ${hasDiscount ? `<span class="product-badge sale">-${discount}%</span>` : ''}
           ${product.is_new ? `<span class="product-badge">New</span>` : ''}
+          ${_heart}
         </div>
         <div class="product-body">
           <p class="product-brand">${product.brand || product.advertiser_name}</p>
@@ -192,16 +224,9 @@ const AdmitadAPI = (() => {
           </div>
         </div>
         <div class="product-footer">
-          ${isRealLink ? `<a href="${link}"
-             class="btn-product"
-             target="_blank"
-             rel="noopener sponsored nofollow"
-             data-product-id="${product.id}"
-             onclick="trackClick('${product.id}', '${product.advertiser_name}')">
-            Shop Now
-          </a>` : `<span class="btn-product btn-disabled">Unavailable</span>`}
+          <span class="btn-product">Shop Now</span>
         </div>
-      </article>
+      </a>
     `;
   }
 
