@@ -148,6 +148,24 @@ function pageHtml(hub, products) {
   const cards = products.map(card).filter(Boolean).join('\n');
   const ld = itemListLd(products, url, hub.title);
 
+  // Hero collage: 4 real product images from this hub, arranged on the right.
+  const collageImgs = products.filter(p => p.image_url).slice(0, 4);
+  const collage = collageImgs.length >= 4 ? `
+      <div class="hub-hero-collage" aria-hidden="true">
+        ${collageImgs.map(p => `<div class="hhc-tile" style="background-image:url('${attr(p.image_url)}')"></div>`).join('\n        ')}
+      </div>` : '';
+
+  // Trust bar: four credibility signals with inline SVG icons.
+  const trustBar = `
+<section class="hub-trust">
+  <div class="hub-trust-inner">
+    <div class="trust-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span>Ships Worldwide</span></div>
+    <div class="trust-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 6 9 17l-5-5"/></svg><span>Verified Deals Daily</span></div>
+    <div class="trust-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h18l-1.5 11h-15zM3 9l2-5h14l2 5M9 13v3m6-3v3"/></svg><span>Trusted Global Stores</span></div>
+    <div class="trust-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 5 0c0 1.5-1 2-2.5 2.5m0 3v.5m0-9V6"/></svg><span>Prices in Your Currency</span></div>
+  </div>
+</section>`;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -184,12 +202,21 @@ function pageHtml(hub, products) {
 <style>
 .hub-hero { position: relative; padding: calc(var(--nav-h) + 72px) 0 64px; background: #14110e; color: #f5f0ea; overflow: hidden; }
 .hub-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 100% at 80% 0%, rgba(201,168,76,0.18) 0%, rgba(20,17,14,0) 55%); pointer-events: none; }
-.hub-hero-inner { position: relative; max-width: var(--max-w); margin: 0 auto; padding: 0 40px; }
+.hub-hero-inner { position: relative; max-width: var(--max-w); margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: center; gap: 40px; }
+.hub-hero-text { min-width: 0; }
 .hub-eyebrow { display: inline-block; font-family: var(--font-sans); font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold, #c9a84c); margin-bottom: 18px; }
 .hub-hero h1 { font-size: clamp(40px, 7vw, 84px); line-height: 0.98; margin: 0; color: #fff; font-weight: 400; }
 .hub-hero h1 em { color: var(--gold, #c9a84c); font-style: italic; }
 .hub-intro { max-width: 640px; margin: 22px 0 0; font-size: 16px; line-height: 1.7; color: rgba(245,240,234,0.78); }
 .hub-intro p { margin: 0 0 12px; }
+.hub-hero-collage { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; height: 380px; }
+.hhc-tile { background-size: cover; background-position: center; background-color: #2a2620; border-radius: 14px; box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
+.hhc-tile:nth-child(1) { border-radius: 14px 14px 60px 14px; }
+.hhc-tile:nth-child(4) { border-radius: 60px 14px 14px 14px; }
+.hub-trust { background: #1d1915; border-top: 1px solid rgba(201,168,76,0.18); }
+.hub-trust-inner { max-width: var(--max-w); margin: 0 auto; padding: 18px 40px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.trust-cell { display: flex; align-items: center; gap: 10px; color: #e8e0d4; font-family: var(--font-sans); font-size: 13.5px; letter-spacing: 0.01em; }
+.trust-cell svg { width: 20px; height: 20px; color: var(--gold, #c9a84c); flex-shrink: 0; }
 .hub-products { max-width: var(--max-w); margin: 0 auto; padding: 56px 40px 80px; }
 .hub-products h2 { font-size: 24px; margin: 0 0 24px; }
 .shop-layout { display: grid; grid-template-columns: 240px 1fr; gap: 48px; padding: 24px 0 0; }
@@ -208,15 +235,21 @@ function pageHtml(hub, products) {
 .sort-select { padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; font-family: var(--font-sans); }
 .cat-seo { max-width: var(--max-w); margin: 0 auto; padding: 0 40px 64px; color: var(--text-muted); font-size: 15px; line-height: 1.7; }
 @media (max-width: 860px) {
+  .hub-hero-inner { grid-template-columns: 1fr; gap: 28px; }
+  .hub-hero-collage { height: 260px; max-width: 420px; }
+  .hub-trust-inner { grid-template-columns: 1fr 1fr; gap: 14px; padding: 16px 20px; }
   .shop-layout { grid-template-columns: 1fr; gap: 24px; }
   .sidebar { position: static; }
 }
 @media (max-width: 640px) {
-  .hub-hero { padding: calc(var(--nav-h) + 40px) 0 40px; }
+  .hub-hero { padding: calc(var(--nav-h) + 36px) 0 36px; }
   .hub-hero-inner { padding: 0 20px; }
+  .hub-hero-collage { height: 200px; gap: 10px; }
   .hub-eyebrow { font-size: 11px; letter-spacing: 0.18em; margin-bottom: 12px; }
   .hub-intro { font-size: 15px; margin-top: 16px; }
-  .hub-products { padding: 36px 16px 60px; }
+  .hub-trust-inner { padding: 14px 16px; }
+  .trust-cell { font-size: 12.5px; }
+  .hub-products { padding: 28px 16px 60px; }
   .hub-products h2 { font-size: 20px; }
   .cat-seo { padding: 0 16px 48px; }
 }
@@ -249,11 +282,14 @@ function pageHtml(hub, products) {
 
 <section class="hub-hero">
   <div class="hub-hero-inner">
-    <span class="hub-eyebrow">Ships Worldwide</span>
-    <h1>${esc(hub.h1html)}</h1>
-    <div class="hub-intro">${introCopy(hub, products)}</div>
+    <div class="hub-hero-text">
+      <span class="hub-eyebrow">Ships Worldwide</span>
+      <h1>${esc(hub.h1html)}</h1>
+      <div class="hub-intro">${introCopy(hub, products)}</div>
+    </div>${collage}
   </div>
 </section>
+${trustBar}
 
 <section class="hub-products" id="products">
   <div class="container">
