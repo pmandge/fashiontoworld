@@ -317,3 +317,38 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
   else build();
 })();
+
+/* ===== Site-wide wishlist helper (so hearts work on every page) ===== */
+(function () {
+  if (window.FTWWish) return; // homepage's home-v2.js already defined it
+  var WISH_KEY = 'ftw_saved';
+  function wishGet() { try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch (e) { return []; } }
+  function wishHas(id) { return wishGet().some(function (x) { return x.id === id; }); }
+  function updateWishBadges() {
+    var n = wishGet().length;
+    document.querySelectorAll('.botnav-saved-badge').forEach(function (b) {
+      if (n > 0) { b.textContent = n > 99 ? '99+' : n; b.style.display = 'flex'; }
+      else { b.style.display = 'none'; }
+    });
+  }
+  function wishToggle(item) {
+    var list = wishGet(); var i = list.findIndex(function (x) { return x.id === item.id; });
+    if (i > -1) { list.splice(i, 1); } else { list.unshift(item); }
+    try { localStorage.setItem(WISH_KEY, JSON.stringify(list.slice(0, 200))); } catch (e) {}
+    updateWishBadges();
+    return i === -1;
+  }
+  window.FTWWish = { get: wishGet, has: wishHas, toggle: wishToggle, key: function (p) { return (p.id || p.url || p.name || '').toString(); } };
+
+  // Mark already-saved hearts on load (so they show filled)
+  function paintHearts() {
+    document.querySelectorAll('.card-heart[data-wid]').forEach(function (h) {
+      if (wishHas(h.getAttribute('data-wid'))) h.classList.add('on');
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ paintHearts(); updateWishBadges(); });
+  else { paintHearts(); updateWishBadges(); }
+  // Re-paint after async product loads (category/search render later)
+  var _mo = new MutationObserver(function () { paintHearts(); });
+  _mo.observe(document.body, { childList: true, subtree: true });
+})();
