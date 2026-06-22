@@ -32,27 +32,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../public/css/main.css">
 <style>
-.hub-hero { position: relative; padding: calc(var(--nav-h) + 72px) 0 64px; background: #14110e; color: #f5f0ea; overflow: hidden; }
-.hub-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 100% at 80% 0%, rgba(201,168,76,0.18) 0%, rgba(20,17,14,0) 55%); pointer-events: none; }
-.hub-hero-inner { position: relative; max-width: var(--max-w); margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: center; gap: 40px; }
-.hub-hero-text { min-width: 0; }
+.hub-hero { position: relative; padding: calc(var(--nav-h) + 88px) 0 80px; background: #14110e; background-size: cover; background-position: center; color: #f5f0ea; overflow: hidden; }
+.hub-hero-inner { position: relative; max-width: var(--max-w); margin: 0 auto; padding: 0 40px; }
+.hub-hero-text { max-width: 720px; }
 .hub-eyebrow { display: inline-block; font-family: var(--font-sans); font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold, #c9a84c); margin-bottom: 18px; }
 .hub-hero h1 { font-size: clamp(40px, 7vw, 84px); line-height: 0.98; margin: 0; color: #fff; font-weight: 400; }
 .hub-hero h1 em { color: var(--gold, #c9a84c); font-style: italic; }
-.hub-intro { max-width: 640px; margin: 22px 0 0; font-size: 16px; line-height: 1.7; color: rgba(245,240,234,0.78); }
+.hub-intro { max-width: 620px; margin: 22px 0 0; font-size: 16px; line-height: 1.7; color: rgba(245,240,234,0.82); }
 .hub-intro p { margin: 0 0 12px; }
-.hub-hero-collage { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; height: 380px; }
-.hhc-tile { background-size: cover; background-position: center; background-color: #2a2620; border-radius: 14px; box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
-.hhc-tile:nth-child(1) { border-radius: 14px 14px 60px 14px; }
-.hhc-tile:nth-child(4) { border-radius: 60px 14px 14px 14px; }
 .hub-trust { background: #1d1915; border-top: 1px solid rgba(201,168,76,0.18); }
 .hub-trust-inner { max-width: var(--max-w); margin: 0 auto; padding: 18px 40px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .trust-cell { display: flex; align-items: center; gap: 10px; color: #e8e0d4; font-family: var(--font-sans); font-size: 13.5px; letter-spacing: 0.01em; }
 .trust-cell svg { width: 20px; height: 20px; color: var(--gold, #c9a84c); flex-shrink: 0; }
-.hub-products { max-width: var(--max-w); margin: 0 auto; padding: 56px 40px 80px; }
+.hub-products { max-width: var(--max-w); margin: 0 auto; padding: 48px 40px 56px; }
 .hub-products h2 { font-size: 24px; margin: 0 0 24px; }
-.shop-layout { display: grid; grid-template-columns: 240px 1fr; gap: 48px; padding: 24px 0 0; }
+.shop-layout { display: grid; grid-template-columns: 230px 1fr; gap: 40px; padding: 24px 0 0; }
 .sidebar { position: sticky; top: calc(var(--nav-h) + 20px); align-self: start; }
+.hub-products .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .filter-section { margin-bottom: 32px; }
 .filter-section h4 { font-family: var(--font-sans); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
 .filter-option { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
@@ -60,30 +56,32 @@
 .price-range input { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font-family: var(--font-sans); }
 .products-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 .btn-apply { width: 100%; padding: 12px; background: var(--black); color: var(--white); border: none; border-radius: 8px; font-family: var(--font-sans); font-size: 14px; cursor: pointer; }
-.btn-load { display: block; margin: 40px auto 0; padding: 14px 40px; border: 1px solid var(--black); background: transparent; border-radius: 30px; font-family: var(--font-sans); cursor: pointer; transition: all .2s; }
+.btn-load { display: block; margin: 36px auto 0; padding: 14px 40px; border: 1px solid var(--black); background: transparent; border-radius: 30px; font-family: var(--font-sans); cursor: pointer; transition: all .2s; }
 .btn-load:hover { background: var(--black); color: var(--white); }
 .empty-state { grid-column: 1/-1; padding: 60px 20px; text-align: center; color: var(--text-muted); }
 .btn-disabled { opacity: .5; cursor: not-allowed; }
 .sort-select { padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; font-family: var(--font-sans); }
-.cat-seo { max-width: var(--max-w); margin: 0 auto; padding: 0 40px 64px; color: var(--text-muted); font-size: 15px; line-height: 1.7; }
+.cat-seo { background: var(--warm-ivory, #faf6ef); margin: 40px 0 0; padding: 40px 0; }
+.cat-seo-inner { max-width: 820px; margin: 0 auto; padding: 0 40px; color: var(--text-muted); font-size: 15px; line-height: 1.8; text-align: center; }
+@media (max-width: 1100px) {
+  .hub-products .products-grid { grid-template-columns: repeat(3, 1fr); }
+}
 @media (max-width: 860px) {
-  .hub-hero-inner { grid-template-columns: 1fr; gap: 28px; }
-  .hub-hero-collage { height: 260px; max-width: 420px; }
   .hub-trust-inner { grid-template-columns: 1fr 1fr; gap: 14px; padding: 16px 20px; }
   .shop-layout { grid-template-columns: 1fr; gap: 24px; }
   .sidebar { position: static; }
+  .hub-products .products-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 640px) {
-  .hub-hero { padding: calc(var(--nav-h) + 36px) 0 36px; }
+  .hub-hero { padding: calc(var(--nav-h) + 40px) 0 40px; }
   .hub-hero-inner { padding: 0 20px; }
-  .hub-hero-collage { height: 200px; gap: 10px; }
   .hub-eyebrow { font-size: 11px; letter-spacing: 0.18em; margin-bottom: 12px; }
   .hub-intro { font-size: 15px; margin-top: 16px; }
   .hub-trust-inner { padding: 14px 16px; }
   .trust-cell { font-size: 12.5px; }
-  .hub-products { padding: 28px 16px 60px; }
+  .hub-products { padding: 24px 16px 40px; }
   .hub-products h2 { font-size: 20px; }
-  .cat-seo { padding: 0 16px 48px; }
+  .cat-seo-inner { padding: 0 20px; }
 }
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Watches","url":"https://fashiontoworld.co/pages/watches.html","numberOfItems":20,"itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Product","name":"Hugo Boss Admiral Chronograph Green Dial Men's Watch 1513967","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-admiral-quartz-mens-watch-hb1513967-6954330.webp?v=1779097598","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276244014&a=2926969&m=122382"}}},{"@type":"ListItem","position":2,"item":{"@type":"Product","name":"Hugo Boss Driver 1513081 Men's Chronograph Watch – 44mm Blue Dial Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-driver-chronograph-quartz-mens-watch-hb1513081-1994187.webp?v=1779097005","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276244096&a=2926969&m=122382"}}},{"@type":"ListItem","position":3,"item":{"@type":"Product","name":"Emporio Armani AR1456 Ceramica Mother of Pearl Ladies' Chronograph Watch","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-mother-of-pearl-quartz-ladies-watch-ar1456-8792647.webp?v=1779098128","brand":{"@type":"Brand","name":"Emporio Armani"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"209.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243779&a=2926969&m=122382"}}},{"@type":"ListItem","position":4,"item":{"@type":"Product","name":"Hugo Boss Trophy HB1513675 Men's Chronograph Watch – 44mm Black Dial Stainless Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-trophy-chronograph-quartz-mens-watch-hb1513675-2008344.webp?v=1779097468","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"199.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243941&a=2926969&m=122382"}}},{"@type":"ListItem","position":5,"item":{"@type":"Product","name":"Hugo Boss Distinct Chronograph Grey Dial Grey IP Stainless Steel Men's Watch 1513858","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-distinct-chronograph-quartz-mens-watch-hb1513858-7708135.webp?v=1779097511","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"209.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243985&a=2926969&m=122382"}}},{"@type":"ListItem","position":6,"item":{"@type":"Product","name":"Emporio Armani Gianni T-Bar AR1927 Women's Rose Gold Watch – 32mm White Dial Beige Leather Strap","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-gianni-t-bar-quartz-womens-watch-ar1927-4681772.webp?v=1779098147","brand":{"@type":"Brand","name":"Emporio Armani"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"149.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243787&a=2926969&m=122382"}}},{"@type":"ListItem","position":7,"item":{"@type":"Product","name":"Hugo Boss Jet Chronograph Watch 1513383 – 41mm Black Dial with Silver Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-jet-chronograph-quartz-mens-watch-hb1513383-9578355.webp?v=1779097061","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"179.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276244035&a=2926969&m=122382"}}},{"@type":"ListItem","position":8,"item":{"@type":"Product","name":"Hugo Boss Infinity 1502520 Women's Multifunction Watch – 35mm Gold Dial Gold Mesh Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-infinity-quartz-multifunction-womens-watch-hb1502520-6067348.webp?v=1779097405","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"179.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243966&a=2926969&m=122382"}}},{"@type":"ListItem","position":9,"item":{"@type":"Product","name":"Emporio Armani AR1410 Ceramica Black Dial Chronograph Men's Watch","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-quartz-mens-watch-ar1410-6348253.webp?v=1779098537","brand":{"@type":"Brand","name":"Emporio Armani"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243712&a=2926969&m=122382"}}},{"@type":"ListItem","position":10,"item":{"@type":"Product","name":"Hugo Boss Santiago 1513935 Men's Chronograph Watch – 44mm Black Dial Black Fabric & Leather Strap","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-santiago-quartz-chronograph-mens-watch-hb1513935-1798870.webp?v=1779097622","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243934&a=2926969&m=122382"}}},{"@type":"ListItem","position":11,"item":{"@type":"Product","name":"Hugo Boss Aeroliner 1513236 Men's Chronograph Watch – 44mm White Dial Two-Tone Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-aeroliner-quartz-mens-watch-hb1513236-5663061.webp?v=1779097089","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276244100&a=2926969&m=122382"}}},{"@type":"ListItem","position":12,"item":{"@type":"Product","name":"Hugo Boss Avery 1514158 Men's Chronograph Watch – 42mm Blue Dial Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-chronograph-quartz-mens-watch-hb1514158-2016844.webp?v=1779097785","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243866&a=2926969&m=122382"}}},{"@type":"ListItem","position":13,"item":{"@type":"Product","name":"Hugo Boss HB1513932 Globetrotter Men's Chronograph Watch – 46mm Black Dial Gold-Tone Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-globetrotter-quartz-mens-watch-hb1513932-9100911.webp?v=1779097740","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"199.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243910&a=2926969&m=122382"}}},{"@type":"ListItem","position":14,"item":{"@type":"Product","name":"Hugo Boss Companion Chronograph Men's Watch 1513653 – 44mm Blue Dial Stainless Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-chronograph-quartz-mens-watch-hb1513653-5098982.webp?v=1779097510","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"199.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243928&a=2926969&m=122382"}}},{"@type":"ListItem","position":15,"item":{"@type":"Product","name":"Hugo Boss Troper Chronograph Blue Dial Navy Leather Strap Men's Watch 1514056","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-troper-chronograph-quartz-mens-watch-hb1514056-5588348.webp?v=1779097689","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"155.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243918&a=2926969&m=122382"}}},{"@type":"ListItem","position":16,"item":{"@type":"Product","name":"Hugo Boss Candor HB1514080 Men's Quartz Watch – 41mm Olive Green Dial Black Leather Strap","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-candor-quartz-mens-watch-hb1514080-5667068.webp?v=1779097565","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"169.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243997&a=2926969&m=122382"}}},{"@type":"ListItem","position":17,"item":{"@type":"Product","name":"Hugo Boss Gregor HB1514051 Men's Chronograph Watch – 45mm Grey Dial Gold-Tone Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-gregor-quartz-mens-watch-hb1514051-8952872.webp?v=1779097829","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243917&a=2926969&m=122382"}}},{"@type":"ListItem","position":18,"item":{"@type":"Product","name":"Hugo Boss Steer 1514068 Men's Chronograph Watch – 44mm Black Dial Black PVD Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-steer-chronograph-quartz-mens-watch-hb1514068-9937420.webp?v=1779097365","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"209.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243968&a=2926969&m=122382"}}},{"@type":"ListItem","position":19,"item":{"@type":"Product","name":"Emporio Armani Sigma AR6094 Men's Chronograph Watch – 43mm Black Dial Black PVD Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-chronograph-quartz-mens-watch-ar6094-4655725.webp?v=1779097751","brand":{"@type":"Brand","name":"Emporio Armani"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"159.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243820&a=2926969&m=122382"}}},{"@type":"ListItem","position":20,"item":{"@type":"Product","name":"Emporio Armani Gianni T-Bar AR11446 Women's Watch – 32mm Silver Dial Rose Gold Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-gianni-t-bar-quartz-womens-watch-ar11446-1147542.webp?v=1779098593","brand":{"@type":"Brand","name":"Emporio Armani"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"159.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243699&a=2926969&m=122382"}}}]}</script>
@@ -112,7 +110,7 @@
   </div>
 </nav>
 
-<section class="hub-hero">
+<section class="hub-hero" style="background-image: linear-gradient(90deg, rgba(20,17,14,0.96) 0%, rgba(20,17,14,0.82) 45%, rgba(20,17,14,0.55) 100%), url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1900&q=80');">
   <div class="hub-hero-inner">
     <div class="hub-hero-text">
       <span class="hub-eyebrow">Ships Worldwide</span>
@@ -120,12 +118,6 @@
       <div class="hub-intro"><p>Browse watches from stores that ship worldwide — every item below links straight to a retailer that delivers internationally, with prices shown in your local currency. Featured names include Hugo Boss, Emporio Armani and Diesel.</p>
       <p>We surface 36 hand-picked pieces ranging from £149.00 to £209.00, refreshed daily as new stock and markdowns land. Whether you're after everyday staples or a standout investment piece, each link takes you directly to the store's own checkout — no middleman, no markup.</p></div>
     </div>
-      <div class="hub-hero-collage" aria-hidden="true">
-        <div class="hhc-tile" style="background-image:url('https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-admiral-quartz-mens-watch-hb1513967-6954330.webp?v=1779097598')"></div>
-        <div class="hhc-tile" style="background-image:url('https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-driver-chronograph-quartz-mens-watch-hb1513081-1994187.webp?v=1779097005')"></div>
-        <div class="hhc-tile" style="background-image:url('https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-mother-of-pearl-quartz-ladies-watch-ar1456-8792647.webp?v=1779098128')"></div>
-        <div class="hhc-tile" style="background-image:url('https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-trophy-chronograph-quartz-mens-watch-hb1513675-2008344.webp?v=1779097468')"></div>
-      </div>
   </div>
 </section>
 
@@ -1019,7 +1011,7 @@
 </section>
 
 <section class="cat-seo">
-  <p>Fashion to World curates watches from retailers that ship internationally, so you can shop global brands wherever you live. Every product links directly to the store's own checkout.</p>
+  <div class="cat-seo-inner"><p>Fashion to World curates watches from retailers that ship internationally, so you can shop global brands wherever you live. Every product links directly to the store's own checkout.</p></div>
 </section>
 
 <footer class="footer" id="footer"></footer>
