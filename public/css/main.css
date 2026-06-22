@@ -964,3 +964,7 @@ img, video { max-width: 100%; }
 .card-heart:hover{ transform:scale(1.08); background:#fff }
 .card-heart svg{ fill:none; stroke:#1a1410; stroke-width:1.8; width:18px; height:18px; transition:fill .15s, stroke .15s }
 .card-heart.on svg{ fill:#c0492f; stroke:#c0492f }
+
+/* Homepage product cards are fully clickable (click anywhere opens product) */
+.pcard{ cursor:pointer }
+.pcard-heart{ cursor:pointer }
