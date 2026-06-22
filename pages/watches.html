@@ -88,9 +88,15 @@
   </div>
 </section>
 
-<section class="hub-products">
-  <h2>Featured Watches</h2>
-  <div class="products-grid" id="productsGrid">
+<section class="hub-products" id="products">
+  <div class="container">
+    <div class="shop-layout">
+      <aside class="sidebar mf-sidebar" id="filterSidebar"></aside>
+      <main>
+        <div class="products-toolbar">
+          <span id="productsCount">36 products</span>
+        </div>
+        <div class="products-grid" id="productsGrid">
 
       <a class="product-card product-card-link" href="https://www.awin1.com/pclick.php?p=43276244014&a=2926969&m=122382"
          target="_blank" rel="noopener sponsored nofollow"
@@ -955,6 +961,10 @@
         </div>
         <div class="product-footer"><span class="btn-product">Shop Now</span></div>
       </a>
+        </div>
+        <button class="btn-load" id="loadMoreBtn" onclick="loadMore()" style="display:none">Load More</button>
+      </main>
+    </div>
   </div>
 </section>
 
@@ -964,8 +974,10 @@
 
 <footer class="footer" id="footer"></footer>
 
+<script>window.FILTER_CONFIG={category:"watches",gender:""};</script>
 <script src="../public/js/api-config.js"></script>
 <script src="../public/js/admitad-api.js"></script>
+<script src="../public/js/product-filter.js"></script>
 <script src="../public/js/categories.js"></script>
 <script src="../public/js/i18n.js"></script>
 <script src="../public/js/site-content.js"></script>
