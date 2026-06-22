@@ -32,23 +32,56 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../public/css/main.css">
 <style>
-.hub-hero { padding: calc(var(--nav-h) + 48px) 0 0; background: #f5f0ea; }
-.hub-hero-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 40px 48px; }
-.hub-hero h1 { font-size: clamp(36px, 5vw, 64px); line-height: 1; }
-.hub-hero h1 em { color: var(--gold); font-style: italic; }
-.hub-intro { max-width: 720px; margin: 20px 0 0; font-size: 16px; color: var(--text-muted); }
+.hub-hero { position: relative; padding: calc(var(--nav-h) + 72px) 0 64px; background: #14110e; color: #f5f0ea; overflow: hidden; }
+.hub-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 100% at 80% 0%, rgba(201,168,76,0.18) 0%, rgba(20,17,14,0) 55%); pointer-events: none; }
+.hub-hero-inner { position: relative; max-width: var(--max-w); margin: 0 auto; padding: 0 40px; }
+.hub-eyebrow { display: inline-block; font-family: var(--font-sans); font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold, #c9a84c); margin-bottom: 18px; }
+.hub-hero h1 { font-size: clamp(40px, 7vw, 84px); line-height: 0.98; margin: 0; color: #fff; font-weight: 400; }
+.hub-hero h1 em { color: var(--gold, #c9a84c); font-style: italic; }
+.hub-intro { max-width: 640px; margin: 22px 0 0; font-size: 16px; line-height: 1.7; color: rgba(245,240,234,0.78); }
 .hub-intro p { margin: 0 0 12px; }
-.hub-products { max-width: var(--max-w); margin: 0 auto; padding: 48px 40px 80px; }
+.hub-products { max-width: var(--max-w); margin: 0 auto; padding: 56px 40px 80px; }
 .hub-products h2 { font-size: 24px; margin: 0 0 24px; }
-.cat-seo { max-width: var(--max-w); margin: 0 auto; padding: 0 40px 64px; color: var(--text-muted); font-size: 15px; }
+.cat-seo { max-width: var(--max-w); margin: 0 auto; padding: 0 40px 64px; color: var(--text-muted); font-size: 15px; line-height: 1.7; }
+@media (max-width: 640px) {
+  .hub-hero { padding: calc(var(--nav-h) + 40px) 0 40px; }
+  .hub-hero-inner { padding: 0 20px; }
+  .hub-eyebrow { font-size: 11px; letter-spacing: 0.18em; margin-bottom: 12px; }
+  .hub-intro { font-size: 15px; margin-top: 16px; }
+  .hub-products { padding: 36px 16px 60px; }
+  .hub-products h2 { font-size: 20px; }
+  .cat-seo { padding: 0 16px 48px; }
+}
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Watches","url":"https://fashiontoworld.co/pages/watches.html","numberOfItems":20,"itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Product","name":"Hugo Boss Admiral Chronograph Green Dial Men's Watch 1513967","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-admiral-quartz-mens-watch-hb1513967-6954330.webp?v=1779097598","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276244014&a=2926969&m=122382"}}},{"@type":"ListItem","position":2,"item":{"@type":"Product","name":"Hugo Boss Driver 1513081 Men's Chronograph Watch – 44mm Blue Dial Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-driver-chronograph-quartz-mens-watch-hb1513081-1994187.webp?v=1779097005","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276244096&a=2926969&m=122382"}}},{"@type":"ListItem","position":3,"item":{"@type":"Product","name":"Emporio Armani AR1456 Ceramica Mother of Pearl Ladies' Chronograph Watch","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-mother-of-pearl-quartz-ladies-watch-ar1456-8792647.webp?v=1779098128","brand":{"@type":"Brand","name":"Emporio Armani"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"209.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243779&a=2926969&m=122382"}}},{"@type":"ListItem","position":4,"item":{"@type":"Product","name":"Hugo Boss Trophy HB1513675 Men's Chronograph Watch – 44mm Black Dial Stainless Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-trophy-chronograph-quartz-mens-watch-hb1513675-2008344.webp?v=1779097468","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"199.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243941&a=2926969&m=122382"}}},{"@type":"ListItem","position":5,"item":{"@type":"Product","name":"Hugo Boss Distinct Chronograph Grey Dial Grey IP Stainless Steel Men's Watch 1513858","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-distinct-chronograph-quartz-mens-watch-hb1513858-7708135.webp?v=1779097511","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"209.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243985&a=2926969&m=122382"}}},{"@type":"ListItem","position":6,"item":{"@type":"Product","name":"Emporio Armani Gianni T-Bar AR1927 Women's Rose Gold Watch – 32mm White Dial Beige Leather Strap","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-gianni-t-bar-quartz-womens-watch-ar1927-4681772.webp?v=1779098147","brand":{"@type":"Brand","name":"Emporio Armani"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"149.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243787&a=2926969&m=122382"}}},{"@type":"ListItem","position":7,"item":{"@type":"Product","name":"Hugo Boss Jet Chronograph Watch 1513383 – 41mm Black Dial with Silver Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-jet-chronograph-quartz-mens-watch-hb1513383-9578355.webp?v=1779097061","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"179.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276244035&a=2926969&m=122382"}}},{"@type":"ListItem","position":8,"item":{"@type":"Product","name":"Hugo Boss Infinity 1502520 Women's Multifunction Watch – 35mm Gold Dial Gold Mesh Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-infinity-quartz-multifunction-womens-watch-hb1502520-6067348.webp?v=1779097405","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"179.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243966&a=2926969&m=122382"}}},{"@type":"ListItem","position":9,"item":{"@type":"Product","name":"Emporio Armani AR1410 Ceramica Black Dial Chronograph Men's Watch","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-quartz-mens-watch-ar1410-6348253.webp?v=1779098537","brand":{"@type":"Brand","name":"Emporio Armani"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243712&a=2926969&m=122382"}}},{"@type":"ListItem","position":10,"item":{"@type":"Product","name":"Hugo Boss Santiago 1513935 Men's Chronograph Watch – 44mm Black Dial Black Fabric & Leather Strap","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-santiago-quartz-chronograph-mens-watch-hb1513935-1798870.webp?v=1779097622","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243934&a=2926969&m=122382"}}},{"@type":"ListItem","position":11,"item":{"@type":"Product","name":"Hugo Boss Aeroliner 1513236 Men's Chronograph Watch – 44mm White Dial Two-Tone Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-aeroliner-quartz-mens-watch-hb1513236-5663061.webp?v=1779097089","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276244100&a=2926969&m=122382"}}},{"@type":"ListItem","position":12,"item":{"@type":"Product","name":"Hugo Boss Avery 1514158 Men's Chronograph Watch – 42mm Blue Dial Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-chronograph-quartz-mens-watch-hb1514158-2016844.webp?v=1779097785","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243866&a=2926969&m=122382"}}},{"@type":"ListItem","position":13,"item":{"@type":"Product","name":"Hugo Boss HB1513932 Globetrotter Men's Chronograph Watch – 46mm Black Dial Gold-Tone Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-globetrotter-quartz-mens-watch-hb1513932-9100911.webp?v=1779097740","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"199.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243910&a=2926969&m=122382"}}},{"@type":"ListItem","position":14,"item":{"@type":"Product","name":"Hugo Boss Companion Chronograph Men's Watch 1513653 – 44mm Blue Dial Stainless Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-chronograph-quartz-mens-watch-hb1513653-5098982.webp?v=1779097510","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"199.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243928&a=2926969&m=122382"}}},{"@type":"ListItem","position":15,"item":{"@type":"Product","name":"Hugo Boss Troper Chronograph Blue Dial Navy Leather Strap Men's Watch 1514056","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-troper-chronograph-quartz-mens-watch-hb1514056-5588348.webp?v=1779097689","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"155.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243918&a=2926969&m=122382"}}},{"@type":"ListItem","position":16,"item":{"@type":"Product","name":"Hugo Boss Candor HB1514080 Men's Quartz Watch – 41mm Olive Green Dial Black Leather Strap","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-candor-quartz-mens-watch-hb1514080-5667068.webp?v=1779097565","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"169.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243997&a=2926969&m=122382"}}},{"@type":"ListItem","position":17,"item":{"@type":"Product","name":"Hugo Boss Gregor HB1514051 Men's Chronograph Watch – 45mm Grey Dial Gold-Tone Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-gregor-quartz-mens-watch-hb1514051-8952872.webp?v=1779097829","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"189.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243917&a=2926969&m=122382"}}},{"@type":"ListItem","position":18,"item":{"@type":"Product","name":"Hugo Boss Steer 1514068 Men's Chronograph Watch – 44mm Black Dial Black PVD Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-steer-chronograph-quartz-mens-watch-hb1514068-9937420.webp?v=1779097365","brand":{"@type":"Brand","name":"Hugo Boss"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"209.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243968&a=2926969&m=122382"}}},{"@type":"ListItem","position":19,"item":{"@type":"Product","name":"Emporio Armani Sigma AR6094 Men's Chronograph Watch – 43mm Black Dial Black PVD Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-chronograph-quartz-mens-watch-ar6094-4655725.webp?v=1779097751","brand":{"@type":"Brand","name":"Emporio Armani"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"159.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243820&a=2926969&m=122382"}}},{"@type":"ListItem","position":20,"item":{"@type":"Product","name":"Emporio Armani Gianni T-Bar AR11446 Women's Watch – 32mm Silver Dial Rose Gold Steel Bracelet","image":"https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-gianni-t-bar-quartz-womens-watch-ar11446-1147542.webp?v=1779098593","brand":{"@type":"Brand","name":"Emporio Armani"},"offers":{"@type":"Offer","priceCurrency":"GBP","price":"159.00","availability":"https://schema.org/InStock","url":"https://www.awin1.com/pclick.php?p=43276243699&a=2926969&m=122382"}}}]}</script>
 </head>
 <body>
-<nav class="nav" id="nav"></nav>
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class='logo' href='/'><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span></a>
+    <ul class="nav-links">
+      <li><a href='/pages/women'>Women</a></li>
+      <li><a href='/pages/men'>Men</a></li>
+      <li><a href='/pages/shoes'>Shoes</a></li>
+      <li><a href='/pages/bags'>Bags</a></li>
+      <li><a href='/pages/jewellery'>Jewellery</a></li>
+      <li><a href='/pages/accessories'>Accessories</a></li>
+    </ul>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <form class="nav-search" onsubmit="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search products…" aria-label="Search products" autocomplete="off"></form>
+      <a class='btn-nav-cta' href='/pages/deals'>Shop Deals</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <span class="burger-lines"><span></span><span></span><span></span></span>
+      <span class="burger-label">Menu</span>
+    </button>
+  </div>
+</nav>
 
 <section class="hub-hero">
   <div class="hub-hero-inner">
+    <span class="hub-eyebrow">Ships Worldwide</span>
     <h1>Watches</h1>
     <div class="hub-intro"><p>Browse watches from stores that ship worldwide — every item below links straight to a retailer that delivers internationally, with prices shown in your local currency. Featured names include Hugo Boss, Emporio Armani and Diesel.</p>
       <p>We surface 36 hand-picked pieces ranging from £149.00 to £209.00, refreshed daily as new stock and markdowns land. Whether you're after everyday staples or a standout investment piece, each link takes you directly to the store's own checkout — no middleman, no markup.</p></div>
@@ -66,6 +99,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-admiral-quartz-mens-watch-hb1513967-6954330.webp?v=1779097598" alt="Hugo Boss Admiral Chronograph Green Dial Men's Watch 1513967" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-95%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276244014" data-wname="Hugo Boss Admiral Chronograph Green Dial Men's Watch 1513967" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-admiral-quartz-mens-watch-hb1513967-6954330.webp?v=1779097598"
+        data-wprice="£189.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276244014&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -86,6 +123,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-driver-chronograph-quartz-mens-watch-hb1513081-1994187.webp?v=1779097005" alt="Hugo Boss Driver 1513081 Men's Chronograph Watch – 44mm Blue Dial Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-66%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276244096" data-wname="Hugo Boss Driver 1513081 Men's Chronograph Watch – 44mm Blue Dial Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-driver-chronograph-quartz-mens-watch-hb1513081-1994187.webp?v=1779097005"
+        data-wprice="£189.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276244096&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -106,6 +147,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-mother-of-pearl-quartz-ladies-watch-ar1456-8792647.webp?v=1779098128" alt="Emporio Armani AR1456 Ceramica Mother of Pearl Ladies' Chronograph Watch" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-65%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243779" data-wname="Emporio Armani AR1456 Ceramica Mother of Pearl Ladies' Chronograph Watch" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-mother-of-pearl-quartz-ladies-watch-ar1456-8792647.webp?v=1779098128"
+        data-wprice="£209.00" data-wbrand="Emporio Armani" data-wurl="https://www.awin1.com/pclick.php?p=43276243779&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Emporio Armani</p>
@@ -126,6 +171,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-trophy-chronograph-quartz-mens-watch-hb1513675-2008344.webp?v=1779097468" alt="Hugo Boss Trophy HB1513675 Men's Chronograph Watch – 44mm Black Dial Stainless Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-64%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243941" data-wname="Hugo Boss Trophy HB1513675 Men's Chronograph Watch – 44mm Black Dial Stainless Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-trophy-chronograph-quartz-mens-watch-hb1513675-2008344.webp?v=1779097468"
+        data-wprice="£199.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243941&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -146,6 +195,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-distinct-chronograph-quartz-mens-watch-hb1513858-7708135.webp?v=1779097511" alt="Hugo Boss Distinct Chronograph Grey Dial Grey IP Stainless Steel Men's Watch 1513858" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-63%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243985" data-wname="Hugo Boss Distinct Chronograph Grey Dial Grey IP Stainless Steel Men's Watch 1513858" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-distinct-chronograph-quartz-mens-watch-hb1513858-7708135.webp?v=1779097511"
+        data-wprice="£209.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243985&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -166,6 +219,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-gianni-t-bar-quartz-womens-watch-ar1927-4681772.webp?v=1779098147" alt="Emporio Armani Gianni T-Bar AR1927 Women's Rose Gold Watch – 32mm White Dial Beige Leather Strap" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-63%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243787" data-wname="Emporio Armani Gianni T-Bar AR1927 Women's Rose Gold Watch – 32mm White Dial Beige Leather Strap" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-gianni-t-bar-quartz-womens-watch-ar1927-4681772.webp?v=1779098147"
+        data-wprice="£149.00" data-wbrand="Emporio Armani" data-wurl="https://www.awin1.com/pclick.php?p=43276243787&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Emporio Armani</p>
@@ -186,6 +243,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-jet-chronograph-quartz-mens-watch-hb1513383-9578355.webp?v=1779097061" alt="Hugo Boss Jet Chronograph Watch 1513383 – 41mm Black Dial with Silver Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-63%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276244035" data-wname="Hugo Boss Jet Chronograph Watch 1513383 – 41mm Black Dial with Silver Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-jet-chronograph-quartz-mens-watch-hb1513383-9578355.webp?v=1779097061"
+        data-wprice="£179.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276244035&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -206,6 +267,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-infinity-quartz-multifunction-womens-watch-hb1502520-6067348.webp?v=1779097405" alt="Hugo Boss Infinity 1502520 Women's Multifunction Watch – 35mm Gold Dial Gold Mesh Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-63%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243966" data-wname="Hugo Boss Infinity 1502520 Women's Multifunction Watch – 35mm Gold Dial Gold Mesh Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-infinity-quartz-multifunction-womens-watch-hb1502520-6067348.webp?v=1779097405"
+        data-wprice="£179.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243966&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -226,6 +291,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-quartz-mens-watch-ar1410-6348253.webp?v=1779098537" alt="Emporio Armani AR1410 Ceramica Black Dial Chronograph Men's Watch" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-62%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243712" data-wname="Emporio Armani AR1410 Ceramica Black Dial Chronograph Men's Watch" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-quartz-mens-watch-ar1410-6348253.webp?v=1779098537"
+        data-wprice="£189.00" data-wbrand="Emporio Armani" data-wurl="https://www.awin1.com/pclick.php?p=43276243712&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Emporio Armani</p>
@@ -246,6 +315,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-santiago-quartz-chronograph-mens-watch-hb1513935-1798870.webp?v=1779097622" alt="Hugo Boss Santiago 1513935 Men's Chronograph Watch – 44mm Black Dial Black Fabric & Leather Strap" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-62%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243934" data-wname="Hugo Boss Santiago 1513935 Men's Chronograph Watch – 44mm Black Dial Black Fabric & Leather Strap" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-santiago-quartz-chronograph-mens-watch-hb1513935-1798870.webp?v=1779097622"
+        data-wprice="£189.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243934&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -266,6 +339,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-aeroliner-quartz-mens-watch-hb1513236-5663061.webp?v=1779097089" alt="Hugo Boss Aeroliner 1513236 Men's Chronograph Watch – 44mm White Dial Two-Tone Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-62%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276244100" data-wname="Hugo Boss Aeroliner 1513236 Men's Chronograph Watch – 44mm White Dial Two-Tone Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-aeroliner-quartz-mens-watch-hb1513236-5663061.webp?v=1779097089"
+        data-wprice="£189.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276244100&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -286,6 +363,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-chronograph-quartz-mens-watch-hb1514158-2016844.webp?v=1779097785" alt="Hugo Boss Avery 1514158 Men's Chronograph Watch – 42mm Blue Dial Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-62%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243866" data-wname="Hugo Boss Avery 1514158 Men's Chronograph Watch – 42mm Blue Dial Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-chronograph-quartz-mens-watch-hb1514158-2016844.webp?v=1779097785"
+        data-wprice="£189.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243866&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -306,6 +387,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-globetrotter-quartz-mens-watch-hb1513932-9100911.webp?v=1779097740" alt="Hugo Boss HB1513932 Globetrotter Men's Chronograph Watch – 46mm Black Dial Gold-Tone Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-62%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243910" data-wname="Hugo Boss HB1513932 Globetrotter Men's Chronograph Watch – 46mm Black Dial Gold-Tone Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-globetrotter-quartz-mens-watch-hb1513932-9100911.webp?v=1779097740"
+        data-wprice="£199.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243910&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -326,6 +411,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-chronograph-quartz-mens-watch-hb1513653-5098982.webp?v=1779097510" alt="Hugo Boss Companion Chronograph Men's Watch 1513653 – 44mm Blue Dial Stainless Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-62%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243928" data-wname="Hugo Boss Companion Chronograph Men's Watch 1513653 – 44mm Blue Dial Stainless Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-chronograph-quartz-mens-watch-hb1513653-5098982.webp?v=1779097510"
+        data-wprice="£199.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243928&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -346,6 +435,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-troper-chronograph-quartz-mens-watch-hb1514056-5588348.webp?v=1779097689" alt="Hugo Boss Troper Chronograph Blue Dial Navy Leather Strap Men's Watch 1514056" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-61%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243918" data-wname="Hugo Boss Troper Chronograph Blue Dial Navy Leather Strap Men's Watch 1514056" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-troper-chronograph-quartz-mens-watch-hb1514056-5588348.webp?v=1779097689"
+        data-wprice="£155.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243918&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -366,6 +459,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-candor-quartz-mens-watch-hb1514080-5667068.webp?v=1779097565" alt="Hugo Boss Candor HB1514080 Men's Quartz Watch – 41mm Olive Green Dial Black Leather Strap" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-61%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243997" data-wname="Hugo Boss Candor HB1514080 Men's Quartz Watch – 41mm Olive Green Dial Black Leather Strap" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-candor-quartz-mens-watch-hb1514080-5667068.webp?v=1779097565"
+        data-wprice="£169.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243997&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -386,6 +483,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-gregor-quartz-mens-watch-hb1514051-8952872.webp?v=1779097829" alt="Hugo Boss Gregor HB1514051 Men's Chronograph Watch – 45mm Grey Dial Gold-Tone Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-61%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243917" data-wname="Hugo Boss Gregor HB1514051 Men's Chronograph Watch – 45mm Grey Dial Gold-Tone Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-gregor-quartz-mens-watch-hb1514051-8952872.webp?v=1779097829"
+        data-wprice="£189.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243917&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -406,6 +507,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-steer-chronograph-quartz-mens-watch-hb1514068-9937420.webp?v=1779097365" alt="Hugo Boss Steer 1514068 Men's Chronograph Watch – 44mm Black Dial Black PVD Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-60%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243968" data-wname="Hugo Boss Steer 1514068 Men's Chronograph Watch – 44mm Black Dial Black PVD Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-steer-chronograph-quartz-mens-watch-hb1514068-9937420.webp?v=1779097365"
+        data-wprice="£209.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243968&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -426,6 +531,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-chronograph-quartz-mens-watch-ar6094-4655725.webp?v=1779097751" alt="Emporio Armani Sigma AR6094 Men's Chronograph Watch – 43mm Black Dial Black PVD Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-60%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243820" data-wname="Emporio Armani Sigma AR6094 Men's Chronograph Watch – 43mm Black Dial Black PVD Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-chronograph-quartz-mens-watch-ar6094-4655725.webp?v=1779097751"
+        data-wprice="£159.00" data-wbrand="Emporio Armani" data-wurl="https://www.awin1.com/pclick.php?p=43276243820&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Emporio Armani</p>
@@ -446,6 +555,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-gianni-t-bar-quartz-womens-watch-ar11446-1147542.webp?v=1779098593" alt="Emporio Armani Gianni T-Bar AR11446 Women's Watch – 32mm Silver Dial Rose Gold Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-60%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243699" data-wname="Emporio Armani Gianni T-Bar AR11446 Women's Watch – 32mm Silver Dial Rose Gold Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-gianni-t-bar-quartz-womens-watch-ar11446-1147542.webp?v=1779098593"
+        data-wprice="£159.00" data-wbrand="Emporio Armani" data-wurl="https://www.awin1.com/pclick.php?p=43276243699&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Emporio Armani</p>
@@ -466,6 +579,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-chronograph-quartz-womens-watch-ar1401-5433125.webp?v=1779098263" alt="Emporio Armani AR1401 Ceramica Chronograph Black Ceramic Watch" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-60%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243775" data-wname="Emporio Armani AR1401 Ceramica Chronograph Black Ceramic Watch" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-chronograph-quartz-womens-watch-ar1401-5433125.webp?v=1779098263"
+        data-wprice="£179.00" data-wbrand="Emporio Armani" data-wurl="https://www.awin1.com/pclick.php?p=43276243775&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Emporio Armani</p>
@@ -486,6 +603,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-ace-chronograph-quartz-mens-watch-hb1514094-5534070.webp?v=1779097628" alt="Hugo Boss Top 1514094 Men's Chronograph Watch – 44mm Olive Green Dial Gold-Tone Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-60%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243920" data-wname="Hugo Boss Top 1514094 Men's Chronograph Watch – 44mm Olive Green Dial Gold-Tone Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-ace-chronograph-quartz-mens-watch-hb1514094-5534070.webp?v=1779097628"
+        data-wprice="£199.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243920&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -506,6 +627,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-aero-chronograph-quartz-mens-watch-hb1513771-2096187.webp?v=1779097115" alt="Hugo Boss Aero 1513771 Men's Chronograph Watch – 44mm Black Dial Stainless Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-60%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276244109" data-wname="Hugo Boss Aero 1513771 Men's Chronograph Watch – 44mm Black Dial Stainless Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-aero-chronograph-quartz-mens-watch-hb1513771-2096187.webp?v=1779097115"
+        data-wprice="£199.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276244109&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -526,6 +651,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-ocean-edition-chronograph-quartz-mens-watch-hb1513743-5220574.webp?v=1779097807" alt="Hugo Boss Ocean Edition 1513743 Men's Chronograph Watch – 46mm Blue Dial Black Ceramic Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-60%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243906" data-wname="Hugo Boss Ocean Edition 1513743 Men's Chronograph Watch – 46mm Blue Dial Black Ceramic Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-ocean-edition-chronograph-quartz-mens-watch-hb1513743-5220574.webp?v=1779097807"
+        data-wprice="£199.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243906&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -546,6 +675,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-quartz-mens-watch-ar1452-6124456.webp?v=1779098316" alt="Emporio Armani Ceramica AR1452 Men's Chronograph Watch - 43mm Black Dial Black Ceramic Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-60%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243735" data-wname="Emporio Armani Ceramica AR1452 Men's Chronograph Watch - 43mm Black Dial Black Ceramic Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-quartz-mens-watch-ar1452-6124456.webp?v=1779098316"
+        data-wprice="£199.00" data-wbrand="Emporio Armani" data-wurl="https://www.awin1.com/pclick.php?p=43276243735&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Emporio Armani</p>
@@ -566,6 +699,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-renato-ceramica-quartz-chronograph-mens-watch-ar1451-1409562.webp?v=1779098576" alt="Emporio Armani Renato AR1451 Men's Chronograph Watch – 47mm Black Ceramic" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-60%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243647" data-wname="Emporio Armani Renato AR1451 Men's Chronograph Watch – 47mm Black Ceramic" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-renato-ceramica-quartz-chronograph-mens-watch-ar1451-1409562.webp?v=1779098576"
+        data-wprice="£199.00" data-wbrand="Emporio Armani" data-wurl="https://www.awin1.com/pclick.php?p=43276243647&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Emporio Armani</p>
@@ -586,6 +723,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-grandmaster-quartz-mens-watch-hb1513881-2609672.webp?v=1779097885" alt="Hugo Boss Grandmaster 1513881 Men's Chronograph Watch - 46mm Black Dial Leather Strap" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-60%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243912" data-wname="Hugo Boss Grandmaster 1513881 Men's Chronograph Watch - 46mm Black Dial Leather Strap" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-grandmaster-quartz-mens-watch-hb1513881-2609672.webp?v=1779097885"
+        data-wprice="£169.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243912&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -606,6 +747,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-gregor-chronograph-quartz-mens-watch-hb1514083-6799794.webp?v=1779097596" alt="Hugo Boss Gregor Men's Chronograph Watch HB1514083 – 45mm Blue Dial Grey IP Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-59%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243956" data-wname="Hugo Boss Gregor Men's Chronograph Watch HB1514083 – 45mm Blue Dial Grey IP Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-gregor-chronograph-quartz-mens-watch-hb1514083-6799794.webp?v=1779097596"
+        data-wprice="£199.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243956&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -626,6 +771,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/diesel-mega-chief-quartz-mens-watch-dz4308-9910902.webp?v=1779096796" alt="Diesel Mega Chief DZ4308 Men's Chronograph Watch – 51mm Black Dial Silver-Tone Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-59%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276244159" data-wname="Diesel Mega Chief DZ4308 Men's Chronograph Watch – 51mm Black Dial Silver-Tone Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/diesel-mega-chief-quartz-mens-watch-dz4308-9910902.webp?v=1779096796"
+        data-wprice="£179.00" data-wbrand="Diesel" data-wurl="https://www.awin1.com/pclick.php?p=43276244159&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Diesel</p>
@@ -646,6 +795,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-troper-chronograph-quartz-mens-watch-hb1514121-6296055.webp?v=1779097702" alt="Hugo Boss Troper HB1514121 Men's Chronograph Watch – 44mm Black Dial Silver Case Black Rubber Strap" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-59%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243881" data-wname="Hugo Boss Troper HB1514121 Men's Chronograph Watch – 44mm Black Dial Silver Case Black Rubber Strap" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-troper-chronograph-quartz-mens-watch-hb1514121-6296055.webp?v=1779097702"
+        data-wprice="£179.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243881&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -666,6 +819,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-skytraveller-quartz-mens-watch-hb1514148-7577259.webp?v=1779097377" alt="Hugo Boss Skytraveller 1514148 Men's Chronograph Watch – 44mm Black Dial Olive Green Leather Strap" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-59%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276244004" data-wname="Hugo Boss Skytraveller 1514148 Men's Chronograph Watch – 44mm Black Dial Olive Green Leather Strap" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-skytraveller-quartz-mens-watch-hb1514148-7577259.webp?v=1779097377"
+        data-wprice="£189.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276244004&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -686,6 +843,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/diesel-mega-chief-chronograph-mens-watch-dz4344-1413193.webp?v=1779096697" alt="Diesel Mega Chief DZ4344 Men's Chronograph Watch - Gold Case and Black Leather Strap" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-59%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276244157" data-wname="Diesel Mega Chief DZ4344 Men's Chronograph Watch - Gold Case and Black Leather Strap" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/diesel-mega-chief-chronograph-mens-watch-dz4344-1413193.webp?v=1779096697"
+        data-wprice="£189.00" data-wbrand="Diesel" data-wurl="https://www.awin1.com/pclick.php?p=43276244157&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Diesel</p>
@@ -706,6 +867,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-ikon-chronograph-quartz-mens-watch-hb1513339-7493091.webp?v=1779097524" alt="Hugo Boss Ikon HB1513339 Men's Chronograph Watch – 44mm Grey Dial Two-Tone Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-58%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243930" data-wname="Hugo Boss Ikon HB1513339 Men's Chronograph Watch – 44mm Grey Dial Two-Tone Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-ikon-chronograph-quartz-mens-watch-hb1513339-7493091.webp?v=1779097524"
+        data-wprice="£199.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243930&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -726,6 +891,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-allure-chronograph-quartz-mens-watch-hb1513921-5644173.webp?v=1779097786" alt="Hugo Boss Allure Chronograph Blue Dial Brown Leather Men's Watch 1513921" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-58%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243875" data-wname="Hugo Boss Allure Chronograph Blue Dial Brown Leather Men's Watch 1513921" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-allure-chronograph-quartz-mens-watch-hb1513921-5644173.webp?v=1779097786"
+        data-wprice="£179.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243875&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -746,6 +915,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-candor-quartz-mens-watch-hb1514077-7326525.webp?v=1779097615" alt="Hugo Boss Candor 1514077 Men's Watch – 41mm Black Dial Gold-Tone Steel Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-58%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243999" data-wname="Hugo Boss Candor 1514077 Men's Watch – 41mm Black Dial Gold-Tone Steel Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/hugo-boss-candor-quartz-mens-watch-hb1514077-7326525.webp?v=1779097615"
+        data-wprice="£179.00" data-wbrand="Hugo Boss" data-wurl="https://www.awin1.com/pclick.php?p=43276243999&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Hugo Boss</p>
@@ -766,6 +939,10 @@
           <img src="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-quartz-mens-watch-ar1421-9250172.webp?v=1779098328" alt="Emporio Armani AR1421 Ceramica Men's Chronograph Watch – 43mm Black Dial Black Ceramic Bracelet" loading="lazy" decoding="async"
                onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
           <span class="product-badge sale">-58%</span>
+          <button class="card-heart" type="button" aria-label="Save"
+        data-wid="awin-AWIN-43276243776" data-wname="Emporio Armani AR1421 Ceramica Men's Chronograph Watch – 43mm Black Dial Black Ceramic Bracelet" data-wimg="https://cdn.shopify.com/s/files/1/0955/5027/5910/files/emporio-armani-ceramica-quartz-mens-watch-ar1421-9250172.webp?v=1779098328"
+        data-wprice="£209.00" data-wbrand="Emporio Armani" data-wurl="https://www.awin1.com/pclick.php?p=43276243776&a=2926969&m=122382"
+        onclick="event.preventDefault();event.stopPropagation();if(window.FTWWish){var it={id:this.getAttribute('data-wid'),name:this.getAttribute('data-wname'),brand:this.getAttribute('data-wbrand'),price:this.getAttribute('data-wprice'),img:this.getAttribute('data-wimg'),href:this.getAttribute('data-wurl')};var on=window.FTWWish.toggle(it);this.classList.toggle('on',on);if(window.FTWBotnavBadge)window.FTWBotnavBadge();}return false;"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
         </div>
         <div class="product-body">
           <p class="product-brand">Emporio Armani</p>
