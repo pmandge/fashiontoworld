@@ -942,3 +942,25 @@ img, video { max-width: 100%; }
 
 /* Hide the floating Coupons CTA on mobile — the bottom nav already has Deals */
 @media(max-width:768px){ .float-cta{ display:none !important } }
+
+/* ===== Clickable product card + wishlist heart (category/search pages) ===== */
+/* The whole card is now an <a>; strip link styling so it looks like a card. */
+.product-card-link{ text-decoration:none; color:inherit; display:flex; flex-direction:column; cursor:pointer }
+.product-card-link:hover{ text-decoration:none; color:inherit }
+.product-card-link .product-name,
+.product-card-link .product-brand,
+.product-card-link .product-price{ color:inherit }
+/* Ensure the image area can host the absolutely-positioned heart */
+.product-card .product-img{ position:relative }
+/* Heart button on category/search cards */
+.card-heart{
+  position:absolute; top:10px; right:10px; z-index:3;
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(255,255,255,.92); border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.12); transition:transform .15s, background .15s;
+  padding:0;
+}
+.card-heart:hover{ transform:scale(1.08); background:#fff }
+.card-heart svg{ fill:none; stroke:#1a1410; stroke-width:1.8; width:18px; height:18px; transition:fill .15s, stroke .15s }
+.card-heart.on svg{ fill:#c0492f; stroke:#c0492f }
