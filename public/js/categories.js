@@ -64,8 +64,14 @@ const FASHION_TAXONOMY = {
     },
   },
 
+  watches: {
+    label: 'Watches', slug: 'watches', icon: 'ti-clock',
+    subcategories: {
+      wearer: { label: 'Shop Watches', items: ["Men's Watches", "Women's Watches", "Unisex Watches"] },
+    },
+  },
   jewellery: {
-    label: 'Jewellery & Watches', slug: 'jewellery', icon: 'ti-diamond',
+    label: 'Jewellery', slug: 'jewellery', icon: 'ti-diamond',
     subcategories: {
       jewellery: { label: 'Jewellery', items: ['Necklaces', 'Earrings', 'Rings', 'Bracelets', 'Anklets', 'Brooches', 'Charms', 'Pendants', 'Body Jewellery'] },
       fine: { label: 'Fine Jewellery', items: ['Gold Jewellery', 'Diamond Jewellery', 'Gemstone', 'Pearl', 'Engagement Rings', 'Wedding Bands'] },
