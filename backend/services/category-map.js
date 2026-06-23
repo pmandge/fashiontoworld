@@ -162,32 +162,42 @@ const BEAUTY_SUBCATS = [
   [/skincare|serum|moisturi|cleanser|lotion|\bcream\b/i, 'Skincare'],
   [/shampoo|conditioner|hair ?care/i, 'Haircare'],
 ];
-// Clothing subcats — shared by women / men / kids.
-const CLOTHING_SUBCATS = [
+// Clothing subcats — shared BASE (men + women + kids). Order matters: more
+// specific garments are matched before generic ones. "dress shirt" must hit
+// Shirts (not Dresses), so shirt/blouse rules come before the dress rule and
+// the dress rule explicitly excludes "dress shirt"/"address".
+const CLOTHING_BASE = [
   [/hoodie|sweatshirt/i, 'Hoodies & Sweatshirts'],
-  [/dress(?:es)?\b/i, 'Dresses'],
-  [/jean/i, 'Jeans'],
-  [/trouser|\bpants?\b|chino/i, 'Trousers & Pants'],
-  [/skirt/i, 'Skirts'],
+  [/dress shirt/i, 'Shirts'],
   [/blouse/i, 'Tops & Blouses'],
-  [/^tops|^top$|tank top|camisole/i, 'Tops & Blouses'],
-  [/t-?shirt|\btee\b/i, 'T-Shirts'],
+  [/t-?shirt|\btee\b|tank top/i, 'T-Shirts'],
   [/polo/i, 'Polos'],
   [/shirt/i, 'Shirts'],
   [/sweater|knit|pullover|jumper|cardigan/i, 'Knitwear & Sweaters'],
   [/blazer/i, 'Blazers'],
   [/coat|trench/i, 'Coats'],
   [/jacket|bomber|parka|windbreaker|gilet/i, 'Jackets'],
-  [/legging/i, 'Leggings'],
+  [/jean/i, 'Jeans'],
+  [/trouser|\bpants?\b|chino/i, 'Trousers & Pants'],
   [/\bshorts?\b/i, 'Shorts'],
   [/jumpsuit|romper|playsuit/i, 'Jumpsuits & Rompers'],
   [/\bsuit\b|tuxedo/i, 'Suits'],
   [/waistcoat|\bvest\b/i, 'Waistcoats'],
-  [/\bbra\b|bras|lingerie|bodysuit|corset/i, 'Lingerie'],
   [/panties|brief|underpant|boxer/i, 'Underwear'],
-  [/swimsuit|bikini|swim ?wear|swim ?suit/i, 'Swimwear'],
+  [/swimsuit|bikini|swim ?wear|swim ?suit|swim ?trunk/i, 'Swimwear'],
   [/pajama|pyjama|nightgown|nightwear|sleepwear/i, 'Sleepwear'],
 ];
+// Women-only additions (not shown for men).
+const WOMEN_ONLY = [
+  [/(?<!a)(?<!ad)dress(?:es)?/i, 'Dresses'],
+  [/skirt/i, 'Skirts'],
+  [/legging/i, 'Leggings'],
+  [/\bbra\b|bras|lingerie|bodysuit|corset|camisole/i, 'Lingerie'],
+  [/^tops|^top$/i, 'Tops & Blouses'],
+];
+const WOMEN_SUBCATS = WOMEN_ONLY.concat(CLOTHING_BASE);  // women: dress/skirt/etc. first
+const MEN_SUBCATS = CLOTHING_BASE;                        // men: no dress/skirt/lingerie/legging
+const KIDS_SUBCATS = CLOTHING_BASE.concat([[/(?<!a)(?<!ad)dress(?:es)?/i, 'Dresses']]);
 
 const SUBCATS_BY_CAT = {
   shoes: SHOE_SUBCATS,
@@ -196,9 +206,9 @@ const SUBCATS_BY_CAT = {
   watches: WATCH_SUBCATS,
   accessories: ACCESSORY_SUBCATS,
   beauty: BEAUTY_SUBCATS,
-  women: CLOTHING_SUBCATS,
-  men: CLOTHING_SUBCATS,
-  kids: CLOTHING_SUBCATS,
+  women: WOMEN_SUBCATS,
+  men: MEN_SUBCATS,
+  kids: KIDS_SUBCATS,
 };
 
 // category-scoped: only matches subcategories valid for the given category.
