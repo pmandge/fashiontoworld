@@ -7,13 +7,22 @@
  * Reality of our feeds: many items arrive with an EMPTY feed
  * category, so we infer from the product NAME (+ description for
  * gender) and fall back to a STORE default when there's no signal.
+ *
+ * SUBCATEGORY MAPPING IS CATEGORY-SCOPED: a product only ever
+ * receives a subcategory valid for its category (SUBCATS_BY_CAT),
+ * so a shoe can never become "Trousers", a bag can never become
+ * "Heels", etc. — by construction, for every category, for every
+ * store that ever imports. Word boundaries are hardened so brand
+ * names / feature words (e.g. "Pantanetti", "Cap Toe") don't
+ * collide with subcategory keywords.
  * ============================================================
  */
 
 const CATEGORY_RULES = [
   { cat: 'shoes',       kw: ['shoe','sneaker','boot','heel','sandal','loafer','espadrille','mule','uggs','ballet flat','slides','flip flop','moccasin','trainers','pumps','slipper','slippers','clogs','derby','oxford','brogue'] },
   { cat: 'bags',        kw: ['handbag','bag','clutch','backpack','tote','purse','wallet','briefcase','satchel','messenger','belt bag','mini bag','travel bag','pouch','cosmetic bag','cosmetic case','vanity case','makeup bag','pochette','hobo','crossbody','shoulder bag','bucket bag','flap bag','birkin','baguette bag','saddle bag','top handle'] },
-  { cat: 'jewellery',   kw: ['ring','necklace','earring','bracelet','brooch','jewel','watch','pendant','keyring','anklet','cufflink'] },
+  { cat: 'jewellery',   kw: ['ring','necklace','earring','bracelet','brooch','jewel','pendant','keyring','anklet','cufflink'] },
+  { cat: 'watches',     kw: ['watch','wristwatch','smartwatch','chronograph','timepiece'] },
   { cat: 'accessories', kw: ['belt','scarf','scarves','glove','hat','cap','beanie','sunglass','sunglasses','eyewear','eyeglass','reading glasses','tie','umbrella','hair accessor','bow tie','pocket square','bucket hat','bowler'] },
   { cat: 'kids',        kw: ['baby','babies','kids','child','children','toddler','infant','animal clothing'] },
   { cat: 'beauty',      kw: ['fragrance','perfume','parfum','cologne','eau de','makeup','lipstick','mascara','foundation','concealer','eyeshadow','eyeliner','skincare','serum','moisturiser','moisturizer','cleanser','shampoo','conditioner','nail polish','nail lacquer'] },
@@ -50,22 +59,22 @@ function detectGender(text, feedGender) {
 // Non-fashion homeware/drinkware that some stores list — excluded from the catalogue.
 const NON_FASHION_RE = /(?:wine|whisk(?:e)?y|cognac|champagne|crystal|water|shot|cocktail|beer)\s+glass|set of[^.]*glass|glass(?:es)?\s+\d+\s*pcs|\b(?:decanter|tumbler|goblet|carafe)\b|(?:aroma|reed)\s+diffuser|scented candle|(?:interior|home|textile|room)\s+perfum|perfum\w*\s+(?:spray\s+)?for home|spray for home|home fragrance|perfume for textile|perfume for home|perfumed home|home spray|home diffuser|room fragrance|\b(?:vase|cushion|duvet|bedding|tableware|dinnerware|cutlery|cookware|candlestick|incense|figurine|ashtray|coaster|placemat)\b/i;
 
-// typeText: name (+ feed category) — clean signal for product TYPE.
-// genderText: extra text (description) — only used for gender.
 // Adult toys / intimacy products — excluded from a fashion catalogue.
-// IMPORTANT: this deliberately does NOT match intimate APPAREL — lingerie,
-// bras, panties, underwear, swimwear, bikinis, thongs, corsets, garters,
-// suspenders, bodysuits etc. are clothing and stay in the catalogue.
 const ADULT_RE = /\b(?:vibrator|dildo|butt[\s-]?plug|anal|sex\s*toys?|adult\s+(?:toy|toys|product|products|novelt\w+|dvd|video)|sexual\s+wellness|masturbat\w*|fleshlight|cock\s*ring|strapon|strap-on|bdsm|nipple\s+clamp|ball\s+gag|gag\s+ball|lubricant|lube|condoms?|prostate|g[\s-]?spot|clitoral|clitoris|erotica?|aphrodisiac|dominatrix|penis|(?:wand|personal|intimate|clitoral)\s+massager|pleasure\s+(?:toy|wand|ring|bead))s?\b/i;
 
 // Unambiguous garment words. If any appears, the product is clothing even if
-// it also contains a shoe/bag/jewellery substring. NOTE: deliberately omits
-// 'dress', 'top', 'suit', 'polo', 'socks' (all ambiguous with shoes/bags/
-// jewellery or brand names) to avoid new mis-tags.
+// it also contains a shoe/bag/jewellery substring.
 const STRONG_CLOTHING_RE = /\b(jeans|chinos?|trousers?|leggings?|joggers?|sweatpants?|tracksuits?|t-?shirts?|shirts?|sweatshirts?|hoodies?|sweaters?|jumpers?|cardigans?|knitwear|pullovers?|blouses?|blazers?|waistcoats?|jumpsuits?|rompers?|dungarees?|overalls?|jackets?|coats?|skirts?|\bshorts\b|gowns?|nightgowns?|pyjamas?|pajamas?)\b/i;
+
+// Unambiguous bag words. If any appears, the product is a bag even if it also
+// contains a shoe substring (e.g. "Coach Derby Tote" — derby is a shoe word).
+const STRONG_BAG_RE = /\b(handbag|tote bag|tote|clutch|backpack|rucksack|satchel|briefcase|messenger bag|crossbody|cross-body|shoulder bag|bucket bag|hobo bag|duffle|duffel|holdall|weekender|pochette|birkin|baguette bag)\b/i;
 
 // Perfume / fragrance -> beauty (checked before jewellery brand words).
 const PERFUME_RE = /\b(perfume|fragrances?|cologne|after\s?shave|eau de (parfum|toilette|cologne)|\bparfum\b|body mist|body spray)\b/i;
+// Watches -> own category, but NOT watch accessories (straps/winders/cases).
+const WATCH_RE = /\b(watch|watches|wristwatch|smartwatch|chronograph|timepiece)\b/i;
+const WATCH_ACCESSORY_RE = /watch\s?(strap|band|winder|case|box|holder|stand|charger|cable|tool|pin|link)/i;
 
 function mapCategory(typeText, genderText, genderHint, advertiser) {
   const n = (typeText || '').toLowerCase();
@@ -78,19 +87,15 @@ function mapCategory(typeText, genderText, genderHint, advertiser) {
     if (!g) g = storeGender(advertiser);
     return g === 'men' ? 'men' : 'women';
   }
-  // Order matters: kids first; then distinct product types; then a CLOTHING guard
-  // so garments that merely contain 'tie'/'belt'/'cap' are NOT mis-tagged as
-  // accessories; then accessories/beauty; finally gender default.
   if (hit(byCat.kids)) return 'kids';
-  // Unambiguous garments win over shoe/bag/jewellery SUBSTRINGS, so
-  // "Oxford Shirt", "Bootcut Jeans", "Ring-detail Blouse" are clothing, not
-  // shoes/jewellery. Deliberately excludes ambiguous words like 'dress'/'top'
-  // so "Dress Shoes" and "Dress Ring" still classify correctly below.
   if (STRONG_CLOTHING_RE.test(n)) return genderCat();
-  // Perfume/fragrance -> beauty before it can hit a jewellery brand word.
   if (PERFUME_RE.test(n)) return 'beauty';
+  // Strong bag words win over shoe substrings, so "Coach Derby Tote" (derby is a
+  // shoe word) classifies as a bag, not a shoe.
+  if (STRONG_BAG_RE.test(n)) return 'bags';
   if (hit(byCat.shoes)) return 'shoes';
   if (hit(byCat.bags)) return 'bags';
+  if (WATCH_RE.test(n) && !WATCH_ACCESSORY_RE.test(n)) return 'watches';
   if (hit(byCat.jewellery)) return 'jewellery';
   if (CLOTHING_HINT.some(k => n.includes(k))) return genderCat();
   if (hit(byCat.accessories)) return 'accessories';
@@ -98,36 +103,110 @@ function mapCategory(typeText, genderText, genderHint, advertiser) {
   return genderCat();
 }
 
-const SUBCATEGORY_RULES = [
-  [/sneaker|trainer/i, 'Sneakers'], [/ankle boot|western boot|over the knee|^boots/i, 'Boots'],
-  [/heel|pump/i, 'Heels'], [/sandal/i, 'Sandals'], [/loafer|moccasin/i, 'Loafers'],
-  [/ballet flat|flat/i, 'Flats'], [/espadrille/i, 'Espadrilles'], [/mule|slides|flip flop/i, 'Mules & Slides'],
-  [/ugg/i, 'Boots'], [/slipper/i, 'Slippers'],
-  [/clutch/i, 'Clutches'], [/backpack/i, 'Backpacks'], [/tote/i, 'Totes'],
-  [/shoulder bag/i, 'Shoulder Bags'], [/mini bag|belt bag/i, 'Mini Bags'],
-  [/wallet|purse/i, 'Wallets'], [/messenger|briefcase|satchel/i, 'Work Bags'], [/travel bag|suitcase/i, 'Travel Bags'],
-  [/earring/i, 'Earrings'], [/necklace/i, 'Necklaces'], [/bracelet/i, 'Bracelets'], [/anklet/i, 'Bracelets'],
-  [/brooch/i, 'Brooches'], [/watch/i, 'Watches'], [/\bring\b|rings/i, 'Rings'],
-  [/sunglass/i, 'Sunglasses'], [/scarf|scarves/i, 'Scarves'], [/belt$|^belts|\bbelt\b/i, 'Belts'],
-  [/hat|cap|beanie|bucket|bowler/i, 'Hats & Caps'], [/glove/i, 'Gloves'], [/bow tie|\bties?\b|necktie/i, 'Ties'],
-  [/fragrance|perfume|parfum|cologne|eau de/i, 'Fragrance'], [/lipstick|mascara|foundation|eyeshadow|makeup|palette|blush|concealer/i, 'Makeup'],
-  [/skincare|serum|moisturi|cleanser|lotion/i, 'Skincare'],
+/* ============================================================================
+ * SUBCATEGORY MAPPING — grouped by parent category.
+ * A product only matches subcategory rules belonging to its own category, so
+ * cross-category leakage is structurally impossible (a shoe cannot become
+ * "Trousers", a bag cannot become "Heels"). Hardened word boundaries prevent
+ * brand/feature collisions: \bcap\b (not "Cap Toe"), \bpants?\b (not
+ * "Pantanetti"), \bring\b (not "earring"). Unmatched -> '' (shows under "All").
+ * ========================================================================== */
+const SHOE_SUBCATS = [
+  [/sneaker|trainer/i, 'Sneakers'],
+  [/ankle boot|chelsea boot|combat boot|western boot|over the knee|\bboots?\b|booties|bootie/i, 'Boots'],
+  [/\bugg/i, 'Boots'],
+  [/\bheel|pump/i, 'Heels'],
+  [/sandal/i, 'Sandals'],
+  [/espadrille/i, 'Espadrilles'],
+  [/\bmule|slides|flip ?flop/i, 'Mules & Slides'],
+  [/slipper/i, 'Slippers'],
+  [/loafer|moccasin|derby|oxford|brogue|monk strap|lace ?up|dress shoe/i, 'Loafers'],
+  [/ballet ?flat|\bflats?\b/i, 'Flats'],
+];
+const BAG_SUBCATS = [
+  [/clutch/i, 'Clutches'],
+  [/backpack|rucksack/i, 'Backpacks'],
+  [/tote/i, 'Totes'],
+  [/shoulder bag/i, 'Shoulder Bags'],
+  [/cross ?body|mini bag|belt bag/i, 'Mini Bags'],
+  [/wallet|purse|card ?holder/i, 'Wallets'],
+  [/messenger|briefcase|satchel/i, 'Work Bags'],
+  [/travel bag|suitcase|duffle|duffel|holdall|weekender/i, 'Travel Bags'],
+  [/hand ?bag|\bbag\b|pochette|hobo|baguette/i, 'Shoulder Bags'],
+];
+const JEWELLERY_SUBCATS = [
+  [/earring/i, 'Earrings'],
+  [/necklace|pendant/i, 'Necklaces'],
+  [/bracelet|anklet|bangle/i, 'Bracelets'],
+  [/brooch/i, 'Brooches'],
+  [/\bring\b|\brings\b/i, 'Rings'],
+  [/cufflink/i, 'Cufflinks'],
+];
+const WATCH_SUBCATS = [
+  [/watch|chronograph|timepiece/i, 'Watches'],
+];
+const ACCESSORY_SUBCATS = [
+  [/sunglass|eyewear|eyeglass/i, 'Sunglasses'],
+  [/scarf|scarves|shawl|pashmina/i, 'Scarves'],
+  [/\bbelt\b|belts/i, 'Belts'],
+  [/\bhat\b|\bcap\b|beanie|bucket hat|bowler|fedora|baseball cap|\bcaps\b/i, 'Hats & Caps'],
+  [/glove/i, 'Gloves'],
+  [/bow ?tie|neck ?tie|\bties?\b/i, 'Ties'],
+  [/\bsocks?\b/i, 'Socks'],
+  [/tights|stocking|hosiery/i, 'Hosiery'],
+  [/umbrella/i, 'Umbrellas'],
+];
+const BEAUTY_SUBCATS = [
+  [/fragrance|perfume|parfum|cologne|eau de/i, 'Fragrance'],
+  [/lipstick|mascara|foundation|eyeshadow|makeup|palette|blush|concealer|eyeliner/i, 'Makeup'],
+  [/skincare|serum|moisturi|cleanser|lotion|\bcream\b/i, 'Skincare'],
+  [/shampoo|conditioner|hair ?care/i, 'Haircare'],
+];
+// Clothing subcats — shared by women / men / kids.
+const CLOTHING_SUBCATS = [
   [/hoodie|sweatshirt/i, 'Hoodies & Sweatshirts'],
-  [/dress/i, 'Dresses'], [/jean/i, 'Jeans'], [/trouser|pant|chino/i, 'Trousers & Pants'],
-  [/skirt/i, 'Skirts'], [/blouse/i, 'Tops & Blouses'], [/^tops|^top$/i, 'Tops & Blouses'],
-  [/t-shirt|tee/i, 'T-Shirts'], [/polo/i, 'Polos'], [/shirt/i, 'Shirts'],
-  [/sweater|knit|pullover|jumper|cardigan/i, 'Knitwear & Sweaters'], [/blazer/i, 'Blazers'],
-  [/coat|trench/i, 'Coats'], [/jacket|bomber|parka|windbreaker/i, 'Jackets'],
-  [/legging/i, 'Leggings'], [/short/i, 'Shorts'], [/jumpsuit|romper/i, 'Jumpsuits & Rompers'],
-  [/\bsuit\b|tuxedo/i, 'Suits'], [/waistcoat|\bvest\b/i, 'Waistcoats'],
-  [/bra$|bras|lingerie|bodysuit/i, 'Lingerie'], [/panties|brief|underpant|boxer/i, 'Underwear'],
-  [/swimsuit|bikini|swim/i, 'Swimwear'], [/pajama|nightgown|nightwear|sleepwear/i, 'Sleepwear'],
-  [/\bsock\b|socks/i, 'Socks'], [/tights|stocking|hosiery/i, 'Hosiery'],
+  [/\bdress\b|dresses/i, 'Dresses'],
+  [/jean/i, 'Jeans'],
+  [/trouser|\bpants?\b|chino/i, 'Trousers & Pants'],
+  [/skirt/i, 'Skirts'],
+  [/blouse/i, 'Tops & Blouses'],
+  [/^tops|^top$|tank top|camisole/i, 'Tops & Blouses'],
+  [/t-?shirt|\btee\b/i, 'T-Shirts'],
+  [/polo/i, 'Polos'],
+  [/shirt/i, 'Shirts'],
+  [/sweater|knit|pullover|jumper|cardigan/i, 'Knitwear & Sweaters'],
+  [/blazer/i, 'Blazers'],
+  [/coat|trench/i, 'Coats'],
+  [/jacket|bomber|parka|windbreaker|gilet/i, 'Jackets'],
+  [/legging/i, 'Leggings'],
+  [/\bshorts?\b/i, 'Shorts'],
+  [/jumpsuit|romper|playsuit/i, 'Jumpsuits & Rompers'],
+  [/\bsuit\b|tuxedo/i, 'Suits'],
+  [/waistcoat|\bvest\b/i, 'Waistcoats'],
+  [/\bbra\b|bras|lingerie|bodysuit|corset/i, 'Lingerie'],
+  [/panties|brief|underpant|boxer/i, 'Underwear'],
+  [/swimsuit|bikini|swim ?wear|swim ?suit/i, 'Swimwear'],
+  [/pajama|pyjama|nightgown|nightwear|sleepwear/i, 'Sleepwear'],
 ];
 
-function mapSubcategory(text) {
+const SUBCATS_BY_CAT = {
+  shoes: SHOE_SUBCATS,
+  bags: BAG_SUBCATS,
+  jewellery: JEWELLERY_SUBCATS,
+  watches: WATCH_SUBCATS,
+  accessories: ACCESSORY_SUBCATS,
+  beauty: BEAUTY_SUBCATS,
+  women: CLOTHING_SUBCATS,
+  men: CLOTHING_SUBCATS,
+  kids: CLOTHING_SUBCATS,
+};
+
+// category-scoped: only matches subcategories valid for the given category.
+function mapSubcategory(text, category) {
   const n = (text || '');
-  for (const [re, label] of SUBCATEGORY_RULES) {
+  const rules = SUBCATS_BY_CAT[category];
+  if (!rules) return '';
+  for (const [re, label] of rules) {
     if (re.test(n)) return label;
   }
   return '';
@@ -147,6 +226,7 @@ function buildProduct(raw, opts) {
   const desc = raw.description || '';
   const typeText = `${catName} ${name}`;          // clean signal for product type + subcategory
   const detectedGender = detectGender(`${typeText} ${desc}`, raw.gender) || storeGender(opts.advertiser);
+  const category = mapCategory(typeText, desc, raw.gender, opts.advertiser);
   return {
     id: `${opts.network}-${opts.advertiser || 'feed'}-${raw.id}`,
     name: name.trim(),
@@ -160,8 +240,8 @@ function buildProduct(raw, opts) {
     images: raw.images || (raw.image_url ? [raw.image_url] : []),
     url: (raw.url || '').trim(),
     affiliate_url: (raw.url || '').trim(),
-    category: mapCategory(typeText, desc, raw.gender, opts.advertiser),
-    subcategory: mapSubcategory(typeText),
+    category: category,
+    subcategory: mapSubcategory(typeText, category),
     feed_category: catName,
     gender: detectedGender || 'unisex',
     color: (raw.color || '').trim(),
