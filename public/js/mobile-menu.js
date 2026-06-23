@@ -36,7 +36,7 @@
     return items.filter(function (n) { var k = n.toLowerCase(); if (seen[k]) return false; seen[k] = 1; return true; });
   }
   function renderCats(tax, facets) {
-    var ICONS = { women:'<path d="M12 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM9 9l-2 7h3l-1 6h4l-1-6h3L12 9"/>', men:'<path d="M6 3h12l-2 5 2 13H6l2-13z"/>', kids:'<circle cx="12" cy="5" r="2.5"/><path d="M8 9h8l-1 5h-2l1 7h-4l1-7H9z"/>', shoes:'<path d="M2 16h13l5 2h2v2H2zM2 10v6h4l-1-6z"/>', bags:'<path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/>', jewellery:'<path d="M12 3l4 5-4 13-4-13zM8 8h8"/>', accessories:'<circle cx="7" cy="13" r="4"/><circle cx="17" cy="13" r="4"/><path d="M11 12h2"/>', beauty:'<path d="M12 2l2 6h-4zM10 8h4v6a2 2 0 0 1-4 0zM9 20h6"/>' };
+    var ICONS = { women:'<path d="M12 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM9 9l-2 7h3l-1 6h4l-1-6h3L12 9"/>', men:'<path d="M6 3h12l-2 5 2 13H6l2-13z"/>', kids:'<circle cx="12" cy="5" r="2.5"/><path d="M8 9h8l-1 5h-2l1 7h-4l1-7H9z"/>', shoes:'<path d="M2 16h13l5 2h2v2H2zM2 10v6h4l-1-6z"/>', bags:'<path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/>', watches:'<circle cx="12" cy="12" r="7"/><path d="M12 9v3l2 2M9 2h6M9 22h6"/>', jewellery:'<path d="M12 3l4 5-4 13-4-13zM8 8h8"/>', accessories:'<circle cx="7" cy="13" r="4"/><circle cx="17" cy="13" r="4"/><path d="M11 12h2"/>', beauty:'<path d="M12 2l2 6h-4zM10 8h4v6a2 2 0 0 1-4 0zM9 20h6"/>' };
     var cats = '';
     for (var key in tax) {
       var c = tax[key];
@@ -62,7 +62,7 @@
 
   function catUrl(slug) {
     // Every top-level category now has its own real page.
-    const pages = ['women','men','shoes','bags','jewellery','accessories','beauty','kids','deals','brands'];
+    const pages = ['women','men','shoes','bags','watches','jewellery','accessories','beauty','kids','deals','brands'];
     if (pages.includes(slug)) return root + slug + '.html';
     // Subcategories fall back to women.html with a filter
     return root + 'women.html?cat=' + encodeURIComponent(slug);
