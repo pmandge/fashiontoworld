@@ -145,6 +145,20 @@ const JEWELLERY_SUBCATS = [
 const WATCH_SUBCATS = [
   [/watch|chronograph|timepiece/i, 'Watches'],
 ];
+
+// Watches subdivide by WEARER (the reliable signal in watch feeds), not by a
+// product-type word. Uses the name first, then the feed gender field.
+const WATCH_MEN_RE = /\b(men|man|mens|gents|gentlemen|male)s?\b/i;
+const WATCH_WOMEN_RE = /\b(women|woman|womens|ladies|lady|female)s?\b/i;
+function watchSubcategory(text, genderField) {
+  const n = text || '';
+  if (WATCH_WOMEN_RE.test(n)) return "Women's Watches";
+  if (WATCH_MEN_RE.test(n)) return "Men's Watches";
+  const g = (genderField || '').toLowerCase();
+  if (g === 'women' || g === 'female' || g === 'w' || g === 'f') return "Women's Watches";
+  if (g === 'men' || g === 'male' || g === 'm') return "Men's Watches";
+  return 'Unisex Watches';
+}
 const ACCESSORY_SUBCATS = [
   [/sunglass|eyewear|eyeglass/i, 'Sunglasses'],
   [/scarf|scarves|shawl|pashmina/i, 'Scarves'],
@@ -212,8 +226,9 @@ const SUBCATS_BY_CAT = {
 };
 
 // category-scoped: only matches subcategories valid for the given category.
-function mapSubcategory(text, category) {
+function mapSubcategory(text, category, genderField) {
   const n = (text || '');
+  if (category === 'watches') return watchSubcategory(n, genderField);
   const rules = SUBCATS_BY_CAT[category];
   if (!rules) return '';
   for (const [re, label] of rules) {
@@ -251,7 +266,7 @@ function buildProduct(raw, opts) {
     url: (raw.url || '').trim(),
     affiliate_url: (raw.url || '').trim(),
     category: category,
-    subcategory: mapSubcategory(typeText, category),
+    subcategory: mapSubcategory(typeText, category, detectedGender || raw.gender),
     feed_category: catName,
     gender: detectedGender || 'unisex',
     color: (raw.color || '').trim(),
