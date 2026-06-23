@@ -165,7 +165,7 @@ const BEAUTY_SUBCATS = [
 // Clothing subcats — shared by women / men / kids.
 const CLOTHING_SUBCATS = [
   [/hoodie|sweatshirt/i, 'Hoodies & Sweatshirts'],
-  [/\bdress\b|dresses/i, 'Dresses'],
+  [/dress(?:es)?\b/i, 'Dresses'],
   [/jean/i, 'Jeans'],
   [/trouser|\bpants?\b|chino/i, 'Trousers & Pants'],
   [/skirt/i, 'Skirts'],
