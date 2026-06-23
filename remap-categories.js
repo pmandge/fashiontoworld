@@ -31,7 +31,7 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejec
   for (const p of rows) {
     const typeText = `${p.feed_category || ''} ${p.name || ''}`;
     const newCat = cm.mapCategory(typeText, p.description || '', p.gender, p.advertiser);
-    const newSub = cm.mapSubcategory(typeText, newCat);
+    const newSub = cm.mapSubcategory(typeText, newCat, p.gender);
 
     const catChanged = newCat !== (p.category || '');
     const subChanged = newSub !== (p.subcategory || '');
