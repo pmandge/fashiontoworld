@@ -235,7 +235,7 @@
         var rows = (data && data.stores) || [];
         if (rows.length) {
           var built = rows.map(function (r) { return build(r.name, r.count); });
-          STORES = pickBalanced(built, 15);
+          STORES = pickBalanced(built, 16);
           var on = chips && chips.querySelector('.schip.on');
           draw(on ? (on.getAttribute('data-cat') || on.getAttribute('data-c') || 'all') : 'all');
         }
