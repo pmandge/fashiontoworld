@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're Subscribed — Fashion to World</title>
+<meta name="description" content="Your subscription to Fashion to World is confirmed. Worldwide-shipping fashion deals, updated daily.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../public/css/main.css">
+<style>
+  .sub-wrap {
+    min-height: 64vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 80px 24px;
+  }
+  .sub-card {
+    max-width: 540px; width: 100%; text-align: center;
+  }
+  .sub-mark {
+    width: 84px; height: 84px; border-radius: 50%;
+    margin: 0 auto 32px;
+    display: flex; align-items: center; justify-content: center;
+    background: #f5f2ec;
+    border: 1px solid var(--border);
+  }
+  .sub-mark svg { width: 38px; height: 38px; }
+  .sub-card h1 {
+    font-family: var(--font-serif, 'Cormorant Garamond', serif);
+    font-weight: 600;
+    font-size: clamp(38px, 6vw, 64px);
+    line-height: 1.0;
+    margin: 0 0 18px;
+    color: var(--text, #0f0f0f);
+  }
+  .sub-card h1 em { font-style: italic; color: #c9a84c; }
+  .sub-card p {
+    font-family: var(--font-sans, 'DM Sans', sans-serif);
+    font-size: 17px; line-height: 1.6;
+    color: var(--text-muted, #6b6b6b);
+    margin: 0 auto 14px; max-width: 420px;
+  }
+  .sub-actions {
+    margin-top: 34px;
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+  }
+  .sub-btn {
+    display: inline-block;
+    font-family: var(--font-sans, 'DM Sans', sans-serif);
+    font-size: 14px; font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 15px 30px; border-radius: 999px;
+    text-decoration: none; cursor: pointer;
+    transition: transform .15s ease, opacity .15s ease;
+  }
+  .sub-btn:hover { transform: translateY(-1px); }
+  .sub-btn-primary { background: #0f0f0f; color: #fff; }
+  .sub-btn-ghost { background: transparent; color: #0f0f0f; border: 1px solid var(--border, #e6e1d8); }
+  .sub-note {
+    margin-top: 30px;
+    font-family: var(--font-sans, 'DM Sans', sans-serif);
+    font-size: 13px; color: #9a948a;
+  }
+</style>
+</head>
+<body>
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class='logo' href='/'><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="logo-fw">Fashion</span><span class="logo-to">to</span><span class="logo-w">World</span></a>
+  </div>
+</nav>
+
+<section class="sub-wrap">
+  <div class="sub-card">
+    <div class="sub-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <h1>You're <em>in</em>.</h1>
+    <p>Your subscription is confirmed. You'll be first to know about new worldwide-shipping deals, designer markdowns, and fresh arrivals — curated and sent straight to your inbox.</p>
+    <div class="sub-actions">
+      <a class="sub-btn sub-btn-primary" href="/">Start shopping</a>
+      <a class="sub-btn sub-btn-ghost" href="/pages/search?markdown=true&sort=discount">Today's top deals</a>
+    </div>
+    <p class="sub-note">Didn't mean to subscribe? Every email has a one-click unsubscribe.</p>
+  </div>
+</section>
+
+<footer class="footer" id="footer"></footer>
+
+<script src="../public/js/api-config.js"></script>
+<script src="../public/js/categories.js"></script>
+<script src="../public/js/i18n.js"></script>
+<script src="../public/js/site-content.js"></script>
+<script src="../public/js/footer.js"></script>
+<script src="../public/js/main.js"></script>
+<script src="../public/js/mobile-menu.js"></script>
+</body>
+</html>
