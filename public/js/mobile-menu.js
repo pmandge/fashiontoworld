@@ -378,4 +378,35 @@
     paintHearts();
     if (++_tries >= 10) clearInterval(_iv);   // ~5s of polling then stop
   }, 500);
+
+  /* ---- Auto subscribe popup: 15s timer + exit-intent, once per session ---- */
+  (function () {
+    function alreadyHandled() {
+      try {
+        if (localStorage.getItem('ftw_subscribed') === '1') return true;
+        if (localStorage.getItem('ftw_popup_dismissed') === '1') return true;
+        if (sessionStorage.getItem('ftw_popup_shown') === '1') return true;
+      } catch (e) {}
+      return false;
+    }
+    function markShown() { try { sessionStorage.setItem('ftw_popup_shown', '1'); } catch (e) {} }
+    function fire() {
+      if (alreadyHandled()) return;
+      if (!window.FTWSubscribe || typeof window.FTWSubscribe.open !== 'function') return;
+      if (document.getElementById('ftwSubModal')) return;
+      markShown();
+      window.FTWSubscribe.open();
+    }
+    setTimeout(fire, 15000);
+    document.addEventListener('mouseout', function (e) {
+      if (e.clientY <= 0 && !e.relatedTarget && !e.toElement) fire();
+    });
+    document.addEventListener('click', function (e) {
+      var t = e.target; if (!t) return;
+      var oc = (t.getAttribute && t.getAttribute('onclick')) || '';
+      if (oc.indexOf('FTWSubscribe.close') > -1) {
+        try { localStorage.setItem('ftw_popup_dismissed', '1'); } catch (e2) {}
+      }
+    }, true);
+  })();
 })();
