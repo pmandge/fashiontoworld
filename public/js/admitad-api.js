@@ -175,6 +175,8 @@ const AdmitadAPI = (() => {
     var _wimg = (product.image_url || '').replace(/"/g, '&quot;');
     var _wprice = (product.price_display || formatPrice(product.price, product.currency) || '').replace(/"/g, '&quot;');
     var _wbrand = (product.brand || product.advertiser_name || '').replace(/"/g, '&quot;');
+    var _imgOrig = httpsImg(product.image_url);
+    var _imgOpt = optimizedImg(product.image_url, 400);
     var _heart = `<button class="card-heart" type="button" aria-label="Save"
         data-wid="${product.id}" data-wname="${_wn}" data-wimg="${_wimg}"
         data-wprice="${_wprice}" data-wbrand="${_wbrand}" data-wurl="${link}"
@@ -185,8 +187,9 @@ const AdmitadAPI = (() => {
       return `
       <article class="product-card">
         <div class="product-img">
-          <img src="${product.image_url || ''}" alt="${product.name}" loading="lazy" decoding="async"
-               onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
+          <img src="${_imgOpt}" alt="${product.name}" width="400" height="500" loading="lazy" decoding="async"
+               data-orig="${_imgOrig}"
+               onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src=this.getAttribute('data-orig');}else{this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();}">
           ${_heart}
         </div>
         <div class="product-body">
@@ -205,11 +208,13 @@ const AdmitadAPI = (() => {
          data-product-id="${product.id}"
          onclick="trackClick('${product.id}', '${product.advertiser_name}')">
         <div class="product-img">
-          <img src="${product.image_url || ''}"
+          <img src="${_imgOpt}"
                alt="${product.name}"
+               width="400" height="500"
                loading="lazy"
                decoding="async"
-               onerror="this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();">
+               data-orig="${_imgOrig}"
+               onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src=this.getAttribute('data-orig');}else{this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();}">
           ${hasDiscount ? `<span class="product-badge sale">-${discount}%</span>` : ''}
           ${product.is_new ? `<span class="product-badge">New</span>` : ''}
           ${_heart}
@@ -265,6 +270,22 @@ const AdmitadAPI = (() => {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
+  }
+
+  // Normalize any image URL to https (kills mixed-content requests).
+  function httpsImg(rawUrl) {
+    return (rawUrl || '').replace(/^http:\/\//i, 'https://');
+  }
+
+  // Build a resized image URL via the free weserv.nl proxy.
+  // Shrinks large retailer photos to card size for a far smaller payload,
+  // and keeps that image bandwidth OFF Netlify (served by weserv's own CDN).
+  // If weserv ever fails, the <img> onerror falls back to the https original.
+  function optimizedImg(rawUrl, width) {
+    if (!rawUrl) return '';
+    var stripped = rawUrl.replace(/^https?:\/\//i, '');
+    return 'https://images.weserv.nl/?url=' + encodeURIComponent(stripped) +
+           '&w=' + (width || 400) + '&we&output=webp&q=82';
   }
 
   function trackClick(productId, brandName) {
