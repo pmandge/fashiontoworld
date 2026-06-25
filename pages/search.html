@@ -181,24 +181,16 @@
   const params = new URLSearchParams(location.search);
   const currentQuery = (params.get('q') || '').trim();
   const currentAdvertiser = (params.get('advertiser') || '').trim();
-  // Activate the filter for text searches AND for filter-only links (On Sale, Under $X, brand, etc.)
-  const hasFilter = currentQuery || currentAdvertiser || params.get('sale') || params.get('markdown') ||
-   params.get('minprice') || params.get('maxprice') || params.get('brand') || params.get('cat');
+  if (currentQuery || currentAdvertiser) document.body.classList.add('search-has-q');
   document.getElementById('searchInput').value = currentQuery;
-  var label = currentAdvertiser || (currentQuery ? '"' + currentQuery + '"' : '');
-  if (!label) {
-    if (params.get('sale')) label = 'On Sale';
-    else if (params.get('maxprice')) label = 'Under $' + params.get('maxprice');
-    else if (params.get('minprice')) label = '$' + params.get('minprice') + '+';
-    else label = 'Results';
-  }
-  document.getElementById('searchTermTitle').textContent = label;
-  document.title = (currentAdvertiser || currentQuery || label) + ' — FashionToWorld';
+  const titleLabel = currentAdvertiser || (currentQuery ? '"' + currentQuery + '"' : 'Results');
+  document.getElementById('searchTermTitle').textContent = titleLabel;
+  document.title = (currentAdvertiser || currentQuery || 'Search') + ' — FashionToWorld';
 
-  // Drive the shared modern filter (sidebar + toolbar + results)
+  // Drive the shared modern filter (sidebar + toolbar + results) with this query
   window.FILTER_CONFIG = { q: currentQuery, advertiser: currentAdvertiser };
 
-  if (hasFilter) {
+  if (currentQuery || currentAdvertiser) {
     var s = document.createElement('script');
     s.src = '../public/js/product-filter.js';
     document.body.appendChild(s);
