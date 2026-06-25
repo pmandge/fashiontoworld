@@ -10,6 +10,18 @@ img, svg, video, iframe { max-width: 100%; }
 img { height: auto; }
 
 /* ============================================================
+   SEARCH HERO  →  hidden on results pages (ALL widths)
+   search.html adds body.search-has-q whenever a query or
+   advertiser is active. On those result views we hide the hero
+   entirely — on desktop AND mobile — so products lead, and pad the
+   results to clear the fixed nav. The empty search page (no query)
+   keeps its hero + search box. Search stays reachable via the nav
+   search field (desktop) and the bottom nav + burger drawer (mobile).
+   ============================================================ */
+body.search-has-q .search-hero { display: none !important; }
+body.search-has-q .search-results { padding-top: calc(var(--nav-h) + 16px) !important; }
+
+/* ============================================================
    TABLET  (<= 1024px)
    ============================================================ */
 @media (max-width: 1024px) {
@@ -95,6 +107,7 @@ img { height: auto; }
     border-color: #fff;
     align-self: flex-start;
   }
+
 }
 
 /* ============================================================
