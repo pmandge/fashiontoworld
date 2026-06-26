@@ -33,6 +33,13 @@
   window.FTWWish = { get: wishGet, has: wishHas, toggle: wishToggle, key: productKey };
 
   function esc(s) { return (s || '').toString().replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  // Resize retailer images via the free weserv.nl proxy (smaller payload, https,
+  // bandwidth stays off Netlify). Used for product-card background images.
+  function imgCdn(rawUrl, width) {
+    if (!rawUrl) return '';
+    var stripped = rawUrl.replace(/^https?:\/\//i, '');
+    return 'https://images.weserv.nl/?url=' + encodeURIComponent(stripped) + '&w=' + (width || 400) + '&we&output=webp&q=82';
+  }
   function hideSection(el) { if (!el) return; var s = el.closest('section'); if (s) s.style.display = 'none'; }
 
   /* ---------------- hero carousel + count-up ---------------- */
@@ -42,7 +49,7 @@
     if (wrap) {
       var slides = imgs.map(function (id, i) {
         var d = document.createElement('div'); d.className = 'hero-slide' + (i === 0 ? ' on' : '');
-        var url = 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=1900&q=80';
+        var url = 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=1000&q=80';
         var im = new Image(); im.onload = function () { d.style.backgroundImage = "url('" + url + "')"; }; im.src = url;
         wrap.appendChild(d); return d;
       });
@@ -276,7 +283,7 @@
     var _wid = productKey(p);
     var _saved = wishHas(_wid);
     var _heart = '<button class="pcard-heart' + (_saved ? ' on' : '') + '" data-wid="' + esc(_wid) + '" aria-label="Save item" onclick="return false;"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>';
-    return '<article class="pcard" data-wid="' + esc(_wid) + '" data-name="' + esc(p.name || '') + '" data-brand="' + esc(p.brand || p.advertiser_name || '') + '" data-price="' + esc(price) + '" data-img="' + esc(img) + '" data-href="' + esc(href) + '"><div class="pcard-img" style="background:#efe9df center/cover no-repeat' + (img ? (" url('" + esc(img) + "')") : '') + '">' + badge + _heart + '</div>' +
+    return '<article class="pcard" data-wid="' + esc(_wid) + '" data-name="' + esc(p.name || '') + '" data-brand="' + esc(p.brand || p.advertiser_name || '') + '" data-price="' + esc(price) + '" data-img="' + esc(img) + '" data-href="' + esc(href) + '"><div class="pcard-img" style="background:#efe9df center/cover no-repeat' + (img ? (" url('" + esc(imgCdn(img, 400)) + "')") : '') + '">' + badge + _heart + '</div>' +
       '<div class="pcard-body"><p class="pcard-brand">' + esc(p.brand || p.advertiser_name || '') + '</p>' +
       '<h3 class="pcard-name">' + esc(p.name || '') + '</h3>' +
       '<p class="pcard-price">' + esc(price) + (was ? '<span class="was">' + esc(was) + '</span>' : '') + '</p></div>' +
