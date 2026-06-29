@@ -193,7 +193,7 @@ const AdmitadAPI = (() => {
           ${_heart}
         </div>
         <div class="product-body">
-          <p class="product-brand">${product.brand || product.advertiser_name}</p>
+          <p class="product-brand">${product.brand || product.advertiser_name || ''}</p>
           <h3 class="product-name">${product.name}</h3>
           <div class="product-price-row">
             <span class="product-price">${product.price_display || formatPrice(product.price, product.currency)}</span>
@@ -220,7 +220,7 @@ const AdmitadAPI = (() => {
           ${_heart}
         </div>
         <div class="product-body">
-          <p class="product-brand">${product.brand || product.advertiser_name}</p>
+          <p class="product-brand">${product.brand || product.advertiser_name || ''}</p>
           <h3 class="product-name">${product.name}</h3>
           <div class="product-price-row">
             <span class="product-price">${product.price_display || formatPrice(product.price, product.currency)}</span>
@@ -640,7 +640,7 @@ const AdmitadAPI = (() => {
           const brand = card.querySelector('.pcf-brand');
           const name = card.querySelector('.pcf-name');
           const price = card.querySelector('.pcf-price');
-          if (brand) brand.textContent = p.brand || p.advertiser_name;
+          if (brand) brand.textContent = p.brand || p.advertiser_name || '';
           if (name) name.textContent = p.name;
           if (price) price.textContent = formatPrice(p.price, p.currency);
           // Make the whole floating card clickable to the real store
