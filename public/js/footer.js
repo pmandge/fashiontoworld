@@ -17,7 +17,7 @@
   var shopLinks = link(P+'women.html','Women')+link(P+'men.html','Men')+link(P+'kids.html','Kids')+link(P+'shoes.html','Shoes')+link(P+'bags.html','Bags')+link(SEARCH+'?q=watch','Watches')+link(P+'jewellery.html','Jewellery')+link(P+'accessories.html','Accessories')+link(P+'beauty.html','Beauty');
   var storeLinks = stores.map(function(s){return link(P+'go.html?store='+enc(s), s);}).join('');
   var brandLinks = brands.map(function(b){return link(P+'go.html?brand='+enc(b), b);}).join('');
-  var editLinks = link(SEARCH+'?q='+enc('swimwear'),'Vacation')+link(SEARCH+'?q='+enc('occasion dress'),'Wedding Guest')+link(SEARCH+'?q='+enc('tailored blazer'),'Workwear')+link(SEARCH+'?q='+enc('evening dress'),'Date Night')+link(SEARCH+'?q='+enc('activewear'),'Athleisure')+link(SEARCH+'?maxprice=50','Under $50')+link(SEARCH+'?sale=true','On Sale')+link(P+'coupons.html','Coupons')+link(SEARCH+'?markdown=true&sort=discount','All Deals')+link(P+'women.html','New In');
+  var editLinks = link(SEARCH+'?q='+enc('swimwear'),'Vacation')+link(SEARCH+'?q='+enc('occasion dress'),'Wedding Guest')+link(SEARCH+'?q='+enc('tailored blazer'),'Workwear')+link(SEARCH+'?q='+enc('evening dress'),'Date Night')+link(SEARCH+'?q='+enc('activewear'),'Athleisure')+link(SEARCH+'?maxprice=50','Under $50')+link(SEARCH+'?sale=true','On Sale')+link(P+'coupons.html','Coupons')+link(P+'deals.html','All Deals')+link(P+'women.html','New In');
   var companyLinks = link(P+'about.html','About Us')+link(P+'blog.html','Style Blog')+link(P+'contact.html','Contact')+link(P+'affiliate-disclosure.html','Affiliate Disclosure')+link(P+'privacy.html','Privacy Policy')+link(P+'terms.html','Terms');
 
   var html = '<div class="container">' +
