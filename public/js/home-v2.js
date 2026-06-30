@@ -33,13 +33,6 @@
   window.FTWWish = { get: wishGet, has: wishHas, toggle: wishToggle, key: productKey };
 
   function esc(s) { return (s || '').toString().replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-  // Resize retailer images via the free weserv.nl proxy (smaller payload, https,
-  // bandwidth stays off Netlify). Used for product-card background images.
-  function imgCdn(rawUrl, width) {
-    if (!rawUrl) return '';
-    var stripped = rawUrl.replace(/^https?:\/\//i, '');
-    return 'https://images.weserv.nl/?url=' + encodeURIComponent(stripped) + '&w=' + (width || 400) + '&we&output=webp&q=82';
-  }
   function hideSection(el) { if (!el) return; var s = el.closest('section'); if (s) s.style.display = 'none'; }
 
   /* ---------------- hero carousel + count-up ---------------- */
@@ -49,7 +42,7 @@
     if (wrap) {
       var slides = imgs.map(function (id, i) {
         var d = document.createElement('div'); d.className = 'hero-slide' + (i === 0 ? ' on' : '');
-        var url = 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=1000&q=80';
+        var url = 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=1900&q=80';
         var im = new Image(); im.onload = function () { d.style.backgroundImage = "url('" + url + "')"; }; im.src = url;
         wrap.appendChild(d); return d;
       });
@@ -135,16 +128,16 @@
   (function () {
     var el = document.getElementById('edits'); if (!el) return;
     var edits = [
-      { n: 'Vacation', img: '1523381210434-271e8be1f52b', href: 'pages/search.html?q=swimwear' },
-      { n: 'Wedding Guest', img: '1566174053879-31528523f8ae', href: 'pages/search.html?q=occasion%20dress' },
-      { n: 'Workwear', img: '1490481651871-ab68de25d43d', href: 'pages/search.html?q=tailored%20blazer' },
-      { n: 'Date Night', img: '1539109136881-3be0616acf4b', href: 'pages/search.html?q=evening%20dress' },
+      { n: 'Vacation', img: '1523381210434-271e8be1f52b', href: 'pages/women.html?cat=Swimwear' },
+      { n: 'Wedding Guest', img: '1566174053879-31528523f8ae', href: 'pages/women.html?cat=Dresses' },
+      { n: 'Workwear', img: '1490481651871-ab68de25d43d', href: 'pages/women.html?cat=Jackets' },
+      { n: 'Date Night', img: '1539109136881-3be0616acf4b', href: 'pages/women.html?cat=Dresses' },
       { n: 'Athleisure', img: '1483721310020-03333e577078', href: 'pages/search.html?q=activewear' },
-      { n: 'Coats & Jackets', img: '1441984904996-e0b6ba687e04', href: 'pages/search.html?q=coat' },
-      { n: 'Statement Jewellery', img: '1515562141207-7a88fb7ce338', href: 'pages/search.html?q=statement%20necklace' },
+      { n: 'Coats & Jackets', img: '1441984904996-e0b6ba687e04', href: 'pages/women.html?cat=Coats' },
+      { n: 'Statement Jewellery', img: '1515562141207-7a88fb7ce338', href: 'pages/jewellery.html?cat=Necklaces' },
       { n: 'Sneaker Edit', img: '1542291026-7eec264c27ff', href: 'pages/shoes.html?cat=Sneakers' },
       { n: 'Bags We Love', img: '1584917865442-de89df76afd3', href: 'pages/bags.html' },
-      { n: 'Best Sellers', img: '1483985988355-763728e1935b', href: 'pages/search.html?q=designer%20handbag' }
+      { n: 'Best Sellers', img: '1483985988355-763728e1935b', href: 'pages/bags.html' }
     ];
     el.innerHTML = edits.map(function (e) {
       return '<a class="edit-tile" href="' + e.href + '"><div class="ph" data-img="' + e.img + '"></div><div class="shade"></div><span class="lbl">' + e.n + '</span></a>';
@@ -283,7 +276,7 @@
     var _wid = productKey(p);
     var _saved = wishHas(_wid);
     var _heart = '<button class="pcard-heart' + (_saved ? ' on' : '') + '" data-wid="' + esc(_wid) + '" aria-label="Save item" onclick="return false;"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>';
-    return '<article class="pcard" data-wid="' + esc(_wid) + '" data-name="' + esc(p.name || '') + '" data-brand="' + esc(p.brand || p.advertiser_name || '') + '" data-price="' + esc(price) + '" data-img="' + esc(img) + '" data-href="' + esc(href) + '"><div class="pcard-img" style="background:#efe9df center/cover no-repeat' + (img ? (" url('" + esc(imgCdn(img, 400)) + "')") : '') + '">' + badge + _heart + '</div>' +
+    return '<article class="pcard" data-wid="' + esc(_wid) + '" data-name="' + esc(p.name || '') + '" data-brand="' + esc(p.brand || p.advertiser_name || '') + '" data-price="' + esc(price) + '" data-img="' + esc(img) + '" data-href="' + esc(href) + '"><div class="pcard-img" style="background:#efe9df center/cover no-repeat' + (img ? (" url('" + esc(img) + "')") : '') + '">' + badge + _heart + '</div>' +
       '<div class="pcard-body"><p class="pcard-brand">' + esc(p.brand || p.advertiser_name || '') + '</p>' +
       '<h3 class="pcard-name">' + esc(p.name || '') + '</h3>' +
       '<p class="pcard-price">' + esc(price) + (was ? '<span class="was">' + esc(was) + '</span>' : '') + '</p></div>' +
