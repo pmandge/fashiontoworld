@@ -181,6 +181,37 @@
       thumbsEls.forEach(function(x){ x.classList.remove('on'); }); t.classList.add('on');
     }); });
 
+    // inject Product structured data (JSON-LD) for Google rich results
+    try {
+      var canonical = 'https://fashiontoworld.co/pages/product.html?id=' + encodeURIComponent(id);
+      var schemaImgs = imgs.slice(0,4).map(function(u){ return img(u,800); });
+      var ld = {
+        '@context': 'https://schema.org/',
+        '@type': 'Product',
+        'name': p.name || 'Product',
+        'image': schemaImgs.length ? schemaImgs : undefined,
+        'description': p.description ? String(p.description).slice(0,900) : undefined,
+        'sku': p.id,
+        'brand': brand ? { '@type': 'Brand', 'name': brand } : undefined,
+        'offers': {
+          '@type': 'Offer',
+          'url': canonical,
+          'priceCurrency': (p.currency || 'EUR').toUpperCase(),
+          'price': (p.price != null ? Number(p.price).toFixed(2) : undefined),
+          'availability': 'https://schema.org/InStock',
+          'seller': { '@type': 'Organization', 'name': retailer }
+        }
+      };
+      if (p.color) ld.color = p.color;
+      if (p.material) ld.material = p.material;
+      // strip undefined keys
+      var clean = JSON.parse(JSON.stringify(ld));
+      var sc = document.createElement('script');
+      sc.type = 'application/ld+json';
+      sc.text = JSON.stringify(clean);
+      document.head.appendChild(sc);
+    } catch (e) {}
+
     // fire analytics + Pinterest outbound on shop click
     var btn = $('pdpShopBtn');
     if (btn) btn.addEventListener('click', function(){
