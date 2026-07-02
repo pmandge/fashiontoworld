@@ -162,7 +162,7 @@ const AdmitadAPI = (() => {
 
   // ─── RENDER HELPERS ──────────────────────────────────────────
 
-  function renderProductCard(product) {
+  function renderProductCard(product, idx) {
     const hasDiscount = product.price_old && product.price_old > product.price;
     const discount = hasDiscount
       ? Math.round((1 - product.price / product.price_old) * 100)
@@ -170,6 +170,8 @@ const AdmitadAPI = (() => {
     // Only use a real outbound affiliate link. Never fall back to an internal page.
     const link = product.affiliate_url || product.url || '';
     const isRealLink = /^https?:\/\//i.test(link);
+    var _imgLoad = (idx != null && idx < 4) ? 'eager' : 'lazy';
+    var _imgPrio = (idx != null && idx < 4) ? ' fetchpriority="high"' : '';
 
     var _wn = (product.name || '').replace(/"/g, '&quot;');
     var _wimg = (product.image_url || '').replace(/"/g, '&quot;');
@@ -187,13 +189,13 @@ const AdmitadAPI = (() => {
       return `
       <article class="product-card">
         <div class="product-img">
-          <img src="${_imgOpt}" alt="${product.name}" width="400" height="500" loading="lazy" decoding="async"
+          <img src="${_imgOpt}" alt="${product.name}" width="400" height="500" loading="${_imgLoad}"${_imgPrio} decoding="async"
                data-orig="${_imgOrig}"
                onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src=this.getAttribute('data-orig');}else{this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();}">
           ${_heart}
         </div>
         <div class="product-body">
-          <p class="product-brand">${product.brand || product.advertiser_name || ''}</p>
+          <p class="product-brand">${product.brand || product.advertiser_name}</p>
           <h3 class="product-name">${product.name}</h3>
           <div class="product-price-row">
             <span class="product-price">${product.price_display || formatPrice(product.price, product.currency)}</span>
@@ -211,7 +213,7 @@ const AdmitadAPI = (() => {
           <img src="${_imgOpt}"
                alt="${product.name}"
                width="400" height="500"
-               loading="lazy"
+               loading="${_imgLoad}"${_imgPrio}
                decoding="async"
                data-orig="${_imgOrig}"
                onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src=this.getAttribute('data-orig');}else{this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();}">
@@ -220,7 +222,7 @@ const AdmitadAPI = (() => {
           ${_heart}
         </div>
         <div class="product-body">
-          <p class="product-brand">${product.brand || product.advertiser_name || ''}</p>
+          <p class="product-brand">${product.brand || product.advertiser_name}</p>
           <h3 class="product-name">${product.name}</h3>
           <div class="product-price-row">
             <span class="product-price">${product.price_display || formatPrice(product.price, product.currency)}</span>
@@ -640,7 +642,7 @@ const AdmitadAPI = (() => {
           const brand = card.querySelector('.pcf-brand');
           const name = card.querySelector('.pcf-name');
           const price = card.querySelector('.pcf-price');
-          if (brand) brand.textContent = p.brand || p.advertiser_name || '';
+          if (brand) brand.textContent = p.brand || p.advertiser_name;
           if (name) name.textContent = p.name;
           if (price) price.textContent = formatPrice(p.price, p.currency);
           // Make the whole floating card clickable to the real store
