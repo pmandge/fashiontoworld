@@ -81,12 +81,6 @@
 .products-grid .empty-state { grid-column: 1 / -1; }
 @media (max-width: 860px) { .shop-layout { grid-template-columns: 1fr; gap: 24px; padding: 0 20px; } }
 .btn-disabled { opacity: .5; cursor: not-allowed; }
-
-/* 4-up product grid to match category pages (overrides responsive-fixes.css which loads later) */
-.products-grid { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 20px; }
-@media (max-width: 1100px) { .products-grid { grid-template-columns: repeat(3, 1fr) !important; } }
-@media (max-width: 860px)  { .products-grid { grid-template-columns: repeat(2, 1fr) !important; } }
-@media (max-width: 600px)  { .products-grid { grid-template-columns: repeat(2, 1fr) !important; } }
 </style>
   <link rel="icon" type="image/svg+xml" href="/public/images/favicon.svg">
   <link rel="alternate icon" href="/public/images/favicon.svg">
@@ -189,16 +183,19 @@
   const params = new URLSearchParams(location.search);
   const currentQuery = (params.get('q') || '').trim();
   const currentAdvertiser = (params.get('advertiser') || '').trim();
-  if (currentQuery || currentAdvertiser) document.body.classList.add('search-has-q');
+  const currentMarkdown = params.get('markdown') === 'true';
+  const currentSort = (params.get('sort') || '').trim();
+  const hasDiscountView = currentMarkdown || currentSort === 'discount';
+  if (currentQuery || currentAdvertiser || hasDiscountView) document.body.classList.add('search-has-q');
   document.getElementById('searchInput').value = currentQuery;
-  const titleLabel = currentAdvertiser || (currentQuery ? '"' + currentQuery + '"' : 'Results');
+  const titleLabel = currentAdvertiser || (currentQuery ? '"' + currentQuery + '"' : (hasDiscountView ? 'Biggest Discounts' : 'Results'));
   document.getElementById('searchTermTitle').textContent = titleLabel;
   document.title = (currentAdvertiser || currentQuery || 'Search') + ' — FashionToWorld';
 
   // Drive the shared modern filter (sidebar + toolbar + results) with this query
-  window.FILTER_CONFIG = { q: currentQuery, advertiser: currentAdvertiser };
+  window.FILTER_CONFIG = { q: currentQuery, advertiser: currentAdvertiser, markdown: currentMarkdown, sort: (currentSort || (hasDiscountView ? 'discount' : '')) };
 
-  if (currentQuery || currentAdvertiser) {
+  if (currentQuery || currentAdvertiser || hasDiscountView) {
     var s = document.createElement('script');
     s.src = '../public/js/product-filter.js';
     document.body.appendChild(s);
