@@ -969,3 +969,25 @@ img, video { max-width: 100%; }
 /* Homepage product cards are fully clickable (click anywhere opens product) */
 .pcard{ cursor:pointer }
 .pcard-heart{ cursor:pointer }
+
+
+/* ===== "You May Also Like" — horizontal scroll ===== */
+#recommendGrid {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 20px;
+  padding: 4px 4px 18px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+#recommendGrid > * {
+  flex: 0 0 240px;
+  max-width: 240px;
+  scroll-snap-align: start;
+}
+#recommendGrid::-webkit-scrollbar { height: 8px; }
+#recommendGrid::-webkit-scrollbar-thumb { background: rgba(201,168,76,.4); border-radius: 4px; }
+#recommendGrid::-webkit-scrollbar-track { background: transparent; }
+@media (max-width: 640px){ #recommendGrid > * { flex-basis: 66vw; max-width: 66vw; } }
