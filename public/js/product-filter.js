@@ -152,7 +152,7 @@
   var allBrands = [];
   async function loadBrands() {
     try {
-      var data = await API.getProducts({ category: CATEGORY, gender: GENDER, q: QUERY, limit: 30, sort: 'popularity' });
+      var data = await API.getProducts({ category: CATEGORY, gender: GENDER, q: QUERY, limit: 100, sort: 'popularity' });
       allBrands = [].concat.apply([], (data && data.products ? data.products : []).map(function (p) { return p.brand ? [p.brand] : []; }));
       allBrands = Array.from(new Set(allBrands)).sort();
       renderBrands('');
@@ -284,6 +284,6 @@
   load(true);
   loadBrands();
   if (API.populateRecommendations) {
-    API.populateRecommendations('recommendGrid', { category: CATEGORY, limit: 4, sectionId: 'recommendSection' });
+    API.populateRecommendations('recommendGrid', { category: CATEGORY, limit: 12, sectionId: 'recommendSection' });
   }
 })();
