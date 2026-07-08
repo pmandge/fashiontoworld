@@ -195,11 +195,13 @@
   const currentCat = (params.get('cat') || '').trim();
   const currentBrand = (params.get('brand') || '').trim();
   const currentSale = params.get('sale') === 'true';
-  const hasAnyFilter = currentQuery || currentAdvertiser || hasDiscountView || currentMinPrice || currentMaxPrice || currentCat || currentBrand || currentSale;
+  const hasSort = currentSort !== '';
+  const hasAnyFilter = currentQuery || currentAdvertiser || hasDiscountView || currentMinPrice || currentMaxPrice || currentCat || currentBrand || currentSale || hasSort;
   if (hasAnyFilter) document.body.classList.add('search-has-q');
   document.getElementById('searchInput').value = currentQuery;
   const priceLabel = currentMaxPrice ? ('Under $' + currentMaxPrice) : (currentMinPrice ? ('$' + currentMinPrice + '+') : '');
-  const titleLabel = currentAdvertiser || (currentQuery ? '"' + currentQuery + '"' : (hasDiscountView ? 'Biggest Discounts' : (priceLabel || 'Results')));
+  const sortTitles = { popularity: 'Trending Now', newest: 'New Arrivals', 'price-asc': 'Lowest Price', 'price-desc': 'Highest Price', discount: 'Biggest Discounts' };
+  const titleLabel = currentAdvertiser || (currentQuery ? '"' + currentQuery + '"' : (hasDiscountView ? 'Biggest Discounts' : (priceLabel || sortTitles[currentSort] || 'Results')));
   document.getElementById('searchTermTitle').textContent = titleLabel;
   document.title = (currentAdvertiser || currentQuery || 'Search') + ' — FashionToWorld';
 
