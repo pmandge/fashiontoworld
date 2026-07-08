@@ -227,8 +227,33 @@
     const tax = window.FASHION_TAXONOMY || {};
     const facets = await getFacets();
 
+    const base = window.API_BASE || '';
+
     document.querySelectorAll('.nav-links > li > a').forEach(function (link) {
       const label = link.textContent.trim().toLowerCase();
+
+      // Special case: Brands -> dropdown of top brand names + "View All Brands"
+      if (label === 'brands') {
+        const li = link.parentElement;
+        if (li.querySelector('.mega')) return;
+        fetch(base + '/api/brands/top?limit=18')
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            const brands = (d && (d.brands || d)) || [];
+            const names = brands.map(function (b) { return (typeof b === 'string') ? b : (b.name || b.brand); }).filter(Boolean).slice(0, 18);
+            if (!names.length) return;
+            const mega = document.createElement('div');
+            mega.className = 'mega';
+            mega.style.setProperty('--mega-rows', Math.max(3, Math.ceil((names.length + 1) / 3)));
+            mega.innerHTML = '<div class="mega-list">' + names.map(function (name) {
+              return '<a href="/pages/search?brand=' + encodeURIComponent(name) + '">' + name + '</a>';
+            }).join('') + '<a href="/pages/brands" style="font-weight:600">View All Brands →</a></div>';
+            li.appendChild(mega);
+          })
+          .catch(function () {});
+        return;
+      }
+
       let key = null;
       for (const k in tax) { if (tax[k].label.toLowerCase() === label) { key = k; break; } }
       if (!key) return;
