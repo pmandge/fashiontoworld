@@ -97,6 +97,7 @@
         '<a href="' + root + 'coupons.html" style="display:block;background:#c9a84c;color:#0f0f0f;text-align:center;padding:12px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;margin-bottom:8px">Coupons</a>' +
         '<button onclick="FTWSubscribe.open()" style="width:100%;background:#0f0f0f;color:#fafaf8;border:none;padding:12px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;margin-bottom:16px">Subscribe</button>' +
         '<div id="mmCats">' + cats + '</div>' +
+        '<a href="' + root + 'deals.html" style="display:block;padding:14px 0;font-family:Georgia,serif;font-size:18px;color:#0f0f0f;text-decoration:none;border-bottom:1px solid rgba(0,0,0,.08)">Deals</a>' +
         '<a href="' + root + 'brands.html" style="display:block;padding:14px 0;font-family:Georgia,serif;font-size:18px;color:#0f0f0f;text-decoration:none;border-bottom:1px solid rgba(0,0,0,.08)">All Brands</a>' +
         '<a href="' + root + 'blog.html" style="display:block;padding:14px 0;font-family:Georgia,serif;font-size:18px;color:#0f0f0f;text-decoration:none">Style Blog</a>' +
       '</div>';
@@ -236,21 +237,28 @@
       if (label === 'brands') {
         const li = link.parentElement;
         if (li.querySelector('.mega')) return;
-        fetch(base + '/api/brands/top?limit=18')
+        const apiBase = window.API_BASE || 'https://api.fashiontoworld.co';
+        fetch(apiBase + '/api/brands/top?limit=18')
           .then(function (r) { return r.json(); })
           .then(function (d) {
-            const brands = (d && (d.brands || d)) || [];
-            const names = brands.map(function (b) { return (typeof b === 'string') ? b : (b.name || b.brand); }).filter(Boolean).slice(0, 18);
-            if (!names.length) return;
+            let arr = [];
+            if (Array.isArray(d)) arr = d;
+            else if (d && Array.isArray(d.brands)) arr = d.brands;
+            else if (d && Array.isArray(d.topBrands)) arr = d.topBrands;
+            else if (d && Array.isArray(d.rows)) arr = d.rows;
+            const names = arr.map(function (b) {
+              return (typeof b === 'string') ? b : (b && (b.name || b.brand || b.advertiser));
+            }).filter(Boolean).slice(0, 18);
+            if (!names.length) { console.warn('[nav] brands dropdown: no names in', d); return; }
             const mega = document.createElement('div');
             mega.className = 'mega';
             mega.style.setProperty('--mega-rows', Math.max(3, Math.ceil((names.length + 1) / 3)));
             mega.innerHTML = '<div class="mega-list">' + names.map(function (name) {
               return '<a href="/pages/search?brand=' + encodeURIComponent(name) + '">' + name + '</a>';
-            }).join('') + '<a href="/pages/brands" style="font-weight:600">View All Brands →</a></div>';
+            }).join('') + '<a href="/pages/brands" style="font-weight:600">View All Brands &rarr;</a></div>';
             li.appendChild(mega);
           })
-          .catch(function () {});
+          .catch(function (e) { console.warn('[nav] brands dropdown fetch failed', e); });
         return;
       }
 
