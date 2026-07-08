@@ -64,6 +64,7 @@
 .shop-head p{font-size:14.5px;color:var(--text-muted);margin-top:6px}
 .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .cat-tile{position:relative;height:200px;border-radius:14px;overflow:hidden;background-size:cover;background-position:center;text-decoration:none;transition:transform .3s}
+.cat-tile .ph{position:absolute;inset:0;background-size:cover;background-position:center;background-color:#e7e0d4}
 .cat-tile::after{content:'';position:absolute;inset:0;background:linear-gradient(rgba(18,16,12,.05),rgba(18,16,12,.6))}
 .cat-tile span{position:absolute;inset:0;z-index:1;display:flex;align-items:flex-end;padding:18px;color:#fff;font-family:var(--font-serif);font-size:24px;font-weight:500}
 .cat-tile:hover{transform:translateY(-4px)}
@@ -205,14 +206,14 @@
       <p>Jump straight into the edit.</p>
     </div>
     <div class="cat-grid">
-      <a class="cat-tile" href="women.html" style="background-image:url('https://images.weserv.nl/?url=images.unsplash.com%2Fphoto-1529139574466-a303027c1d8b%3Fauto%3Dformat%26fit%3Dcrop%26w%3D600%26q%3D80')"><span>Women</span></a>
-      <a class="cat-tile" href="men.html" style="background-image:url('https://images.weserv.nl/?url=images.unsplash.com%2Fphoto-1507003211169-0a1dd7228f2d%3Fauto%3Dformat%26fit%3Dcrop%26w%3D600%26q%3D80')"><span>Men</span></a>
-      <a class="cat-tile" href="shoes.html" style="background-image:url('https://images.weserv.nl/?url=images.unsplash.com%2Fphoto-1595950653106-6c9ebd614d3a%3Fauto%3Dformat%26fit%3Dcrop%26w%3D600%26q%3D80')"><span>Shoes</span></a>
-      <a class="cat-tile" href="bags.html" style="background-image:url('https://images.weserv.nl/?url=images.unsplash.com%2Fphoto-1584917865442-de89df76afd3%3Fauto%3Dformat%26fit%3Dcrop%26w%3D600%26q%3D80')"><span>Bags</span></a>
-      <a class="cat-tile" href="watches.html" style="background-image:url('https://images.weserv.nl/?url=images.unsplash.com%2Fphoto-1523275335684-37898b6baf30%3Fauto%3Dformat%26fit%3Dcrop%26w%3D600%26q%3D80')"><span>Watches</span></a>
-      <a class="cat-tile" href="jewellery.html" style="background-image:url('https://images.weserv.nl/?url=images.unsplash.com%2Fphoto-1515562141207-7a88fb7ce338%3Fauto%3Dformat%26fit%3Dcrop%26w%3D600%26q%3D80')"><span>Jewellery</span></a>
-      <a class="cat-tile" href="beauty.html" style="background-image:url('https://images.weserv.nl/?url=images.unsplash.com%2Fphoto-1596462502278-27bfdc403348%3Fauto%3Dformat%26fit%3Dcrop%26w%3D600%26q%3D80')"><span>Beauty</span></a>
-      <a class="cat-tile" href="accessories.html" style="background-image:url('https://images.weserv.nl/?url=images.unsplash.com%2Fphoto-1511499767150-a48a237f0083%3Fauto%3Dformat%26fit%3Dcrop%26w%3D600%26q%3D80')"><span>Accessories</span></a>
+      <a class="cat-tile" href="women.html"><div class="ph" data-img="1529139574466-a303027c1d8b"></div><span>Women</span></a>
+      <a class="cat-tile" href="men.html"><div class="ph" data-img="1507003211169-0a1dd7228f2d"></div><span>Men</span></a>
+      <a class="cat-tile" href="shoes.html"><div class="ph" data-img="1595950653106-6c9ebd614d3a"></div><span>Shoes</span></a>
+      <a class="cat-tile" href="bags.html"><div class="ph" data-img="1584917865442-de89df76afd3"></div><span>Bags</span></a>
+      <a class="cat-tile" href="watches.html"><div class="ph" data-img="1523275335684-37898b6baf30"></div><span>Watches</span></a>
+      <a class="cat-tile" href="jewellery.html"><div class="ph" data-img="1515562141207-7a88fb7ce338"></div><span>Jewellery</span></a>
+      <a class="cat-tile" href="beauty.html"><div class="ph" data-img="1596462502278-27bfdc403348"></div><span>Beauty</span></a>
+      <a class="cat-tile" href="accessories.html"><div class="ph" data-img="1511499767150-a48a237f0083"></div><span>Accessories</span></a>
     </div>
   </div>
 </section>
@@ -232,5 +233,25 @@
   <script src="/public/js/hero-search.js" defer></script>
   <script src="/public/js/nav-speed.js" defer></script>
   <script src="/public/js/pin-events.js" defer></script>
+<script>
+(function(){
+  function loadPh(ph){
+    var id = ph.getAttribute('data-img'); if(!id) return;
+    var url = 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=600&q=80';
+    var im = new Image();
+    im.onload = function(){ ph.style.backgroundImage = "url('" + url + "')"; };
+    im.onerror = function(){
+      // fallback: try weserv proxy if direct hotlink fails
+      var prox = 'https://images.weserv.nl/?url=images.unsplash.com/photo-' + id + '?w=600';
+      var im2 = new Image();
+      im2.onload = function(){ ph.style.backgroundImage = "url('" + prox + "')"; };
+      im2.src = prox;
+    };
+    im.src = url;
+  }
+  var phs = document.querySelectorAll('.cat-tile .ph');
+  phs.forEach(loadPh);
+})();
+</script>
 </body>
 </html>
