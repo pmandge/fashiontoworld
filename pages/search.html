@@ -187,16 +187,26 @@
   const params = new URLSearchParams(location.search);
   const currentQuery = (params.get('q') || '').trim();
   const currentAdvertiser = (params.get('advertiser') || '').trim();
-  if (currentQuery || currentAdvertiser) document.body.classList.add('search-has-q');
+  const currentMarkdown = params.get('markdown') === 'true';
+  const currentSort = (params.get('sort') || '').trim();
+  const hasDiscountView = currentMarkdown || currentSort === 'discount';
+  const currentMinPrice = (params.get('minprice') || '').trim();
+  const currentMaxPrice = (params.get('maxprice') || '').trim();
+  const currentCat = (params.get('cat') || '').trim();
+  const currentBrand = (params.get('brand') || '').trim();
+  const currentSale = params.get('sale') === 'true';
+  const hasAnyFilter = currentQuery || currentAdvertiser || hasDiscountView || currentMinPrice || currentMaxPrice || currentCat || currentBrand || currentSale;
+  if (hasAnyFilter) document.body.classList.add('search-has-q');
   document.getElementById('searchInput').value = currentQuery;
-  const titleLabel = currentAdvertiser || (currentQuery ? '"' + currentQuery + '"' : 'Results');
+  const priceLabel = currentMaxPrice ? ('Under $' + currentMaxPrice) : (currentMinPrice ? ('$' + currentMinPrice + '+') : '');
+  const titleLabel = currentAdvertiser || (currentQuery ? '"' + currentQuery + '"' : (hasDiscountView ? 'Biggest Discounts' : (priceLabel || 'Results')));
   document.getElementById('searchTermTitle').textContent = titleLabel;
   document.title = (currentAdvertiser || currentQuery || 'Search') + ' — FashionToWorld';
 
   // Drive the shared modern filter (sidebar + toolbar + results) with this query
-  window.FILTER_CONFIG = { q: currentQuery, advertiser: currentAdvertiser };
+  window.FILTER_CONFIG = { q: currentQuery, advertiser: currentAdvertiser, markdown: currentMarkdown, sort: (currentSort || (hasDiscountView ? 'discount' : '')) };
 
-  if (currentQuery || currentAdvertiser) {
+  if (hasAnyFilter) {
     var s = document.createElement('script');
     s.src = '../public/js/product-filter.js';
     document.body.appendChild(s);
