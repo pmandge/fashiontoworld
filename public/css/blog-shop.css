@@ -1,0 +1,43 @@
+/* blog-shop.css — styling for dynamic product blocks inside articles.
+   Self-contained + brand tokens so it survives main.css drift. */
+.blog-shop{
+  margin:36px 0;
+  padding:26px 26px 28px;
+  background:var(--cream,#f5f2ec);
+  border:1px solid var(--border,#e7e0d4);
+  border-radius:16px;
+}
+.blog-shop .bs-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.blog-shop .bs-head h4{
+  font-family:var(--font-serif,'Cormorant Garamond',Georgia,serif);
+  font-size:26px;font-weight:500;color:var(--black,#12100c);margin:0;line-height:1.1;
+}
+.blog-shop .bs-sub{font-size:12px;letter-spacing:.04em;color:var(--text-muted,#8a8474)}
+.blog-shop .bs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+
+.blog-shop .bs-card{
+  display:block;text-decoration:none;color:inherit;background:#fff;
+  border-radius:12px;overflow:hidden;border:1px solid var(--border,#e7e0d4);
+  transition:transform .2s,box-shadow .2s;
+}
+.blog-shop .bs-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(168,134,47,.16)}
+.blog-shop .bs-img{position:relative;aspect-ratio:3/4;background:#f0ece3;overflow:hidden}
+.blog-shop .bs-img img{width:100%;height:100%;object-fit:cover;display:block}
+.blog-shop .bs-pct{
+  position:absolute;top:10px;left:10px;z-index:1;
+  background:#c0392b;color:#fff;font-size:11px;font-weight:600;
+  padding:3px 7px;border-radius:6px;font-family:var(--font-sans,'DM Sans',sans-serif);
+}
+.blog-shop .bs-body{padding:12px 13px 14px}
+.blog-shop .bs-brand{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep,#a8862f);margin-bottom:5px;font-weight:600}
+.blog-shop .bs-name{font-size:13px;line-height:1.35;color:var(--black,#12100c);margin-bottom:8px;height:35px;overflow:hidden;font-family:var(--font-sans,'DM Sans',sans-serif)}
+.blog-shop .bs-price{font-size:15px;font-weight:600;color:var(--black,#12100c);font-family:var(--font-sans,'DM Sans',sans-serif)}
+.blog-shop .bs-old{color:#b0a89a;text-decoration:line-through;font-weight:400;font-size:12.5px;margin-left:5px}
+.blog-shop .bs-cta{margin-top:10px;background:var(--black,#12100c);color:#fff;text-align:center;padding:8px;border-radius:7px;font-size:11.5px;letter-spacing:.05em;font-family:var(--font-sans,'DM Sans',sans-serif)}
+
+/* loading skeletons */
+.blog-shop .bs-skel{aspect-ratio:3/4;border-radius:12px;background:linear-gradient(90deg,#efeae1 25%,#e6e0d5 37%,#efeae1 63%);background-size:400% 100%;animation:bsShimmer 1.3s ease infinite}
+@keyframes bsShimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+
+@media(max-width:900px){ .blog-shop .bs-grid{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:560px){ .blog-shop{padding:20px 16px 22px} }
