@@ -301,6 +301,41 @@
     });
   }
 
+  /* -------- lazy product images (resized via proxy, original as fallback) ---- */
+  function proxied(url, w) {
+    try {
+      var clean = String(url).replace(/^https?:\/\//, '');
+      return 'https://images.weserv.nl/?url=' + encodeURIComponent(clean) + '&w=' + (w || 400) + '&q=72&output=webp';
+    } catch (e) { return url; }
+  }
+  function paintCard(ph) {
+    var raw = ph.getAttribute('data-pimg');
+    if (!raw || ph.getAttribute('data-done')) return;
+    ph.setAttribute('data-done', '1');
+    var small = proxied(raw, 400);
+    var im = new Image();
+    im.onload = function () { ph.style.backgroundImage = "url('" + small + "')"; };
+    im.onerror = function () {
+      // proxy failed -> use the merchant's original so a product is never blank
+      var fb = new Image();
+      fb.onload = function () { ph.style.backgroundImage = "url('" + raw + "')"; };
+      fb.src = raw;
+    };
+    im.src = small;
+  }
+  var _cardObs = ('IntersectionObserver' in window) ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { paintCard(e.target); _cardObs.unobserve(e.target); }
+    });
+  }, { rootMargin: '400px 0px' }) : null;
+  function lazyCards(root) {
+    var nodes = (root || document).querySelectorAll('.pcard-img[data-pimg]:not([data-done])');
+    nodes.forEach(function (ph) {
+      if (_cardObs) _cardObs.observe(ph); else paintCard(ph);
+    });
+  }
+  window.FTWLazyCards = lazyCards;
+
   /* ---------------- live product card ---------------- */
   function pcard(p, opts) {
     opts = opts || {};
@@ -313,7 +348,12 @@
     var _wid = productKey(p);
     var _saved = wishHas(_wid);
     var _heart = '<button class="pcard-heart' + (_saved ? ' on' : '') + '" data-wid="' + esc(_wid) + '" aria-label="Save item" onclick="return false;"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>';
-    return '<article class="pcard" data-wid="' + esc(_wid) + '" data-name="' + esc(p.name || '') + '" data-brand="' + esc(p.brand || p.advertiser_name || '') + '" data-price="' + esc(price) + '" data-img="' + esc(img) + '" data-href="' + esc(href) + '"><div class="pcard-img" style="background:#efe9df center/cover no-repeat' + (img ? (" url('" + esc(img) + "')") : '') + '">' + badge + _heart + '</div>' +
+    // PERF: merchant images are full-resolution (often 1-2MB each) and dozens
+    // render per page -> ~5MB payloads. We no longer paint them inline; the
+    // lazy loader below fills each card only when it nears the viewport, and
+    // requests a 400px copy via the weserv proxy (falling back to the original
+    // if the proxy fails, so images can never silently disappear).
+    return '<article class="pcard" data-wid="' + esc(_wid) + '" data-name="' + esc(p.name || '') + '" data-brand="' + esc(p.brand || p.advertiser_name || '') + '" data-price="' + esc(price) + '" data-img="' + esc(img) + '" data-href="' + esc(href) + '"><div class="pcard-img" style="background:#efe9df center/cover no-repeat"' + (img ? (' data-pimg="' + esc(img) + '"') : '') + '>' + badge + _heart + '</div>' +
       '<div class="pcard-body"><p class="pcard-brand">' + esc(p.brand || p.advertiser_name || '') + '</p>' +
       '<h3 class="pcard-name">' + esc(p.name || '') + '</h3>' +
       '<p class="pcard-price">' + esc(price) + (was ? '<span class="was">' + esc(was) + '</span>' : '') + '</p></div>' +
@@ -344,6 +384,7 @@
       if (opts && opts.slice) items = items.slice(opts.slice[0], opts.slice[1]);
       if (!items.length) { hideSection(el); return; }
       el.innerHTML = items.map(function (p) { return pcard(p, cardOpts); }).join('');
+      lazyCards(el);
     } catch (e) { hideSection(el); }
   }
 
@@ -393,7 +434,7 @@
         var r = await fetch(base + '/api/products/top-deals');
         var dd = r.ok ? await r.json() : null;
         var dp = (dd && dd.products) || [];
-        if (dp.length) { deals.innerHTML = dp.map(function (p) { return pcard(p, {}); }).join(''); }
+        if (dp.length) { deals.innerHTML = dp.map(function (p) { return pcard(p, {}); }).join(''); lazyCards(deals); }
         else { hideSection(deals); }
       } catch (e) { hideSection(deals); }
     }
