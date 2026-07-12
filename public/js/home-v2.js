@@ -40,13 +40,50 @@
     var imgs = ['1490481651871-ab68de25d43d', '1445205170230-053b83016050', '1441984904996-e0b6ba687e04', '1539109136881-3be0616acf4b'];
     var wrap = document.getElementById('heroSlides');
     if (wrap) {
-      var slides = imgs.map(function (id, i) {
-        var d = document.createElement('div'); d.className = 'hero-slide' + (i === 0 ? ' on' : '');
-        var url = 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=1900&q=80';
-        var im = new Image(); im.onload = function () { d.style.backgroundImage = "url('" + url + "')"; }; im.src = url;
-        wrap.appendChild(d); return d;
-      });
-      var hi = 0; setInterval(function () { slides[hi].classList.remove('on'); hi = (hi + 1) % slides.length; slides[hi].classList.add('on'); }, 5000);
+      // PERF: slide 1 is already painted from HTML/CSS (see index.html) so the
+      // LCP image is discoverable without waiting for this script. Was w=1900
+      // for every device, which was the main cause of a 9s mobile LCP.
+      var HW = (window.innerWidth <= 768) ? 900 : 1600;
+      var HQ = (window.innerWidth <= 768) ? 70 : 75;
+      function heroUrl(id) {
+        return 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=' + HW + '&q=' + HQ;
+      }
+      var slides = [];
+      var first = wrap.querySelector('[data-hero-first]');
+      if (first) {
+        slides.push(first);
+      } else {
+        // fallback if the inline slide is missing: paint slide 1 immediately
+        var d0 = document.createElement('div');
+        d0.className = 'hero-slide on';
+        d0.style.backgroundImage = "url('" + heroUrl(imgs[0]) + "')";
+        wrap.appendChild(d0); slides.push(d0);
+      }
+      // Slides 2-4 are decorative. Load them only once the page is idle so they
+      // never compete with the LCP image for bandwidth.
+      function addRestOfCarousel() {
+        for (var i = 1; i < imgs.length; i++) {
+          (function (idx) {
+            var d = document.createElement('div');
+            d.className = 'hero-slide';
+            var url = heroUrl(imgs[idx]);
+            var im = new Image();
+            im.onload = function () { d.style.backgroundImage = "url('" + url + "')"; };
+            im.src = url;
+            wrap.appendChild(d); slides.push(d);
+          })(i);
+        }
+        if (slides.length > 1) {
+          var hi = 0;
+          setInterval(function () {
+            slides[hi].classList.remove('on');
+            hi = (hi + 1) % slides.length;
+            slides[hi].classList.add('on');
+          }, 5000);
+        }
+      }
+      if ('requestIdleCallback' in window) requestIdleCallback(addRestOfCarousel, { timeout: 3500 });
+      else setTimeout(addRestOfCarousel, 2500);
     }
     var cnt = document.getElementById('cnt');
     function animateCount(target){ if(!cnt) return; var t0=null; requestAnimationFrame(function step(t){ if(!t0)t0=t; var p=Math.min((t-t0)/1500,1); cnt.textContent=Math.floor((1-Math.pow(1-p,3))*target).toLocaleString(); if(p<1)requestAnimationFrame(step); }); }
