@@ -205,6 +205,40 @@
   document.getElementById('searchTermTitle').textContent = titleLabel;
   document.title = (currentAdvertiser || currentQuery || 'Search') + ' — FashionToWorld';
 
+  // --- SEO: make brand views rankable -------------------------------------
+  // A brand view is a real, substantial page (e.g. ?brand=Chanel = thousands of
+  // products), so it gets a SELF-REFERENCING canonical instead of collapsing
+  // into the bare search page. Any extra filters on top of a brand (sort, price,
+  // sale...) canonicalize UP to the clean brand URL, so ranking signals
+  // consolidate on one URL and Google never indexes junk filter combinations.
+  // Non-brand views keep the base canonical exactly as before.
+  if (currentBrand) {
+    var cleanBrandUrl = 'https://fashiontoworld.co/pages/search.html?brand=' + encodeURIComponent(currentBrand);
+    var canonEl = document.querySelector('link[rel="canonical"]');
+    if (canonEl) canonEl.setAttribute('href', cleanBrandUrl);
+
+    document.title = currentBrand + ' — Shop Products That Ship Worldwide | Fashion to World';
+
+    var descText = 'Shop ' + currentBrand + ' online. Compare prices across worldwide-shipping stores, updated daily — delivered to the USA, UK, Australia and beyond.';
+    var descEl = document.querySelector('meta[name="description"]');
+    if (descEl) descEl.setAttribute('content', descText);
+
+    var ogT = document.querySelector('meta[property="og:title"]');
+    if (ogT) ogT.setAttribute('content', currentBrand + ' — Shop Products That Ship Worldwide');
+    var ogD = document.querySelector('meta[property="og:description"]');
+    if (ogD) ogD.setAttribute('content', descText);
+    var ogU = document.querySelector('meta[property="og:url"]');
+    if (ogU) ogU.setAttribute('content', cleanBrandUrl);
+    var twT = document.querySelector('meta[name="twitter:title"]');
+    if (twT) twT.setAttribute('content', currentBrand + ' — Shop Products That Ship Worldwide');
+    var twD = document.querySelector('meta[name="twitter:description"]');
+    if (twD) twD.setAttribute('content', descText);
+
+    // H1 becomes the brand name — the single strongest on-page ranking signal.
+    var h1 = document.querySelector('.search-hero h1');
+    if (h1) h1.innerHTML = '<em>' + currentBrand.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</em>';
+  }
+
   // Drive the shared modern filter (sidebar + toolbar + results) with this query
   window.FILTER_CONFIG = { q: currentQuery, advertiser: currentAdvertiser, markdown: currentMarkdown, sort: (currentSort || (hasDiscountView ? 'discount' : '')) };
 
