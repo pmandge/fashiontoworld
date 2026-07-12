@@ -77,6 +77,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"></noscript>
 <link rel="preconnect" href="https://images.unsplash.com">
+<link rel="preconnect" href="https://images.weserv.nl" crossorigin>
+<!-- LCP: preload the first hero image so the browser fetches it immediately
+     instead of waiting for home-v2.js to download, parse and run. Two media-
+     scoped preloads: phones get a 900px image, desktops 1600px. -->
+<link rel="preload" as="image" fetchpriority="high" media="(max-width: 768px)" href="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&q=70">
+<link rel="preload" as="image" fetchpriority="high" media="(min-width: 769px)" href="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=75">
 <link rel="dns-prefetch" href="https://api.fashiontoworld.co">
 <link rel="stylesheet" href="public/css/main.css">
 <link rel="stylesheet" href="public/css/home.css">
@@ -168,7 +174,13 @@
 </nav>
 
 <section class="hero">
-  <div class="hero-slides" id="heroSlides"></div>
+  <div class="hero-slides" id="heroSlides"><div class="hero-slide on" data-hero-first="1"></div></div>
+  <style>
+    /* LCP: paint the first hero image straight from HTML/CSS. home-v2.js sees
+       data-hero-first and skips re-creating it, then lazily adds slides 2-4. */
+    #heroSlides .hero-slide[data-hero-first]{background-image:url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&q=70');background-size:cover;background-position:center}
+    @media (min-width:769px){#heroSlides .hero-slide[data-hero-first]{background-image:url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=75')}}
+  </style>
   <div class="hero-scrim"></div>
   <div class="hero-inner">
     <p class="eyebrow">New Season · Ships Worldwide</p>
@@ -391,15 +403,15 @@
 <footer class="footer"></footer>
 
 <script src="public/js/api-config.js"></script>
-  <script src="public/js/categories.js"></script>
-<script src="public/js/i18n.js"></script>
-<script src="public/js/admitad-api.js"></script>
-<script src="public/js/hero-search.js"></script>
-<script src="public/js/home-v2.js"></script>
-<script src="public/js/site-content.js"></script>
-<script src="public/js/main.js"></script>
-<script src="public/js/footer.js"></script>
-<script src="public/js/mobile-menu.js"></script>
+  <script src="public/js/categories.js" defer></script>
+<script src="public/js/i18n.js" defer></script>
+<script src="public/js/admitad-api.js" defer></script>
+<script src="public/js/hero-search.js" defer></script>
+<script src="public/js/home-v2.js" defer></script>
+<script src="public/js/site-content.js" defer></script>
+<script src="public/js/main.js" defer></script>
+<script src="public/js/footer.js" defer></script>
+<script src="public/js/mobile-menu.js" defer></script>
   <script src="/public/js/cookie-consent.js" defer></script>
   <script src="/public/js/nav-speed.js" defer></script>
   <script src="/public/js/pin-events.js" defer></script>
