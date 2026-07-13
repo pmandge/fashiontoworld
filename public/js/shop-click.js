@@ -120,15 +120,12 @@
       window.gtag('event', 'shop_now_click', payload);
     }
 
-    // --- Pinterest conversion ------------------------------------------------
-    // Lets the campaign optimise for people who reach a store, not just clickers.
-    if (typeof window.pintrk === 'function') {
-      window.pintrk('track', 'lead', {
-        lead_type: 'shop_now_click',
-        product_category: payload.item_brand || undefined,
-        product_name: payload.item_name || undefined
-      });
-    }
+    // --- Pinterest ------------------------------------------------------------
+    // DELIBERATELY NOT FIRED HERE. public/js/pin-events.js already sends the
+    // pintrk 'lead' conversion on outbound clicks. Firing it here too would
+    // double-count every store click in Pinterest and corrupt any campaign
+    // optimised against that conversion. pin-events.js owns Pinterest;
+    // this file owns GA4. Keep it that way.
 
     // --- Clarity -------------------------------------------------------------
     if (typeof window.clarity === 'function') {
