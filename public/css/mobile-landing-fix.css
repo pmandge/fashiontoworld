@@ -1,0 +1,80 @@
+/* ============================================================
+   MOBILE LANDING FIX  —  added 23 July 2026
+   ------------------------------------------------------------
+   PROBLEM (measured on live site):
+     On a 390px phone the first product sat 991px down the page.
+     Visitors from Pinterest saw only a hero + wrapped filter
+     chips, never a product, and left after ~2 seconds.
+     Clarity: 18.6% scroll depth, 2s active time, 92% bounce.
+
+   FIX: shrink the hero and put the filter chips on one
+     horizontally-scrollable row, so products appear on the
+     first screen.
+
+   MEASURED RESULT: first product moves from 800px -> 333px
+     (hero 590px -> 164px, chips 231px -> 61px).
+
+   Applies only to screens <= 860px. Desktop is untouched.
+   ============================================================ */
+
+@media (max-width: 860px) {
+
+  /* ---- 1. Compact hero ------------------------------------ */
+  .cat-hero {
+    padding: calc(var(--nav-h) + 12px) 0 0 !important;
+  }
+  .cat-hero-inner {
+    padding: 0 20px !important;
+  }
+  .cat-hero-text {
+    padding-bottom: 14px !important;
+  }
+  .cat-hero-text h1 {
+    font-size: 30px !important;
+    line-height: 1.1 !important;
+    margin: 0 !important;
+  }
+  .cat-hero-text .section-eyebrow {
+    font-size: 10px !important;
+    letter-spacing: .18em !important;
+    margin-bottom: 4px !important;
+  }
+  /* the description and Shop Now button are redundant on mobile:
+     the products below ARE the call to action */
+  .cat-hero-text p {
+    display: none !important;
+  }
+  .cat-hero-text .btn-primary {
+    display: none !important;
+  }
+  .cat-hero-visual {
+    display: none !important;
+  }
+
+  /* ---- 2. Filter chips: one scrollable row ---------------- */
+  .subcats {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 10px 20px !important;
+    gap: 8px !important;
+  }
+  .subcats::-webkit-scrollbar {
+    display: none;
+  }
+  .subcat-btn {
+    flex: 0 0 auto !important;
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+  }
+
+  /* ---- 3. Tighten space above the product grid ------------ */
+  .shop-layout {
+    padding: 12px 0 !important;
+  }
+  .products-toolbar {
+    margin-bottom: 12px !important;
+  }
+}
