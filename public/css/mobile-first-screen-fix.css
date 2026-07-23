@@ -1,0 +1,130 @@
+/* ============================================================
+   MOBILE FIRST-SCREEN FIX          added 23 July 2026
+   ------------------------------------------------------------
+   EVIDENCE (real iPhone screenshot of /pages/women.html):
+     On arrival a visitor sees, top to bottom:
+       nav  ->  full-bleed hero photo (~half the screen)
+             ->  cookie consent card (~bottom fifth)
+     ZERO products are visible without scrolling.
+
+     Matching data, 15-23 Jul:
+       Clarity : 18.6% scroll depth, 2s active time,
+                 1.07 pages/session, 83% MobileSafari
+       GA4     : 92.4% bounce on this page, 4s engagement
+       Pinterest: 125 visitors -> 0 shop_now_click
+
+   WHAT THIS DOES
+     1. Shrinks the category hero banner so products appear
+        on the first screen (keeps the image + overlay design,
+        just makes it a banner rather than a full page).
+     2. Turns the cookie consent card into a slim bottom bar
+        so it stops covering the content.
+     3. Collapses the wrapped filter chips into one
+        swipeable row.
+
+   WHAT IT DOES NOT DO
+     * It does not remove the hero image or the overlay text —
+       that design is kept, only made smaller.
+     * It does not remove or auto-dismiss cookie consent —
+       the choice remains fully available.
+     * It does not touch `.shop-layout` padding-top, which the
+       existing <=860px block uses to fix the sidebar gap.
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+  /* ---- 1. Category hero: full-screen -> compact banner ---- */
+  .cat-hero-inner {
+    min-height: 190px !important;   /* was 300px + text padding */
+  }
+  .cat-hero-text {
+    padding: 46px 20px 18px !important;   /* was 90px 22px 30px */
+  }
+  .cat-hero-text h1 {
+    font-size: 34px !important;
+    line-height: 1.06 !important;
+  }
+  /* the sub-line and button are redundant on mobile: the
+     products directly below ARE the call to action */
+  .cat-hero-text p {
+    display: none !important;
+  }
+  .cat-hero-text .btn-primary {
+    display: none !important;
+  }
+
+  /* ---- 2. Filter chips: one swipeable row ---------------- */
+  .subcats {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding: 12px 20px !important;   /* overrides inline padding-top:40px */
+    gap: 8px !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .subcats::-webkit-scrollbar { display: none; }
+
+  .subcat-btn {
+    flex: 0 0 auto !important;
+    scroll-snap-align: start;
+    padding: 9px 16px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+  }
+
+  .products-toolbar { margin-bottom: 10px !important; }
+
+  /* ---- 3. Cookie consent: big card -> slim bottom bar ----
+     Consent is still fully offered; it simply stops occupying
+     a fifth of the first screen. Selectors are deliberately
+     broad because the markup is injected by cookie-consent.js. */
+  #cookieConsent,
+  .cookie-consent,
+  .cookie-banner,
+  [class*="cookie-consent"],
+  [id*="cookie-consent"] {
+    left: 8px !important;
+    right: 8px !important;
+    bottom: 8px !important;
+    width: auto !important;
+    max-width: none !important;
+    padding: 12px 14px !important;
+    border-radius: 14px !important;
+    font-size: 12.5px !important;
+    line-height: 1.35 !important;
+    max-height: 38vh !important;
+    overflow-y: auto !important;
+    box-shadow: 0 8px 28px rgba(0,0,0,.18) !important;
+  }
+  /* tighten the heading + body text inside it */
+  #cookieConsent h2, #cookieConsent h3, #cookieConsent strong,
+  .cookie-consent h2, .cookie-consent h3, .cookie-consent strong,
+  [class*="cookie-consent"] h2,
+  [class*="cookie-consent"] h3 {
+    font-size: 15px !important;
+    margin: 0 0 4px !important;
+  }
+  #cookieConsent p,
+  .cookie-consent p,
+  [class*="cookie-consent"] p {
+    font-size: 12.5px !important;
+    margin: 0 0 8px !important;
+  }
+  /* buttons on one compact row */
+  #cookieConsent button,
+  .cookie-consent button,
+  [class*="cookie-consent"] button {
+    padding: 8px 14px !important;
+    font-size: 12.5px !important;
+  }
+}
+
+/* Small phones — trim a little further */
+@media (max-width: 420px) {
+  .cat-hero-inner { min-height: 170px !important; }
+  .cat-hero-text  { padding: 40px 18px 16px !important; }
+  .cat-hero-text h1 { font-size: 31px !important; }
+}
