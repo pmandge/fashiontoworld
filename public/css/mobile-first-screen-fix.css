@@ -1,57 +1,55 @@
 /* ============================================================
    MOBILE FIRST-SCREEN FIX          added 23 July 2026
    ------------------------------------------------------------
-   EVIDENCE (real iPhone screenshot of /pages/women.html):
-     On arrival a visitor sees, top to bottom:
-       nav  ->  full-bleed hero photo (~half the screen)
-             ->  cookie consent card (~bottom fifth)
-     ZERO products are visible without scrolling.
+   EVIDENCE — real iPhone screenshot of /pages/women.html.
+   On arrival a visitor sees, top to bottom:
+       nav
+       full-bleed hero photo  (~half the screen)
+       cookie consent card    (~bottom fifth)
+   ZERO products visible without scrolling.
 
-     Matching data, 15-23 Jul:
-       Clarity : 18.6% scroll depth, 2s active time,
-                 1.07 pages/session, 83% MobileSafari
-       GA4     : 92.4% bounce on this page, 4s engagement
-       Pinterest: 125 visitors -> 0 shop_now_click
+   Matching data, 15-23 July:
+       Clarity  : 18.6% scroll depth, 2s active time,
+                  1.07 pages/session, 83% MobileSafari
+       GA4      : 92.4% bounce on this page, 4s engagement
+       Pinterest: 125 visitors -> 0 shop_now_click, $44.86 spent
 
    WHAT THIS DOES
-     1. Shrinks the category hero banner so products appear
-        on the first screen (keeps the image + overlay design,
-        just makes it a banner rather than a full page).
-     2. Turns the cookie consent card into a slim bottom bar
-        so it stops covering the content.
-     3. Collapses the wrapped filter chips into one
-        swipeable row.
+     1. Category hero: full screen -> compact banner
+     2. Filter chips: wrapped rows -> one swipeable row
+     3. Cookie consent: large card -> slim bottom bar
 
-   WHAT IT DOES NOT DO
-     * It does not remove the hero image or the overlay text —
-       that design is kept, only made smaller.
-     * It does not remove or auto-dismiss cookie consent —
-       the choice remains fully available.
-     * It does not touch `.shop-layout` padding-top, which the
+   WHAT IT DELIBERATELY DOES NOT DO
+     * Does not remove the hero image or its overlay design —
+       the <=768px block above builds that intentionally.
+       This only makes it smaller.
+     * Does not remove, bypass or auto-dismiss cookie consent.
+       Every option (Manage / Reject all / Accept all) stays
+       fully available — it just stops covering the content.
+     * Does not touch `.shop-layout` padding-top, which the
        existing <=860px block uses to fix the sidebar gap.
+
+   Scoped to <=768px. Desktop and tablet unaffected.
    ============================================================ */
 
 @media (max-width: 768px) {
 
-  /* ---- 1. Category hero: full-screen -> compact banner ---- */
+  /* ---- 1. Category hero: compact banner ------------------ */
   .cat-hero-inner {
-    min-height: 190px !important;   /* was 300px + text padding */
+    min-height: 190px !important;          /* was 300px */
   }
   .cat-hero-text {
-    padding: 46px 20px 18px !important;   /* was 90px 22px 30px */
+    padding: 46px 20px 18px !important;    /* was 90px 22px 30px */
   }
   .cat-hero-text h1 {
     font-size: 34px !important;
     line-height: 1.06 !important;
   }
-  /* the sub-line and button are redundant on mobile: the
-     products directly below ARE the call to action */
-  .cat-hero-text p {
-    display: none !important;
-  }
-  .cat-hero-text .btn-primary {
-    display: none !important;
-  }
+  /* On mobile the products below ARE the call to action, so the
+     descriptive line and SHOP NOW button only push them down. */
+  .cat-hero-text p            { display: none !important; }
+  .cat-hero-text .btn-primary { display: none !important; }
+
 
   /* ---- 2. Filter chips: one swipeable row ---------------- */
   .subcats {
@@ -77,54 +75,63 @@
 
   .products-toolbar { margin-bottom: 10px !important; }
 
-  /* ---- 3. Cookie consent: big card -> slim bottom bar ----
-     Consent is still fully offered; it simply stops occupying
-     a fifth of the first screen. Selectors are deliberately
-     broad because the markup is injected by cookie-consent.js. */
-  #cookieConsent,
-  .cookie-consent,
-  .cookie-banner,
-  [class*="cookie-consent"],
-  [id*="cookie-consent"] {
+
+  /* ---- 3. Cookie consent: slim bottom bar ----------------
+     Real markup (from cookie-consent.js):
+       .ftw-cc            outer, position:fixed
+         .ftw-cc-inner    content wrapper
+           .ftw-cc-actions  button row
+             .ftw-cc-btn    Manage / Reject all / Accept all
+           .ftw-cc-prefs    expandable preferences panel      */
+  .ftw-cc {
     left: 8px !important;
     right: 8px !important;
     bottom: 8px !important;
     width: auto !important;
     max-width: none !important;
+  }
+  .ftw-cc-inner {
     padding: 12px 14px !important;
     border-radius: 14px !important;
-    font-size: 12.5px !important;
-    line-height: 1.35 !important;
-    max-height: 38vh !important;
+    max-height: 40vh !important;
     overflow-y: auto !important;
     box-shadow: 0 8px 28px rgba(0,0,0,.18) !important;
   }
-  /* tighten the heading + body text inside it */
-  #cookieConsent h2, #cookieConsent h3, #cookieConsent strong,
-  .cookie-consent h2, .cookie-consent h3, .cookie-consent strong,
-  [class*="cookie-consent"] h2,
-  [class*="cookie-consent"] h3 {
+  .ftw-cc-inner h1,
+  .ftw-cc-inner h2,
+  .ftw-cc-inner h3,
+  .ftw-cc-inner strong {
     font-size: 15px !important;
+    line-height: 1.25 !important;
     margin: 0 0 4px !important;
   }
-  #cookieConsent p,
-  .cookie-consent p,
-  [class*="cookie-consent"] p {
+  .ftw-cc-inner p {
     font-size: 12.5px !important;
+    line-height: 1.35 !important;
     margin: 0 0 8px !important;
   }
-  /* buttons on one compact row */
-  #cookieConsent button,
-  .cookie-consent button,
-  [class*="cookie-consent"] button {
-    padding: 8px 14px !important;
+  .ftw-cc-actions {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+  }
+  .ftw-cc-btn {
+    flex: 1 1 auto !important;
+    padding: 9px 10px !important;
     font-size: 12.5px !important;
+    white-space: nowrap !important;
+  }
+  .ftw-cc-prefs {
+    max-height: 26vh !important;
+    overflow-y: auto !important;
   }
 }
 
-/* Small phones — trim a little further */
+
+/* ---- Small phones: trim a little further ----------------- */
 @media (max-width: 420px) {
-  .cat-hero-inner { min-height: 170px !important; }
-  .cat-hero-text  { padding: 40px 18px 16px !important; }
+  .cat-hero-inner   { min-height: 170px !important; }
+  .cat-hero-text    { padding: 40px 18px 16px !important; }
   .cat-hero-text h1 { font-size: 31px !important; }
+  .ftw-cc-btn       { padding: 9px 8px !important; font-size: 12px !important; }
 }
