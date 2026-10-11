@@ -1,5 +1,6 @@
-/* home-fixups.js — hide broken-image cards + dedupe carousels (2026-10-11) */
+/* home-fixups.js — hide broken-image cards + dedupe carousels (2026-10-11 v2) */
 (function(){
+  var t;
   function clean(){
     var shelves=document.querySelectorAll('.prod-grid,.deal-grid');
     for(var s=0;s<shelves.length;s++){
@@ -26,6 +27,11 @@
       })(un[j]);
     }
   }
-  var n=0, iv=setInterval(function(){ n++; try{clean();}catch(e){} if(n>=30) clearInterval(iv); }, 400);
-  if(document.readyState!=='loading') clean(); else document.addEventListener('DOMContentLoaded', clean);
+  function schedule(){ clearTimeout(t); t=setTimeout(clean, 250); }
+  function start(){
+    clean();
+    try{ new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true}); }catch(e){}
+    setTimeout(clean,1500); setTimeout(clean,4000); setTimeout(clean,9000);
+  }
+  if(document.readyState!=='loading') start(); else document.addEventListener('DOMContentLoaded', start);
 })();
