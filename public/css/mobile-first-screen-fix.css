@@ -135,3 +135,11 @@
   .cat-hero-text h1 { font-size: 31px !important; }
   .ftw-cc-btn       { padding: 9px 8px !important; font-size: 12px !important; }
 }
+
+/* Mobile: product/store shelves as horizontal swipe carousels (2026-10-11) */
+@media (max-width:768px){
+  .prod-grid,.deal-grid,.rail{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden;grid-template-columns:none!important;gap:11px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:8px}
+  .prod-grid::-webkit-scrollbar,.deal-grid::-webkit-scrollbar,.rail::-webkit-scrollbar{display:none}
+  .prod-grid>.pcard,.deal-grid>.pcard{flex:0 0 62%!important;max-width:62%!important;scroll-snap-align:start}
+  .rail>*{flex:0 0 auto!important;scroll-snap-align:start}
+}
