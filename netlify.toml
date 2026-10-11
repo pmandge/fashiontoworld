@@ -1,34 +1,37 @@
 # ============================================================
 # FashionToWorld — Netlify configuration
 # ============================================================
-# Deploy: drag this whole folder onto app.netlify.com/drop,
-# or connect a GitHub repo. Then add the 3 ADMITAD_* env vars
-# under Site settings → Environment variables.
-# ============================================================
 [build]
   publish = "."
   functions = "netlify/functions"
 
-# Serve the dynamic, self-updating sitemap from the backend at the
-# canonical URL (fashiontoworld.co/sitemap.xml). force=true so it wins
-# even though a static sitemap.xml file may exist in the repo.
 [[redirects]]
   from = "/sitemap.xml"
   to = "https://api.fashiontoworld.co/api/sitemap.xml"
   status = 200
   force = true
 
-# Send all /api/* calls to the serverless function
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
   status = 200
 
-# Cache static assets hard for speed (global CDN)
+# Long-cache genuinely static assets (images, fonts) for CDN speed
 [[headers]]
   for = "/public/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# BUT always revalidate CSS/JS so edits reach every visitor on next load
+[[headers]]
+  for = "/public/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/public/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
   for = "/*.html"
