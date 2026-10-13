@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fashion Deals & Coupons — FashionToWorld</title>
-<meta name="description" content="The best fashion deals, promo codes, and discount vouchers from top brands. Updated daily.">
+<title>Fashion Deals — Up to 80% Off on Products | Fashion to World</title>
+<meta name="description" content="Live discounts on real products from worldwide-shipping fashion stores — biggest markdowns first, updated daily. For promo codes, see our Coupons page.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" media="print" onload="this.media='all'">
@@ -66,9 +66,10 @@
   opacity: 0.6;
   font-weight: 400;
 }
+/* Product grid: sized for product cards (narrower than the old coupon cards). */
 .deals-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
 }
 .deal-card {
@@ -281,8 +282,8 @@
 <section class="page-hero">
   <div class="container">
     <p class="section-eyebrow" style="justify-content:center;display:flex">Updated Daily</p>
-    <h1>Fashion Deals &<br><em>Exclusive Codes</em></h1>
-    <p>Verified promo codes and hand-picked sale deals from worldwide-shipping stores — updated daily.</p>
+    <h1>Fashion Deals &<br><em>Big Discounts</em></h1>
+    <p>Hand-picked discounts on real products from worldwide-shipping stores — biggest markdowns first, updated daily. Looking for promo codes? See our <a href="coupons.html" style="color:var(--gold);text-decoration:underline">Coupons</a> page.</p>
   </div>
 </section>
 
@@ -293,7 +294,7 @@
     <div class="deals-stats">
       <div class="deals-stat">
         <div class="deals-stat-num" id="stat-deals">—</div>
-        <div class="deals-stat-label">Active Deals</div>
+        <div class="deals-stat-label">On Sale Now</div>
       </div>
       <div class="deals-stat">
         <div class="deals-stat-num" id="stat-brands">—</div>
@@ -309,10 +310,10 @@
       </div>
     </div>
 
-    <!-- Filters (rendered dynamically; only tabs with results appear) -->
+    <!-- Category filters (rendered dynamically) -->
     <div class="deals-filters" id="dealsFilters"></div>
 
-    <!-- Deals Grid -->
+    <!-- Product Grid -->
     <div class="deals-grid" id="dealsGrid">
       <!-- Populated by API -->
     </div>
@@ -323,7 +324,7 @@
 <footer class="footer">
   <div class="container">
     <div class="footer-bottom">
-      <p>© 2026 FashionToWorld. Affiliate Disclosure: We earn a commission on qualifying purchases. Deals verified daily but may expire — always check the brand's site for current pricing.</p>
+      <p>© 2026 FashionToWorld. Affiliate Disclosure: We earn a commission on qualifying purchases. Prices and discounts are pulled from partner stores and may change — always check the brand's site for current pricing.</p>
     </div>
   </div>
 </footer>
@@ -331,218 +332,74 @@
 <script src="../public/js/api-config.js"></script>
 <script src="../public/js/admitad-api.js"></script>
 <script>
-/* ---- Coupons load once, all filtering happens client-side ---- */
-const API_LIMIT = 60;
-let ALL_COUPONS = [];
-let activeFilter = 'all';
-
-/* Tier maps derived from advertiser name (substring, case-insensitive). */
-const LUXURY_STORES = ['luxury closet', 'italo', 'silverbene', 'jewel'];
-const HIGHSTREET_STORES = ['glasseslit', 'noracora', 'chicme', 'wayrates', 'justfashionnow', 'stylewe', 'stylevana', 'symbol', 'metro'];
-
-const FILTERS = [
-  { key: 'all',        label: 'All Deals' },
-  { key: 'code',       label: 'Promo Codes' },
-  { key: 'sale',       label: 'Sales' },
-  { key: 'freeship',   label: 'Free Shipping' },
-  { key: 'luxury',     label: 'Luxury' },
-  { key: 'highstreet', label: 'High Street' },
+/* ---- Deals = live on-sale PRODUCTS (distinct from the Coupons page) ---- */
+const PRODUCT_LIMIT = 48;
+let activeCat = 'all';
+const CATS = [
+  { key:'all', label:'All' }, { key:'women', label:'Women' }, { key:'men', label:'Men' },
+  { key:'shoes', label:'Shoes' }, { key:'bags', label:'Bags' }, { key:'jewellery', label:'Jewellery' },
+  { key:'beauty', label:'Beauty' }, { key:'accessories', label:'Accessories' },
 ];
+let PRODUCTS = [];
 
-/* A coupon is a real "code" only if it has a usable promocode.
-   Admitad sends "Not required" for code-less deals — treat those as sales. */
-function isCode(c) {
-  const code = (c.promocode || '').trim().toLowerCase();
-  return !!code && code !== 'not required' && code !== 'no code';
-}
-function hasFreeShip(c) {
-  const t = ((c.name || '') + ' ' + (c.description || '')).toLowerCase();
-  return t.includes('free ship') || t.includes('free deliver');
-}
-function inTier(c, list) {
-  const n = (c.advertiser_name || '').toLowerCase();
-  return list.some(s => n.includes(s));
-}
-function matchesFilter(c, f) {
-  switch (f) {
-    case 'all':        return true;
-    case 'code':       return isCode(c);
-    case 'sale':       return !isCode(c);
-    case 'freeship':   return hasFreeShip(c);
-    case 'luxury':     return inTier(c, LUXURY_STORES);
-    case 'highstreet': return inTier(c, HIGHSTREET_STORES);
-    default:           return true;
-  }
-}
-
-async function loadDeals() {
+async function loadDeals(){
   const grid = document.getElementById('dealsGrid');
-  grid.innerHTML = '<div class="loading-skeleton" style="height:240px"></div>'.repeat(6);
+  grid.innerHTML = '<div class="loading-skeleton" style="height:300px"></div>'.repeat(8);
   let data = null;
   try {
-    data = await AdmitadAPI.getCoupons({ limit: API_LIMIT });
-  } catch (e) {
-    console.error('[deals] load failed', e);
-  }
-  ALL_COUPONS = (data && Array.isArray(data.coupons)) ? data.coupons : [];
+    data = await AdmitadAPI.getProducts({
+      category: activeCat === 'all' ? '' : activeCat,
+      sale: 'true', markdown: true, sort: 'discount', limit: PRODUCT_LIMIT, minprice: 5
+    });
+  } catch (e) { console.error('[deals] load failed', e); }
+  let list = (data && Array.isArray(data.products)) ? data.products : [];
+  // keep only genuinely discounted items with a real outbound link + image
+  list = list.filter(p => p.image_url
+    && /^https?:/i.test(p.affiliate_url || p.url || '')
+    && p.price_old && Number(p.price_old) > Number(p.price));
+  PRODUCTS = list;
   renderStats();
   renderFilters();
   renderGrid();
 }
 
-function renderStats() {
-  document.getElementById('stat-deals').textContent = ALL_COUPONS.length || '—';
-
-  const stores = new Set(ALL_COUPONS.map(c => c.advertiser_name).filter(Boolean));
-  const sb = document.getElementById('stat-brands');
-  if (sb) sb.textContent = stores.size || '—';
-
+function renderStats(){
+  const el = id => document.getElementById(id);
+  if (el('stat-deals')) el('stat-deals').textContent = PRODUCTS.length || '—';
+  const stores = new Set(PRODUCTS.map(p => p.advertiser_name || p.brand).filter(Boolean));
+  if (el('stat-brands')) el('stat-brands').textContent = stores.size || '—';
   let max = 0;
-  ALL_COUPONS.forEach(c => {
-    const m = (c.discount || '').match(/(\d+)\s*%/);
-    if (m) max = Math.max(max, parseInt(m[1], 10));
-  });
-  const sv = document.getElementById('stat-savings');
-  if (sv) sv.textContent = max ? max + '%' : '—';
-}
-
-function renderFilters() {
-  const wrap = document.getElementById('dealsFilters');
-  const tabs = FILTERS
-    .map(f => ({ ...f, count: ALL_COUPONS.filter(c => matchesFilter(c, f.key)).length }))
-    .filter(f => f.key === 'all' || f.count > 0);
-
-  // If the active filter no longer has results, fall back to All.
-  if (!tabs.some(t => t.key === activeFilter)) activeFilter = 'all';
-
-  wrap.innerHTML = tabs.map(f => `
-    <button class="filter-btn${f.key === activeFilter ? ' active' : ''}" onclick="setFilter('${f.key}')">
-      ${f.label}${f.key !== 'all' ? `<span class="filter-count">${f.count}</span>` : ''}
-    </button>`).join('');
-}
-
-function setFilter(key) {
-  activeFilter = key;
-  renderFilters();
-  renderGrid();
-}
-
-/* "20%" -> "20% OFF", "20 $" -> "$20 OFF", leaves anything unexpected alone. */
-function formatDiscount(d) {
-  if (!d) return '';
-  d = d.trim();
-  if (/^\d+\s*%$/.test(d)) return d.replace(/\s+/g, '') + ' OFF';
-  if (/^\d+\s*\$$/.test(d)) return '$' + d.replace(/[\s$]/g, '') + ' OFF';
-  return d;
-}
-
-/* Feeds pour raw T&C text with ○ / ● / • bullet artifacts and hard line
-   breaks into the description. Strip those so the 3-line clamp reads cleanly. */
-function cleanDesc(s) {
-  if (!s) return '';
-  return s
-    .replace(/[○●◦•▪‣·]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-/* Store logos: try the feed's own logo first, then Clearbit by domain,
-   then fall back to a lettermark. Domains are matched by substring so
-   "Alibaba WW" / "The Luxury Closet WW" etc. all resolve. */
-const STORE_DOMAINS = [
-  ['alibaba', 'alibaba.com'], ['aliexpress', 'aliexpress.com'], ['chicme', 'chicme.com'],
-  ['drippy', 'drippycustom.com'], ['glasseslit', 'glasseslit.com'], ['italo', 'italojewelry.com'],
-  ['justfashionnow', 'justfashionnow.com'], ['noracora', 'noracora.com'], ['stylevana', 'stylevana.com'],
-  ['stylewe', 'stylewe.com'], ['luxury closet', 'theluxurycloset.com'], ['wayrates', 'wayrates.com'],
-  ['symbol', 'symbolfashion.com'], ['metro', 'metrobrazil.com'], ['silverbene', 'silverbene.com'],
-];
-function storeDomain(name) {
-  const n = (name || '').toLowerCase();
-  const hit = STORE_DOMAINS.find(([k]) => n.includes(k));
-  return hit ? hit[1] : '';
-}
-function logoMarkup(c) {
-  const initial = (c.advertiser_name || '?').trim().charAt(0).toUpperCase();
-  const cands = [];
-  if (c.logo) cands.push(c.logo);
-  const dom = storeDomain(c.advertiser_name);
-  if (dom) cands.push('https://logo.clearbit.com/' + dom);
-  if (!cands.length) return initial;
-  const rest = JSON.stringify(cands.slice(1)).replace(/"/g, '&quot;');
-  return `<img src="${cands[0]}" alt="${escAttr(c.advertiser_name)}" class="deal-logo-img" loading="lazy" data-rest="${rest}" data-initial="${initial}" onerror="nextLogo(this)">`;
-}
-function nextLogo(img) {
-  try {
-    const rest = JSON.parse((img.getAttribute('data-rest') || '[]').replace(/&quot;/g, '"'));
-    if (rest.length) {
-      img.src = rest[0];
-      img.setAttribute('data-rest', JSON.stringify(rest.slice(1)).replace(/"/g, '&quot;'));
-    } else {
-      img.parentNode.textContent = img.getAttribute('data-initial') || '?';
+  PRODUCTS.forEach(p => {
+    if (p.price_old && p.price_old > p.price) {
+      const d = Math.round((1 - p.price / p.price_old) * 100);
+      if (d > max) max = d;
     }
-  } catch (e) {
-    img.parentNode.textContent = img.getAttribute('data-initial') || '?';
-  }
+  });
+  if (el('stat-savings')) el('stat-savings').textContent = max ? max + '%' : '—';
 }
 
-function escAttr(s) { return (s || '').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+function renderFilters(){
+  const wrap = document.getElementById('dealsFilters');
+  if (!wrap) return;
+  wrap.innerHTML = CATS.map(f =>
+    `<button class="filter-btn${f.key === activeCat ? ' active' : ''}" onclick="setCat('${f.key}')">${f.label}</button>`
+  ).join('');
+}
 
-function renderGrid() {
+function setCat(key){
+  if (key === activeCat) return;
+  activeCat = key;
+  renderFilters();
+  loadDeals();
+}
+
+function renderGrid(){
   const grid = document.getElementById('dealsGrid');
-  const list = ALL_COUPONS.filter(c => matchesFilter(c, activeFilter));
-
-  if (!list.length) {
-    grid.innerHTML = '<div class="deals-empty">No deals in this category right now — we refresh daily, so check back soon.</div>';
+  if (!PRODUCTS.length) {
+    grid.innerHTML = '<div class="deals-empty">No discounted products in this category right now — we refresh daily, so check back soon.</div>';
     return;
   }
-
-  grid.innerHTML = list.map(c => {
-    const code = isCode(c);
-    const title = (c.name || '').length > 90 ? c.name.slice(0, 88) + '…' : (c.name || 'Special Offer');
-    const logoHtml = logoMarkup(c);
-    const disc = formatDiscount(c.discount);
-
-    return `
-    <div class="deal-card">
-      <div class="deal-card-head">
-        <div class="deal-store-row">
-          <span class="deal-logo">${logoHtml}</span>
-          <span class="deal-store">${c.advertiser_name || ''}</span>
-        </div>
-        <div class="deal-head-tags">
-          ${disc ? `<span class="deal-discount">${disc}</span>` : ''}
-          <span class="deal-type ${code ? 'code' : 'sale'}">${code ? 'Code' : 'Deal'}</span>
-        </div>
-      </div>
-      <h3 class="deal-title">${title}</h3>
-      <p class="deal-desc">${cleanDesc(c.description) || 'Limited-time offer — shop and save.'}</p>
-      <div class="deal-foot">
-        ${c.date_end ? `<p class="deal-expires">Expires <span>${formatDate(c.date_end)}</span></p>` : ''}
-        ${code
-          ? `<div class="deal-code-box" onclick="copyCode('${escAttr(c.promocode)}', this)">
-               <span class="deal-code-text">${c.promocode}</span>
-               <button class="deal-copy-btn">Copy</button>
-             </div>`
-          : `<p class="no-code-note">✓ No code needed — discount applied at checkout</p>`}
-        <a href="${c.url || '#'}" class="deal-action" target="_blank" rel="noopener sponsored">Get Deal</a>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function copyCode(code, el) {
-  navigator.clipboard.writeText(code).then(() => {
-    const btn = el.querySelector('.deal-copy-btn');
-    btn.textContent = 'Copied!';
-    btn.style.color = '#27ae60';
-    setTimeout(() => { btn.textContent = 'Copy'; btn.style.color = ''; }, 2000);
-  });
-}
-
-function formatDate(d) {
-  const dt = new Date((d || '').replace(' ', 'T'));
-  if (isNaN(dt.getTime())) return d;
-  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  grid.innerHTML = PRODUCTS.map((p, i) => AdmitadAPI.renderProductCard(p, i)).join('');
 }
 
 loadDeals();
