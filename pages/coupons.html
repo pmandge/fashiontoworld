@@ -76,6 +76,20 @@
 }
 .cp-search button:hover { background: var(--gold, #c9a84c); color: #0a0a0a; }
 
+/* filter tabs */
+.cp-filters {
+  max-width: 1120px; margin: 0 auto; padding: 6px 28px 0;
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+}
+.cp-filter-btn {
+  padding: 8px 18px; border: 1.5px solid #e3ddcd; background: #fff; border-radius: 40px;
+  font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: 12.5px; letter-spacing: 0.04em;
+  text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 7px; color: var(--ink, #1a1410);
+}
+.cp-filter-btn:hover, .cp-filter-btn.active { background: var(--black, #0a0a0a); color: #fff; border-color: var(--black, #0a0a0a); }
+.cp-filter-btn .cnt { font-size: 11px; opacity: 0.55; font-weight: 400; }
+
 /* grid + cards */
 .cp-wrap { max-width: 1120px; margin: 0 auto; padding: 16px 28px 80px; }
 .cp-meta { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: 14px; color: var(--text-muted, #6b6b6b); margin-bottom: 20px; text-align: center; }
@@ -167,6 +181,7 @@
       <li><a href='/pages/accessories'>Accessories</a></li>
       <li><a href='/pages/brands'>Brands</a></li>
       <li><a href='/pages/deals'>Deals</a></li>
+      <li><a href='/pages/coupons'>Coupons</a></li>
     </ul>
     <div class="nav-spacer"></div>
     <div class="nav-actions">
@@ -195,6 +210,8 @@
   </div>
 </section>
 
+<div class="cp-filters" id="cpFilters"></div>
+
 <section class="cp-wrap">
   <div class="cp-meta" id="cpMeta">Loading coupons…</div>
   <div class="cp-grid" id="cpGrid"></div>
@@ -212,12 +229,47 @@
   var moreBtn = document.getElementById('cpMore');
   var totalEl = document.getElementById('cpTotal');
   var searchEl = document.getElementById('cpSearch');
+  var filtersEl = document.getElementById('cpFilters');
   var PER = 18;
   var ALL = [];
   var filtered = [];
   var shown = 0;
+  var activeFilter = 'all';
+
+  /* Store-tier maps (substring match on advertiser name, case-insensitive). */
+  var LUXURY_STORES = ['luxury closet','italo','silverbene','jewel','armani','saint laurent','bobbi brown','yves saint'];
+  var HIGHSTREET_STORES = ['glasseslit','noracora','chicme','wayrates','justfashionnow','stylewe','stylevana','symbol','metro','shein','romwe','spreadshirt'];
+
+  var FILTERS = [
+    { key:'all',        label:'All' },
+    { key:'code',       label:'Promo Codes' },
+    { key:'sale',       label:'Sales' },
+    { key:'freeship',   label:'Free Shipping' },
+    { key:'beauty',     label:'Beauty' },
+    { key:'luxury',     label:'Luxury' },
+    { key:'highstreet', label:'High Street' },
+  ];
 
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];});}
+
+  /* --- filter helpers --- */
+  function isCode(c){ var code=(c.promocode||'').trim().toLowerCase(); return !!code && code!=='not required' && code!=='no code'; }
+  function hasFreeShip(c){ var t=((c.name||'')+' '+(c.description||'')).toLowerCase(); return t.indexOf('free ship')>-1 || t.indexOf('free deliver')>-1; }
+  function inTier(c,list){ var n=(c.advertiser_name||'').toLowerCase(); return list.some(function(s){return n.indexOf(s)>-1;}); }
+  function isBeauty(c){ var t=((c.advertiser_name||'')+' '+(c.name||'')).toLowerCase(); return /beauty|cosmet|makeup|skincare|fragrance|perfume/.test(t); }
+  function matchesFilter(c,f){
+    switch(f){
+      case 'all':        return true;
+      case 'code':       return isCode(c);
+      case 'sale':       return !isCode(c);
+      case 'freeship':   return hasFreeShip(c);
+      case 'beauty':     return isBeauty(c);
+      case 'luxury':     return inTier(c,LUXURY_STORES);
+      case 'highstreet': return inTier(c,HIGHSTREET_STORES);
+      default:           return true;
+    }
+  }
+  function maxOff(list){ var m=0; list.forEach(function(c){ var x=(c.discount||'').match(/(\d+)\s*%/); if(x) m=Math.max(m,parseInt(x[1],10)); }); return m; }
 
   function storeDomain(name) {
     var slug = String(name || '').toLowerCase().replace(/\bww\b/g,'').replace(/&/g,'and').replace(/[^a-z0-9]+/g,'');
@@ -249,7 +301,7 @@
     var expiry = fmtExpiry(c.date_end);
     var code = (c.promocode || '').trim();
     var go = c.url || '#';
-    var codeBlock = code
+    var codeBlock = (code && code.toLowerCase() !== 'not required')
       ? '<div class="cp-code" data-code="' + esc(code) + '" onclick="cpCopy(this)"><span>' + esc(code) + '</span><span class="cp-copy">Copy</span></div>'
       : '<div class="cp-nocode">No code needed</div>';
     return '<div class="cp-card">'
@@ -277,28 +329,46 @@
     }
   };
 
+  function renderFilters() {
+    if (!filtersEl) return;
+    var tabs = FILTERS
+      .map(function (f) { return { k: f.key, l: f.label, c: ALL.filter(function (x) { return matchesFilter(x, f.key); }).length }; })
+      .filter(function (f) { return f.k === 'all' || f.c > 0; });
+    if (!tabs.some(function (t) { return t.k === activeFilter; })) activeFilter = 'all';
+    filtersEl.innerHTML = tabs.map(function (f) {
+      return '<button class="cp-filter-btn' + (f.k === activeFilter ? ' active' : '') + '" onclick="cpFilter(\'' + f.k + '\')">'
+        + f.l + (f.k !== 'all' ? '<span class="cnt">' + f.c + '</span>' : '') + '</button>';
+    }).join('');
+  }
+  window.cpFilter = function (k) { activeFilter = k; renderFilters(); applyFilters(); };
+
+  function currentList() {
+    var q = (searchEl.value || '').trim().toLowerCase();
+    return ALL.filter(function (c) {
+      if (!matchesFilter(c, activeFilter)) return false;
+      if (!q) return true;
+      return (c.advertiser_name || '').toLowerCase().indexOf(q) > -1
+          || (c.promocode || '').toLowerCase().indexOf(q) > -1
+          || (c.name || '').toLowerCase().indexOf(q) > -1;
+    });
+  }
+
   function render(reset) {
     if (reset) { grid.innerHTML = ''; shown = 0; }
     var slice = filtered.slice(shown, shown + PER);
     grid.insertAdjacentHTML('beforeend', slice.map(cardHtml).join(''));
     shown += slice.length;
     if (!filtered.length) {
-      grid.innerHTML = '<div class="cp-empty">No coupons match that. Try another store or code.</div>';
+      grid.innerHTML = '<div class="cp-empty">No coupons match that. Try another store, code, or filter.</div>';
       meta.textContent = ''; moreBtn.style.display = 'none'; return;
     }
-    meta.textContent = 'Showing ' + shown + ' of ' + filtered.length + ' active codes';
+    var stores = new Set(filtered.map(function (c) { return c.advertiser_name; }).filter(Boolean)).size;
+    var mo = maxOff(filtered);
+    meta.textContent = 'Showing ' + shown + ' of ' + filtered.length + ' codes · ' + stores + ' stores' + (mo ? ' · up to ' + mo + '% off' : '');
     moreBtn.style.display = (shown < filtered.length) ? 'block' : 'none';
   }
 
-  function applySearch() {
-    var q = (searchEl.value || '').trim().toLowerCase();
-    filtered = !q ? ALL.slice() : ALL.filter(function (c) {
-      return (c.advertiser_name || '').toLowerCase().indexOf(q) > -1
-          || (c.promocode || '').toLowerCase().indexOf(q) > -1
-          || (c.name || '').toLowerCase().indexOf(q) > -1;
-    });
-    render(true);
-  }
+  function applyFilters() { filtered = currentList(); render(true); }
 
   function showSkeletons() {
     var s = ''; for (var i = 0; i < 9; i++) s += '<div class="cp-skel"></div>';
@@ -306,8 +376,9 @@
   }
 
   moreBtn.addEventListener('click', function () { render(false); });
-  document.getElementById('cpSearchBtn').addEventListener('click', applySearch);
-  searchEl.addEventListener('keyup', function (e) { if (e.key === 'Enter') applySearch(); });
+  document.getElementById('cpSearchBtn').addEventListener('click', applyFilters);
+  searchEl.addEventListener('keyup', function (e) { if (e.key === 'Enter') applyFilters(); });
+  searchEl.addEventListener('input', function () { applyFilters(); });
 
   showSkeletons();
   (function load() {
@@ -316,7 +387,6 @@
     }
     window.AdmitadAPI.getCoupons({ limit: 200 }).then(function (data) {
       var raw = (data && Array.isArray(data.coupons)) ? data.coupons : [];
-      // Keep active, non-expired coupons; sort by soonest expiry then those with codes.
       var now = new Date(); now.setHours(0,0,0,0);
       ALL = raw.filter(function (c) {
         if (c.status && c.status !== 'active') return false;
@@ -325,13 +395,13 @@
       });
       // Codes first, then by expiry soonest.
       ALL.sort(function (a, b) {
-        var ac = a.promocode ? 0 : 1, bc = b.promocode ? 0 : 1;
+        var ac = isCode(a) ? 0 : 1, bc = isCode(b) ? 0 : 1;
         if (ac !== bc) return ac - bc;
         return String(a.date_end || '9999').localeCompare(String(b.date_end || '9999'));
       });
-      filtered = ALL.slice();
       if (totalEl) totalEl.textContent = ALL.length;
-      render(true);
+      renderFilters();
+      applyFilters();
     }).catch(function () {
       grid.innerHTML = '<div class="cp-empty">Could not load coupons. Please refresh.</div>'; meta.textContent = '';
     });
