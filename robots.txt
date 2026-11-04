@@ -5,5 +5,8 @@ Allow: /
 # Utility pages we don't need indexed
 Disallow: /pages/api-status.html
 
+# API endpoints are data, not pages — never crawl them (e.g. /api/store-link)
+Disallow: /api/
+
 # Sitemap location
 Sitemap: https://fashiontoworld.co/sitemap.xml
