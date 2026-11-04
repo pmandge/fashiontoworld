@@ -10,6 +10,12 @@
   # (placeholder) pages, so content stays fresh via scheduled rebuilds.
   command = "node prerender.js"
 
+# On-demand render product pages at /product/<slug>-<id> (SEO + CDN-cached).
+# Fail-safe: redirects to /pages/product.html?id=<id> on any error.
+[[edge_functions]]
+  path = "/product/*"
+  function = "product"
+
 [[redirects]]
   from = "/sitemap.xml"
   to = "https://api.fashiontoworld.co/api/sitemap.xml"

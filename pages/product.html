@@ -119,7 +119,11 @@
   function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function param(n){ return new URLSearchParams(location.search).get(n); }
 
-  var id = param('id');
+  // id comes from ?id= (legacy URL), or from the edge-rendered clean URL
+  // /product/<slug>-<id> via the injected meta tag or the path.
+  var id = param('id')
+    || (document.querySelector('meta[name="ftw:pid"]') || {}).content
+    || (function(){ var m = location.pathname.match(/\/product\/([^/]+)/); return m ? decodeURIComponent(m[1]) : ''; })();
   var content = $('pdpContent');
   if (!id) { content.innerHTML = '<div class="pdp-error">No product specified.</div>'; return; }
 

@@ -8,5 +8,6 @@ Disallow: /pages/api-status.html
 # API endpoints are data, not pages — never crawl them (e.g. /api/store-link)
 Disallow: /api/
 
-# Sitemap location
+# Sitemaps
 Sitemap: https://fashiontoworld.co/sitemap.xml
+Sitemap: https://fashiontoworld.co/sitemap-products.xml
