@@ -33,6 +33,14 @@ jobs:
           if [ -z "$HOOK" ]; then
             echo "::error::NETLIFY_BUILD_HOOK secret is not set"; exit 1
           fi
+          # A copy-paste can leave a trailing newline/space in the secret;
+          # curl rejects any URL with control chars ("Malformed input").
+          # Strip all whitespace, then sanity-check it's an https URL.
+          HOOK="$(printf '%s' "$HOOK" | tr -d '[:space:]')"
+          case "$HOOK" in
+            https://*) : ;;
+            *) echo "::error::NETLIFY_BUILD_HOOK is not an https:// URL after trimming"; exit 1 ;;
+          esac
           code=$(curl -sS -X POST -o /dev/null -w '%{http_code}' "$HOOK")
           echo "Netlify build hook returned HTTP $code"
           case "$code" in
