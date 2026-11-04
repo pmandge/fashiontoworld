@@ -241,6 +241,16 @@
     if (h1) h1.innerHTML = '<em>' + currentBrand.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</em>';
   }
 
+  // --- SEO: keep thin internal search/filter results out of the index -------
+  // Brand views stay indexable (handled above). Query, category, price, sort and
+  // sale views are thin internal search results, so mark them noindex (still
+  // follow the links so products get discovered).
+  if (!currentBrand && hasAnyFilter) {
+    var _rb = document.createElement('meta');
+    _rb.name = 'robots'; _rb.content = 'noindex,follow';
+    document.head.appendChild(_rb);
+  }
+
   // Drive the shared modern filter (sidebar + toolbar + results) with this query
   window.FILTER_CONFIG = { q: currentQuery, advertiser: currentAdvertiser, markdown: currentMarkdown, sort: (currentSort || (hasDiscountView ? 'discount' : '')) };
 
