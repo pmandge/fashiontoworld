@@ -292,12 +292,26 @@
   })();
   function setTrustStores(n) { document.querySelectorAll('.trust-item').forEach(function (it) { var lbl = it.querySelector('.trust-label'); if (lbl && /store/i.test(lbl.textContent)) { var num = it.querySelector('.trust-num'); if (num) num.textContent = n; } }); }
 
-  /* ---------------- shared image loader ---------------- */
+  /* ---------------- shared image loader (lazy) ----------------
+     PERF: category/edit/blog tiles all sit below the fold but used to fetch
+     their Unsplash images the instant the grid rendered — ~23 images at once,
+     saturating mobile bandwidth and starving the hero (LCP). Now each tile's
+     image loads only when it nears the viewport, like the product cards. */
+  function _bgPaint(ph) {
+    if (ph.getAttribute('data-bgdone')) return;
+    var id = ph.getAttribute('data-img'); if (!id) return;
+    ph.setAttribute('data-bgdone', '1');
+    var w = ph.getAttribute('data-bgw') || 600;
+    var url = 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=' + w + '&q=80';
+    var im = new Image(); im.onload = function () { ph.style.backgroundImage = "url('" + url + "')"; }; im.src = url;
+  }
+  var _bgObs = ('IntersectionObserver' in window) ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { _bgPaint(e.target); _bgObs.unobserve(e.target); } });
+  }, { rootMargin: '400px 0px' }) : null;
   function bgFill(nodes, w) {
     nodes.forEach(function (ph) {
-      var id = ph.getAttribute('data-img'); if (!id) return;
-      var url = 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=' + (w || 600) + '&q=80';
-      var im = new Image(); im.onload = function () { ph.style.backgroundImage = "url('" + url + "')"; }; im.src = url;
+      if (w) ph.setAttribute('data-bgw', w);
+      if (_bgObs) _bgObs.observe(ph); else _bgPaint(ph);
     });
   }
 
