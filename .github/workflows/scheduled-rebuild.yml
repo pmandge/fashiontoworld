@@ -1,0 +1,39 @@
+name: Daily SEO rebuild
+
+# Pings the Netlify build hook once a day so the build-time prerender
+# (node prerender.js) re-runs: it refreshes the baked products on every
+# listing page and regenerates sitemap-products.xml from current inventory.
+# The hook URL lives in the repo secret NETLIFY_BUILD_HOOK (Settings ->
+# Secrets and variables -> Actions). Nothing here touches the live site
+# directly — it only asks Netlify to rebuild from main, which is fail-safe.
+
+on:
+  schedule:
+    # 00:20 UTC = 04:20 Asia/Dubai, daily. Off the top of the hour on
+    # purpose: GitHub's shared scheduler is heavily delayed at :00.
+    - cron: '20 0 * * *'
+  # Also runnable on demand from the Actions tab ("Run workflow").
+  workflow_dispatch: {}
+
+# A single rebuild at a time is plenty; cancel an older run if one is queued.
+concurrency:
+  group: scheduled-rebuild
+  cancel-in-progress: true
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Netlify build hook
+        env:
+          HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::error::NETLIFY_BUILD_HOOK secret is not set"; exit 1
+          fi
+          code=$(curl -sS -X POST -o /dev/null -w '%{http_code}' "$HOOK")
+          echo "Netlify build hook returned HTTP $code"
+          case "$code" in
+            200|201|202|204) echo "Rebuild triggered."; exit 0 ;;
+            *) echo "::error::unexpected status $code"; exit 1 ;;
+          esac
