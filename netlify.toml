@@ -4,6 +4,11 @@
 [build]
   publish = "."
   functions = "netlify/functions"
+  # Bake top products into category pages' HTML at build time (SEO + fast paint).
+  # prerender.js is fail-safe: on any API error it leaves pages client-rendered,
+  # so this can never fail the deploy. Re-runs each build from the committed
+  # (placeholder) pages, so content stays fresh via scheduled rebuilds.
+  command = "node prerender.js"
 
 [[redirects]]
   from = "/sitemap.xml"
