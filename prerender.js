@@ -21,19 +21,20 @@ const API = process.env.FTW_API_BASE || 'https://api.fashiontoworld.co';
 const PER_PAGE = parseInt(process.env.FTW_PRERENDER_COUNT, 10) || 48;
 const MIN_OK = 8; // fewer than this -> leave the page alone
 
-// page file -> API query params
+// page file -> { params for the API, gridId to inject into }
 const TARGETS = [
-  ['pages/women.html',       { category: 'women' }],
-  ['pages/men.html',         { category: 'men' }],
-  ['pages/shoes.html',       { category: 'shoes' }],
-  ['pages/bags.html',        { category: 'bags' }],
-  ['pages/watches.html',     { category: 'watches' }],
-  ['pages/jewellery.html',   { category: 'jewellery' }],
-  ['pages/accessories.html', { category: 'accessories' }],
-  ['pages/beauty.html',      { category: 'beauty' }],
-  ['pages/kids.html',        { category: 'kids' }],
-  // deals.html + brand pages use a different grid/card and are handled in a
-  // follow-up pass; they stay client-rendered (fail-safe) until then.
+  ['pages/women.html',       { category: 'women' },      'productsGrid'],
+  ['pages/men.html',         { category: 'men' },        'productsGrid'],
+  ['pages/shoes.html',       { category: 'shoes' },      'productsGrid'],
+  ['pages/bags.html',        { category: 'bags' },       'productsGrid'],
+  ['pages/watches.html',     { category: 'watches' },    'productsGrid'],
+  ['pages/jewellery.html',   { category: 'jewellery' },  'productsGrid'],
+  ['pages/accessories.html', { category: 'accessories' },'productsGrid'],
+  ['pages/beauty.html',      { category: 'beauty' },     'productsGrid'],
+  ['pages/kids.html',        { category: 'kids' },       'productsGrid'],
+  // deals uses the same product-card markup, a different grid, and discount params
+  ['pages/deals.html',       { sale: 'true', markdown: 'true', sort: 'discount', minprice: '5' }, 'dealsGrid'],
+  // brand pages are handled on the on-demand edge layer (Phase 5), not here.
 ];
 
 // ---------- pure helpers (exported for tests) ----------
@@ -100,8 +101,9 @@ function itemListLd(products, pageUrl) {
 
 // Replace the inner skeletons of #productsGrid with the prerendered cards,
 // and inject an ItemList before </head>. Returns null if the grid isn't found.
-function injectGrid(html, cardsHtml, itemLd) {
-  const idIdx = html.search(/<div[^>]*id="productsGrid"[^>]*>/i);
+function injectGrid(html, cardsHtml, itemLd, gridId) {
+  gridId = gridId || 'productsGrid';
+  const idIdx = html.search(new RegExp('<div[^>]*id="' + gridId + '"[^>]*>', 'i'));
   if (idIdx === -1) return null;
   const openTag = (html.slice(idIdx).match(/^<div[^>]*>/i) || [])[0];
   if (!openTag) return null;
@@ -136,7 +138,7 @@ async function fetchProducts(params) {
 async function run() {
   const root = __dirname;
   let done = 0, skipped = 0;
-  for (const [rel, params] of TARGETS) {
+  for (const [rel, params, gridId] of TARGETS) {
     const file = path.join(root, rel);
     try {
       if (!fs.existsSync(file)) { skipped++; continue; }
@@ -145,7 +147,7 @@ async function run() {
       if (cards.length < MIN_OK) { console.warn('[prerender] too few for', rel, '(' + cards.length + ') — leaving as-is'); skipped++; continue; }
       const pageUrl = 'https://fashiontoworld.co/' + rel;
       const html = fs.readFileSync(file, 'utf8');
-      const out = injectGrid(html, cards.join('\n'), itemListLd(products, pageUrl));
+      const out = injectGrid(html, cards.join('\n'), itemListLd(products, pageUrl), gridId);
       if (!out) { console.warn('[prerender] no #productsGrid in', rel); skipped++; continue; }
       fs.writeFileSync(file, out);
       console.log('[prerender] baked', cards.length, 'products into', rel);
