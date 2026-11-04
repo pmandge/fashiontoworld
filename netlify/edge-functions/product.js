@@ -6,7 +6,7 @@
 // FAIL-SAFE: any problem (bad id, API error, missing product, fetch failure)
 // 302-redirects to the existing client-rendered /pages/product.html?id=<id>,
 // which works today — so a product URL is never a broken page.
-import { injectProduct, slugify } from './product-render.mjs';
+import { injectProduct, slugify } from '../edge-shared/product-render.mjs';
 
 const API = (typeof Deno !== 'undefined' && Deno.env.get('FTW_API_BASE')) || 'https://api.fashiontoworld.co';
 
