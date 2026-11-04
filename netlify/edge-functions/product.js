@@ -6,15 +6,17 @@
 // FAIL-SAFE: any problem (bad id, API error, missing product, fetch failure)
 // 302-redirects to the existing client-rendered /pages/product.html?id=<id>,
 // which works today — so a product URL is never a broken page.
-import { injectProduct } from './product-render.mjs';
+import { injectProduct, slugify } from './product-render.mjs';
 
 const API = (typeof Deno !== 'undefined' && Deno.env.get('FTW_API_BASE')) || 'https://api.fashiontoworld.co';
 
 export default async (request) => {
   const url = new URL(request.url);
-  const m = url.pathname.match(/\/product\/[^/]*?-(\d+)\/?$/);
+  // /product/<id>/<slug> — id is the first segment (format-agnostic: numeric,
+  // prefixed or hyphenated ids all work). slug is decorative.
+  const m = url.pathname.match(/^\/product\/([^/]+)/);
   if (!m) return; // not a product URL -> pass through
-  const id = m[1];
+  const id = decodeURIComponent(m[1]);
   const fallback = () =>
     Response.redirect(new URL('/pages/product.html?id=' + encodeURIComponent(id), url.origin).toString(), 302);
 
@@ -34,7 +36,9 @@ export default async (request) => {
     shell = await s.text();
   } catch (_) { return fallback(); }
 
-  const canonical = url.origin + url.pathname.replace(/\/$/, '');
+  // Canonical = the slugged form, so /product/<id> and /product/<id>/<slug>
+  // all consolidate onto one URL.
+  const canonical = url.origin + '/product/' + encodeURIComponent(id) + '/' + slugify(product.name);
   let html;
   try { html = injectProduct(shell, product, id, canonical); } catch (_) { return fallback(); }
 

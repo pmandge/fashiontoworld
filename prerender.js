@@ -135,6 +135,37 @@ async function fetchProducts(params) {
   return (data && data.products) || [];
 }
 
+function slugify(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 70) || 'item';
+}
+
+// Curated product sitemap: top products per category -> /product/<id>/<slug>.
+// Written to sitemap-products.xml (referenced from robots.txt). Fail-safe.
+async function buildProductSitemap() {
+  const PER_CAT = parseInt(process.env.FTW_SITEMAP_PER_CAT, 10) || 300;
+  const cats = ['women', 'men', 'shoes', 'bags', 'watches', 'jewellery', 'accessories', 'beauty', 'kids'];
+  const seen = Object.create(null);
+  const urls = [];
+  for (const c of cats) {
+    let prods = [];
+    try { prods = await fetchProducts({ category: c, limit: PER_CAT, sort: 'popularity' }); }
+    catch (e) { console.warn('[prerender] sitemap fetch', c, '-', e.message); continue; }
+    for (const p of prods) {
+      if (!p || p.id == null) continue;
+      const id = String(p.id);
+      if (seen[id]) continue;
+      seen[id] = 1;
+      const loc = 'https://fashiontoworld.co/product/' + encodeURIComponent(id) + '/' + slugify(p.name);
+      const lastmod = Number(p.updated_at) ? new Date(Number(p.updated_at)).toISOString().slice(0, 10) : '';
+      urls.push('  <url><loc>' + loc + '</loc>' + (lastmod ? '<lastmod>' + lastmod + '</lastmod>' : '') + '<changefreq>weekly</changefreq></url>');
+    }
+  }
+  if (urls.length < 50) { console.warn('[prerender] product sitemap: only ' + urls.length + ' urls — skipping'); return; }
+  const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls.join('\n') + '\n</urlset>\n';
+  fs.writeFileSync(path.join(__dirname, 'sitemap-products.xml'), xml);
+  console.log('[prerender] product sitemap: ' + urls.length + ' product URLs written');
+}
+
 async function run() {
   const root = __dirname;
   let done = 0, skipped = 0;
@@ -157,8 +188,9 @@ async function run() {
       skipped++;
     }
   }
+  try { await buildProductSitemap(); } catch (e) { console.warn('[prerender] product sitemap failed:', e.message); }
   console.log(`[prerender] done: ${done} pages baked, ${skipped} left as-is`);
 }
 
-module.exports = { esc, optimizedImg, httpsImg, priceText, card, itemListLd, injectGrid };
+module.exports = { esc, optimizedImg, httpsImg, priceText, card, itemListLd, injectGrid, slugify, buildProductSitemap };
 if (require.main === module) run();

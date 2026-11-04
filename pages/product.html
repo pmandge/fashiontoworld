@@ -123,7 +123,7 @@
   // /product/<slug>-<id> via the injected meta tag or the path.
   var id = param('id')
     || (document.querySelector('meta[name="ftw:pid"]') || {}).content
-    || (location.pathname.match(/-(\d+)\/?$/) || [])[1];
+    || (function(){ var m = location.pathname.match(/\/product\/([^/]+)/); return m ? decodeURIComponent(m[1]) : ''; })();
   var content = $('pdpContent');
   if (!id) { content.innerHTML = '<div class="pdp-error">No product specified.</div>'; return; }
 

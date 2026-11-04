@@ -13,6 +13,11 @@ export function img(u, w) {
     '&w=' + (w || 700) + '&output=webp&q=82';
 }
 
+export function slugify(s) {
+  return String(s || '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 70) || 'item';
+}
+
 // Inject per-product SEO (title, meta, canonical, OG, Product JSON-LD) + a
 // crawlable content block into the static product.html shell. The client JS
 // still hydrates the full interactive PDP on top (it reads the id from the
