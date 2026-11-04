@@ -9,9 +9,11 @@ name: Daily SEO rebuild
 
 on:
   schedule:
-    # 00:20 UTC = 04:20 Asia/Dubai, daily. Off the top of the hour on
-    # purpose: GitHub's shared scheduler is heavily delayed at :00.
-    - cron: '20 0 * * *'
+    # 00:20 UTC = 04:20 Asia/Dubai, twice a week (Mon & Thu). Off the top
+    # of the hour on purpose: GitHub's shared scheduler is heavily delayed
+    # at :00. Twice weekly keeps the baked HTML + sitemap fresh with far
+    # less churn than daily; bump the day list up anytime (e.g. 1,3,5 or *).
+    - cron: '20 0 * * 1,4'
   # Also runnable on demand from the Actions tab ("Run workflow").
   workflow_dispatch: {}
 
