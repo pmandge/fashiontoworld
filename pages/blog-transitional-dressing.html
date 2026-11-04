@@ -10,11 +10,14 @@
 <!-- end Google tag -->
 <!-- Microsoft Clarity -->
 <script type="text/javascript">
-  (function(c,l,a,r,i,t,y){
-    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-  })(window, document, "clarity", "script", "x4x3qstcpo");
+/* Clarity: stub now (no events lost), tag script on idle/first interaction (CWV). */
+(function(){
+  var w=window,d=document,done=false;
+  w.clarity=w.clarity||function(){(w.clarity.q=w.clarity.q||[]).push(arguments)};
+  function go(){if(done)return;done=true;var s=d.createElement('script');s.async=1;s.src='https://www.clarity.ms/tag/x4x3qstcpo';d.head.appendChild(s);}
+  ['scroll','pointerdown','keydown','touchstart'].forEach(function(e){w.addEventListener(e,go,{once:true,passive:true});});
+  if('requestIdleCallback' in w){w.requestIdleCallback(go,{timeout:5000});}else{setTimeout(go,4000);}
+})();
 </script>
 <!-- end Microsoft Clarity -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,14 +68,15 @@
   <meta name="p:domain_verify" content="661d8a8320ccc55e6fcb78c7beae954b"/>
   <!-- Pinterest Tag -->
   <script>
-  !function(e){if(!window.pintrk){window.pintrk = function () {
-  window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
-    n=window.pintrk;n.queue=[],n.version="3.0";var
-    t=document.createElement("script");t.async=!0,t.src=e;var
-    r=document.getElementsByTagName("script")[0];
-    r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
-  pintrk('load', '2614290053907');
-  pintrk('page');
+  /* Pinterest: stub + queued load/page now, core.js on idle/first interaction (CWV). */
+  (function(){
+  var w=window,d=document,done=false;
+  if(!w.pintrk){w.pintrk=function(){w.pintrk.queue.push(Array.prototype.slice.call(arguments))};w.pintrk.queue=[];w.pintrk.version="3.0";}
+  w.pintrk('load','2614290053907');w.pintrk('page');
+  function go(){if(done)return;done=true;var s=d.createElement('script');s.async=1;s.src='https://s.pinimg.com/ct/core.js';d.head.appendChild(s);}
+  ['scroll','pointerdown','keydown','touchstart'].forEach(function(e){w.addEventListener(e,go,{once:true,passive:true});});
+  if('requestIdleCallback' in w){w.requestIdleCallback(go,{timeout:5000});}else{setTimeout(go,4000);}
+  })();
   </script>
   <noscript>
   <img height="1" width="1" style="display:none;" alt="" src="https://ct.pinterest.com/v3/?event=init&tid=2614290053907&noscript=1" />
