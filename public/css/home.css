@@ -52,7 +52,9 @@
   .hero-cat .ic svg{width:30px;height:30px;color:var(--gold-deep)}
   .hero-cat:hover .ic{transform:translateY(-3px);box-shadow:0 12px 26px rgba(0,0,0,.4)}
   .hero-cat:hover .ic svg{color:var(--gold)}
-  .hero-dealhook{display:inline-flex;align-items:center;gap:8px;margin-top:28px;font-size:14px;color:var(--gold-light);font-weight:500;letter-spacing:.02em;border-bottom:1px solid rgba(232,213,163,.4);padding-bottom:3px}
+  /* Primary deals CTA — a real button (big tap target), not a text link. */
+  .hero-dealhook{display:inline-flex;align-items:center;justify-content:center;gap:9px;margin-top:30px;font-size:15px;color:var(--ink);font-weight:600;letter-spacing:.01em;background:var(--gold-light);border-radius:40px;padding:15px 30px;box-shadow:0 12px 30px rgba(0,0,0,.3);transition:.2s;text-decoration:none}
+  .hero-dealhook:hover{background:#fff;transform:translateY(-2px);box-shadow:0 16px 36px rgba(0,0,0,.36)}
 
   /* ---------- TRUST + DISCLOSURE ---------- */
   .trust{background:var(--ink);color:#fff}
@@ -282,11 +284,16 @@
 
 /* ---------- HERO REDESIGN — MOBILE (curvy search + Variant D icons) ---------- */
 @media(max-width:560px){
+  /* Tighten the hero so content starts sooner on phones (most of our traffic). */
+  .hero-inner{padding:52px 20px 44px}
+  .hero h1{margin:12px 0 12px}
+  .hero-sub{margin-bottom:22px}
   .hero-search{max-width:100%;padding:6px 6px 6px 18px;border-radius:50px}
   .hero-search input{font-size:14px}
   .hero-search button{padding:12px 20px;font-size:12.5px}
-  .hero-cats{gap:22px 8px;margin-top:28px}
+  .hero-cats{gap:20px 8px;margin-top:24px}
   .hero-cat{width:30%;font-size:9.5px}
   .hero-cat .ic{width:62px;height:62px}
   .hero-cat .ic svg{width:28px;height:28px}
+  .hero-dealhook{display:flex;width:100%;margin-top:24px;padding:15px 24px}
 }
