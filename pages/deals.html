@@ -14,7 +14,7 @@
 <style>
 .page-hero {
   position: relative;
-  padding: calc(var(--nav-h) + 90px) 0 90px;
+  padding: calc(var(--nav-h) + 44px) 0 40px;
   text-align: center;
   /* Top layer: dark overlay for text contrast.
      Middle: the banner photo (drop it at public/images/deals-hero.jpg).
@@ -27,12 +27,12 @@
   background-color: #2c2620;
 }
 .page-hero .section-eyebrow { color: var(--gold); }
-.page-hero h1 { font-size: clamp(40px, 6vw, 80px); color: #fff; }
+.page-hero h1 { font-size: clamp(32px, 4.5vw, 54px); color: #fff; line-height: 1.05; }
 .page-hero h1 em { color: var(--gold); font-style: italic; }
 .page-hero p { font-size: 18px; color: rgba(255, 255, 255, 0.82); margin-top: 16px; }
 
 @media (max-width: 640px) {
-  .page-hero { padding: calc(var(--nav-h) + 54px) 0 54px; }
+  .page-hero { padding: calc(var(--nav-h) + 28px) 0 28px; }
   .page-hero p { font-size: 16px; padding: 0 18px; }
 }
 .deals-filters {
@@ -67,6 +67,22 @@
   opacity: 0.6;
   font-weight: 400;
 }
+/* Discount-tier quick filters (50%+ / 70%+) */
+.deals-tiers { display:flex; gap:10px; flex-wrap:wrap; margin:-24px 0 32px; }
+.tier-btn { padding:8px 18px; font-size:12px; }
+/* "Biggest drop today" feature banner */
+.deal-featured {
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  margin:0 0 30px; padding:14px 22px; border-radius:16px;
+  background:linear-gradient(135deg,#2c2620,#4a3d30); color:#fff;
+  text-decoration:none; font-size:15px; transition:filter .2s;
+}
+.deal-featured .df-flame { font-size:18px; }
+.deal-featured .df-label { color:var(--gold); font-weight:600; letter-spacing:.04em; text-transform:uppercase; font-size:12px; }
+.deal-featured .df-name { opacity:.92; }
+.deal-featured .df-disc { margin-left:auto; background:var(--gold); color:#1a1410; font-weight:700; padding:4px 13px; border-radius:100px; font-size:13px; white-space:nowrap; }
+.deal-featured:hover { filter:brightness(1.08); }
+@media (max-width:640px){ .deal-featured .df-disc { margin-left:0; } }
 /* Product grid: sized for product cards (narrower than the old coupon cards). */
 .deals-grid {
   display: grid;
@@ -326,7 +342,7 @@
   <div class="container">
     <p class="section-eyebrow" style="justify-content:center;display:flex">Updated Daily</p>
     <h1>Fashion Deals &<br><em>Big Discounts</em></h1>
-    <p>Hand-picked discounts on real products from worldwide-shipping stores — biggest markdowns first, updated daily. Looking for promo codes? See our <a href="coupons.html" style="color:var(--gold);text-decoration:underline">Coupons</a> page.</p>
+    <p>Our biggest markdowns on real products from worldwide-shipping stores, refreshed daily. Looking for promo codes? See our <a href="coupons.html" style="color:var(--gold);text-decoration:underline">Coupons</a> page.</p>
   </div>
 </section>
 
@@ -353,8 +369,14 @@
       </div>
     </div>
 
+    <!-- Featured "biggest drop today" banner (top deal, links to its product page) -->
+    <a class="deal-featured" id="dealFeatured" href="#" style="display:none"></a>
+
     <!-- Category filters (rendered dynamically) -->
     <div class="deals-filters" id="dealsFilters"></div>
+
+    <!-- Discount-tier quick filters (rendered dynamically) -->
+    <div class="deals-tiers" id="dealsTiers"></div>
 
     <!-- Product Grid -->
     <div class="deals-grid" id="dealsGrid">
@@ -384,14 +406,38 @@
 <script src="../public/js/admitad-api.js"></script>
 <script>
 /* ---- Deals = live on-sale PRODUCTS (distinct from the Coupons page) ---- */
-const PRODUCT_LIMIT = 48;
+const PRODUCT_LIMIT = 96;              // pull more so the page never feels empty
 let activeCat = 'all';
+let activeTier = 'all';                // 'all' | '50' | '70'
 const CATS = [
   { key:'all', label:'All' }, { key:'women', label:'Women' }, { key:'men', label:'Men' },
   { key:'shoes', label:'Shoes' }, { key:'bags', label:'Bags' }, { key:'jewellery', label:'Jewellery' },
   { key:'beauty', label:'Beauty' }, { key:'accessories', label:'Accessories' },
 ];
+const TIERS = [
+  { key:'all', label:'All deals' }, { key:'50', label:'50%+ off' }, { key:'70', label:'70%+ off' },
+];
 let PRODUCTS = [];
+
+function discPct(p){
+  return (p.price_old && Number(p.price_old) > Number(p.price))
+    ? Math.round((1 - Number(p.price) / Number(p.price_old)) * 100) : 0;
+}
+function slugify(s){ return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 70) || 'item'; }
+function purlOf(p){ return (p.id != null && p.id !== '') ? '/product/' + encodeURIComponent(p.id) + '/' + slugify(p.name) : (p.affiliate_url || p.url || '#'); }
+
+// Round-robin by store/brand so the grid never shows the same store 3-in-a-row.
+function diversify(list){
+  const g = {};
+  list.forEach(p => { const k = p.advertiser_name || p.brand || '?'; (g[k] = g[k] || []).push(p); });
+  const keys = Object.keys(g), out = []; let more = true;
+  while (more){ more = false; for (const k of keys){ if (g[k].length){ out.push(g[k].shift()); more = true; } } }
+  return out;
+}
+function visible(){
+  const min = activeTier === '50' ? 50 : activeTier === '70' ? 70 : 0;
+  return PRODUCTS.filter(p => discPct(p) >= min);
+}
 
 async function loadDeals(){
   const grid = document.getElementById('dealsGrid');
@@ -408,10 +454,8 @@ async function loadDeals(){
   list = list.filter(p => p.image_url
     && /^https?:/i.test(p.affiliate_url || p.url || '')
     && p.price_old && Number(p.price_old) > Number(p.price));
-  PRODUCTS = list;
-  renderStats();
-  renderFilters();
-  renderGrid();
+  PRODUCTS = diversify(list);
+  renderStats(); renderFilters(); renderTiers(); renderFeatured(); renderGrid();
 }
 
 function renderStats(){
@@ -419,13 +463,7 @@ function renderStats(){
   if (el('stat-deals')) el('stat-deals').textContent = PRODUCTS.length || '—';
   const stores = new Set(PRODUCTS.map(p => p.advertiser_name || p.brand).filter(Boolean));
   if (el('stat-brands')) el('stat-brands').textContent = stores.size || '—';
-  let max = 0;
-  PRODUCTS.forEach(p => {
-    if (p.price_old && p.price_old > p.price) {
-      const d = Math.round((1 - p.price / p.price_old) * 100);
-      if (d > max) max = d;
-    }
-  });
+  let max = 0; PRODUCTS.forEach(p => { const d = discPct(p); if (d > max) max = d; });
   if (el('stat-savings')) el('stat-savings').textContent = max ? max + '%' : '—';
 }
 
@@ -436,21 +474,43 @@ function renderFilters(){
     `<button class="filter-btn${f.key === activeCat ? ' active' : ''}" onclick="setCat('${f.key}')">${f.label}</button>`
   ).join('');
 }
+function renderTiers(){
+  const wrap = document.getElementById('dealsTiers');
+  if (!wrap) return;
+  wrap.innerHTML = TIERS.map(t =>
+    `<button class="filter-btn tier-btn${t.key === activeTier ? ' active' : ''}" onclick="setTier('${t.key}')">${t.label}</button>`
+  ).join('');
+}
 
-function setCat(key){
-  if (key === activeCat) return;
-  activeCat = key;
-  renderFilters();
-  loadDeals();
+function setCat(key){ if (key === activeCat) return; activeCat = key; activeTier = 'all'; renderFilters(); loadDeals(); }
+function setTier(key){ if (key === activeTier) return; activeTier = key; renderTiers(); renderFeatured(); renderGrid(); }
+
+// Feature the single biggest drop in the current view; links to its product page.
+function renderFeatured(){
+  const wrap = document.getElementById('dealFeatured');
+  if (!wrap) return;
+  const top = visible().slice().sort((a, b) => discPct(b) - discPct(a))[0];
+  if (!top){ wrap.style.display = 'none'; wrap.innerHTML = ''; return; }
+  wrap.style.display = '';
+  wrap.href = purlOf(top);
+  const esc = s => String(s || '').replace(/</g, '&lt;');
+  const store = top.advertiser_name || top.brand || '';
+  wrap.innerHTML =
+    '<span class="df-flame">🔥</span>' +
+    '<span class="df-label">Biggest drop today</span>' +
+    '<span class="df-name">' + esc(top.name) + (store ? ' · ' + esc(store) : '') + '</span>' +
+    '<span class="df-disc">-' + discPct(top) + '%</span>';
 }
 
 function renderGrid(){
   const grid = document.getElementById('dealsGrid');
-  if (!PRODUCTS.length) {
-    grid.innerHTML = '<div class="deals-empty">No discounted products in this category right now — we refresh daily, so check back soon.</div>';
+  if (!grid) return;
+  const vis = visible();
+  if (!vis.length) {
+    grid.innerHTML = '<div class="deals-empty">No discounts match this filter right now — we refresh daily, so check back soon.</div>';
     return;
   }
-  grid.innerHTML = PRODUCTS.map((p, i) => AdmitadAPI.renderProductCard(p, i)).join('');
+  grid.innerHTML = vis.map((p, i) => AdmitadAPI.renderProductCard(p, i)).join('');
 }
 
 loadDeals();
