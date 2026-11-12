@@ -351,6 +351,7 @@
   window.FTWLazyCards = lazyCards;
 
   /* ---------------- live product card ---------------- */
+  function _pslug(s){ return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 70) || 'item'; }
   function pcard(p, opts) {
     opts = opts || {};
     var link = p.affiliate_url || p.url || ''; var out = /^https?:/i.test(link); var href = out ? link : '#';
@@ -358,6 +359,8 @@
     var price = p.price_display || (p.price ? ('$' + p.price) : '');
     var was = p.price_old ? (p.price_old_display || ('$' + p.price_old)) : '';
     var img = p.image_url || '';
+    // Internal product-page URL (crawlable) — card body links here; Shop Now stays outbound.
+    var purl = (p.id != null && p.id !== '') ? '/product/' + encodeURIComponent(p.id) + '/' + _pslug(p.name) : '';
     var badge = disc ? '<span class="pcard-badge">-' + disc + '%</span>' : (opts.newBadge ? '<span class="pcard-badge" style="background:var(--gold-deep)">New</span>' : '');
     var _wid = productKey(p);
     var _saved = wishHas(_wid);
@@ -367,10 +370,13 @@
     // lazy loader below fills each card only when it nears the viewport, and
     // requests a 400px copy via the weserv proxy (falling back to the original
     // if the proxy fails, so images can never silently disappear).
-    return '<article class="pcard" data-wid="' + esc(_wid) + '" data-name="' + esc(p.name || '') + '" data-brand="' + esc(p.brand || p.advertiser_name || '') + '" data-price="' + esc(price) + '" data-img="' + esc(img) + '" data-href="' + esc(href) + '"><div class="pcard-img" style="background:#efe9df center/cover no-repeat"' + (img ? (' data-pimg="' + esc(img) + '"') : '') + '>' + badge + _heart + '</div>' +
+    return '<article class="pcard" data-wid="' + esc(_wid) + '" data-name="' + esc(p.name || '') + '" data-brand="' + esc(p.brand || p.advertiser_name || '') + '" data-price="' + esc(price) + '" data-img="' + esc(img) + '" data-href="' + esc(href) + '">' +
+      (purl ? '<a class="pcard-link" href="' + esc(purl) + '">' : '') +
+      '<div class="pcard-img" style="background:#efe9df center/cover no-repeat"' + (img ? (' data-pimg="' + esc(img) + '"') : '') + '>' + badge + _heart + '</div>' +
       '<div class="pcard-body"><p class="pcard-brand">' + esc(p.brand || p.advertiser_name || '') + '</p>' +
       '<h3 class="pcard-name">' + esc(p.name || '') + '</h3>' +
       '<p class="pcard-price">' + esc(price) + (was ? '<span class="was">' + esc(was) + '</span>' : '') + '</p></div>' +
+      (purl ? '</a>' : '') +
       '<div class="pcard-foot"><a class="pcard-btn" href="' + href + '"' + (out ? ' target="_blank" rel="sponsored nofollow noopener"' : '') + '>Shop Now &#8594;</a></div></article>';
   }
 
@@ -462,7 +468,7 @@
     var h = e.target.closest('.pcard-heart');
     if (!h) {
       var pc = e.target.closest('.pcard');
-      if (pc && !e.target.closest('.pcard-btn')) {
+      if (pc && !e.target.closest('.pcard-btn') && !e.target.closest('.pcard-link')) {
         var d = pc.getAttribute('data-href');
         if (d && d !== '#') window.open(d, '_blank', 'noopener');
       }
