@@ -440,6 +440,28 @@
   lazyFill('prods2', { sort: 'popularity', limit: 24, page: 1, minprice: 8, slice: [0, 12] }, { newBadge: true }); // New In — swipeable rail
   // (Biggest Discounts rail removed — consolidated into Today's Top Deals.)
 
+  /* ---- Recently Viewed: rebuilt from localStorage (written by product pages).
+     Re-engages returning shoppers with items they already showed intent on.
+     Hidden until there are a couple of views; brand-safety/eyewear filter applies. */
+  (function () {
+    var sec = document.getElementById('recentSec');
+    var grid = document.getElementById('recent');
+    if (!sec || !grid) return;
+    var items = [];
+    try { items = JSON.parse(localStorage.getItem('ftw_recent') || '[]'); } catch (e) { items = []; }
+    if (!Array.isArray(items)) items = [];
+    items = items.filter(okHome).slice(0, 12);
+    if (items.length < 2) return;            // one lone item isn't worth a rail
+    grid.innerHTML = items.map(function (p) { return pcard(p, {}); }).join('');
+    sec.hidden = false;
+    lazyCards(grid);
+    var clr = document.getElementById('recentClear');
+    if (clr) clr.addEventListener('click', function () {
+      try { localStorage.removeItem('ftw_recent'); } catch (e) {}
+      grid.innerHTML = ''; sec.hidden = true;
+    });
+  })();
+
   /* ---- geo: show "Shop India's Favourite Stores" only to India visitors ----
      Default stays visible; hide only for a CONFIRMED non-IN country (fail-open,
      so the primary India audience keeps it even if the geo lookup is unavailable). */
