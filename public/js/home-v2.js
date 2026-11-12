@@ -462,6 +462,36 @@
     });
   })();
 
+  /* ---- Newsletter: wire every .news-form (the previously-inert footer form
+     + the compact mid-page bar) to /api/subscribe, with inline status. ---- */
+  (function () {
+    var base = window.API_BASE || '';
+    function note(box, msg, ok) {
+      var host = box.closest('.container') || box.parentNode;
+      var n = host.querySelector('.news-note');
+      if (!n) { n = document.createElement('p'); n.className = 'news-note'; host.appendChild(n); }
+      n.textContent = msg; n.style.color = ok ? '#2e7d32' : '#c0392b';
+    }
+    function wire(box) {
+      if (box._wired) return; box._wired = true;
+      var input = box.querySelector('input');
+      var btn = box.querySelector('button');
+      if (!input || !btn) return;
+      function go() {
+        var email = (input.value || '').trim();
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { note(box, 'Please enter a valid email address.', false); return; }
+        btn.disabled = true; var t = btn.textContent; btn.textContent = '…';
+        fetch(base + '/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: email }) })
+          .then(function (r) { if (!r.ok) throw 0; return r.json().catch(function () { return {}; }); })
+          .then(function () { box.innerHTML = '<p class="news-ok">✓ Almost there — check your inbox to confirm.</p>'; })
+          .catch(function () { btn.disabled = false; btn.textContent = t; note(box, 'Something went wrong — please try again in a moment.', false); });
+      }
+      btn.addEventListener('click', go);
+      input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+    }
+    document.querySelectorAll('.news-form').forEach(wire);
+  })();
+
   /* ---- geo: show "Shop India's Favourite Stores" only to India visitors ----
      Default stays visible; hide only for a CONFIRMED non-IN country (fail-open,
      so the primary India audience keeps it even if the geo lookup is unavailable). */
