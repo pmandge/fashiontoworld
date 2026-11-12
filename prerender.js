@@ -69,24 +69,33 @@ function card(p, i) {
   const eager = i < 4;
   const brand = esc(p.brand || p.advertiser_name || '');
   const name = esc(p.name || '');
+  // Internal product-page link (crawlable, followable) so Google can discover and
+  // index /product/ pages — the card body goes here; "Shop Now" stays the outbound
+  // affiliate link. Without this the product pages are orphans (sitemap-only) and
+  // never index. Falls back to a plain div when there's no id.
+  const purl = (p.id != null && p.id !== '') ? '/product/' + encodeURIComponent(p.id) + '/' + slugify(p.name) : '';
+  const bodyOpen = purl ? '<a class="product-card-link" href="' + esc(purl) + '">' : '<div class="product-card-link">';
+  const bodyClose = purl ? '</a>' : '</div>';
   return `
-      <a class="product-card product-card-link" href="${esc(link)}" target="_blank" rel="noopener sponsored nofollow" data-product-id="${esc(p.id)}">
-        <div class="product-img">
-          <img src="${esc(optimizedImg(p.image_url, 400))}" alt="${name}" width="400" height="500" loading="${eager ? 'eager' : 'lazy'}"${eager ? ' fetchpriority="high"' : ''} decoding="async" data-orig="${esc(httpsImg(p.image_url))}"
-               onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src=this.getAttribute('data-orig');}else{this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();}">
-          ${hasDisc ? `<span class="product-badge sale">-${disc}%</span>` : ''}
-        </div>
-        <div class="product-body">
-          <p class="product-brand">${brand}</p>
-          <h3 class="product-name">${name}</h3>
-          <div class="product-price-row">
-            <span class="product-price">${esc(priceText(p))}</span>
-            ${hasDisc ? `<span class="product-original">${esc(priceOldText(p))}</span>` : ''}
-            ${disc ? `<span class="product-discount">-${disc}%</span>` : ''}
+      <div class="product-card" data-product-id="${esc(p.id)}">
+        ${bodyOpen}
+          <div class="product-img">
+            <img src="${esc(optimizedImg(p.image_url, 400))}" alt="${name}" width="400" height="500" loading="${eager ? 'eager' : 'lazy'}"${eager ? ' fetchpriority="high"' : ''} decoding="async" data-orig="${esc(httpsImg(p.image_url))}"
+                 onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src=this.getAttribute('data-orig');}else{this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();}">
+            ${hasDisc ? `<span class="product-badge sale">-${disc}%</span>` : ''}
           </div>
-        </div>
-        <div class="product-footer"><span class="btn-product">Shop Now</span></div>
-      </a>`;
+          <div class="product-body">
+            <p class="product-brand">${brand}</p>
+            <h3 class="product-name">${name}</h3>
+            <div class="product-price-row">
+              <span class="product-price">${esc(priceText(p))}</span>
+              ${hasDisc ? `<span class="product-original">${esc(priceOldText(p))}</span>` : ''}
+              ${disc ? `<span class="product-discount">-${disc}%</span>` : ''}
+            </div>
+          </div>
+        ${bodyClose}
+        <div class="product-footer"><a class="btn-product" href="${esc(link)}" target="_blank" rel="noopener sponsored nofollow">Shop Now</a></div>
+      </div>`;
 }
 
 function itemListLd(products, pageUrl) {
