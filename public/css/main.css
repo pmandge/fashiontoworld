@@ -467,6 +467,7 @@ em { font-style: italic; }
 }
 .btn-product {
   display: block;
+  text-decoration: none;
   width: 100%;
   text-align: center;
   padding: 10px;
@@ -946,7 +947,7 @@ img, video { max-width: 100%; }
 
 /* ===== Clickable product card + wishlist heart (category/search pages) ===== */
 /* The whole card is now an <a>; strip link styling so it looks like a card. */
-.product-card-link{ text-decoration:none; color:inherit; display:flex; flex-direction:column; cursor:pointer }
+.product-card-link{ text-decoration:none; color:inherit; display:flex; flex-direction:column; cursor:pointer; flex:1 }
 .product-card-link:hover{ text-decoration:none; color:inherit }
 .product-card-link .product-name,
 .product-card-link .product-brand,

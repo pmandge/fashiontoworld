@@ -179,6 +179,9 @@ const AdmitadAPI = (() => {
     var _wbrand = (product.brand || product.advertiser_name || '').replace(/"/g, '&quot;');
     var _imgOrig = httpsImg(product.image_url);
     var _imgOpt = optimizedImg(product.image_url, 400);
+    // Internal product-page URL (crawlable) — card body links here; Shop Now stays outbound.
+    var _slug = (product.name || '').toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 70) || 'item';
+    var _purl = (product.id != null && product.id !== '') ? '/product/' + encodeURIComponent(product.id) + '/' + _slug : '';
     var _heart = `<button class="card-heart" type="button" aria-label="Save"
         data-wid="${product.id}" data-wname="${_wn}" data-wimg="${_wimg}"
         data-wprice="${_wprice}" data-wbrand="${_wbrand}" data-wurl="${link}"
@@ -205,35 +208,34 @@ const AdmitadAPI = (() => {
       </article>`;
     }
     return `
-      <a class="product-card product-card-link" href="${link}"
-         target="_blank" rel="noopener sponsored nofollow"
-         data-product-id="${product.id}"
-         onclick="trackClick('${product.id}', '${product.advertiser_name}')">
-        <div class="product-img">
-          <img src="${_imgOpt}"
-               alt="${product.name}"
-               width="400" height="500"
-               loading="${_imgLoad}"${_imgPrio}
-               decoding="async"
-               data-orig="${_imgOrig}"
-               onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src=this.getAttribute('data-orig');}else{this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();}">
-          ${hasDiscount ? `<span class="product-badge sale">-${discount}%</span>` : ''}
-          ${product.is_new ? `<span class="product-badge">New</span>` : ''}
-          ${_heart}
-        </div>
-        <div class="product-body">
-          <p class="product-brand">${product.brand || product.advertiser_name}</p>
-          <h3 class="product-name">${product.name}</h3>
-          <div class="product-price-row">
-            <span class="product-price">${product.price_display || formatPrice(product.price, product.currency)}</span>
-            ${hasDiscount ? `<span class="product-original">${product.price_old_display || formatPrice(product.price_old, product.currency)}</span>` : ''}
-            ${discount ? `<span class="product-discount">-${discount}%</span>` : ''}
+      <div class="product-card" data-product-id="${product.id}">
+        ${_purl ? `<a class="product-card-link" href="${_purl}">` : `<div class="product-card-link">`}
+          <div class="product-img">
+            <img src="${_imgOpt}"
+                 alt="${product.name}"
+                 width="400" height="500"
+                 loading="${_imgLoad}"${_imgPrio}
+                 decoding="async"
+                 data-orig="${_imgOrig}"
+                 onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src=this.getAttribute('data-orig');}else{this.onerror=null;var c=this.closest('.product-card');if(c)c.remove();}">
+            ${hasDiscount ? `<span class="product-badge sale">-${discount}%</span>` : ''}
+            ${product.is_new ? `<span class="product-badge">New</span>` : ''}
+            ${_heart}
           </div>
-        </div>
+          <div class="product-body">
+            <p class="product-brand">${product.brand || product.advertiser_name}</p>
+            <h3 class="product-name">${product.name}</h3>
+            <div class="product-price-row">
+              <span class="product-price">${product.price_display || formatPrice(product.price, product.currency)}</span>
+              ${hasDiscount ? `<span class="product-original">${product.price_old_display || formatPrice(product.price_old, product.currency)}</span>` : ''}
+              ${discount ? `<span class="product-discount">-${discount}%</span>` : ''}
+            </div>
+          </div>
+        ${_purl ? `</a>` : `</div>`}
         <div class="product-footer">
-          <span class="btn-product">Shop Now</span>
+          <a class="btn-product" href="${link}" target="_blank" rel="noopener sponsored nofollow" onclick="trackClick('${product.id}', '${product.advertiser_name}')">Shop Now</a>
         </div>
-      </a>
+      </div>
     `;
   }
 
