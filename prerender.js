@@ -133,6 +133,16 @@ function injectGrid(html, cardsHtml, itemLd, gridId) {
   return out;
 }
 
+// Block explicit / adult-lingerie products from baked HTML and the product
+// sitemap (brand-safety). Must mirror AdmitadAPI.isAllowed in admitad-api.js.
+const ADULT_BLOCK = ['lingerie', 'thong', 'g-string', 'gstring', 'bodystocking', 'body stocking', 'babydoll', 'crotchless', 'crotch', 'negligee', 'garter belt', 'nipple', 'pasties', 'erotic', 'fetish', 'bondage', 'bdsm', 'obsessive'];
+function isAllowed(p) {
+  if (!p) return false;
+  const hay = ((p.name || '') + ' ' + (p.brand || '') + ' ' + (p.advertiser_name || p.advertiser || '') + ' ' + (p.category || '') + ' ' + (p.subcategory || '') + ' ' + (p.feed_category || '')).toLowerCase();
+  for (let i = 0; i < ADULT_BLOCK.length; i++) { if (hay.indexOf(ADULT_BLOCK[i]) !== -1) return false; }
+  return true;
+}
+
 async function fetchProducts(params) {
   if (typeof fetch !== 'function') { console.warn('[prerender] no global fetch; skipping'); return []; }
   const u = new URL(API + '/api/admitad/products');
@@ -141,7 +151,7 @@ async function fetchProducts(params) {
   const res = await fetch(u.toString());
   if (!res.ok) throw new Error('API ' + res.status);
   const data = await res.json();
-  return (data && data.products) || [];
+  return ((data && data.products) || []).filter(isAllowed);
 }
 
 function slugify(s) {
