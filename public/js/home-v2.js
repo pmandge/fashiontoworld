@@ -8,6 +8,17 @@
 (function () {
   var API = window.AdmitadAPI;
   function okProd(p) { return (API && API.isAllowed) ? API.isAllowed(p) : true; }
+  // Homepage curation: keep sunglasses / eyewear out of the homepage rails —
+  // they were dominating Biggest Discounts & Today's Top Deals. Homepage-only
+  // (category/Accessories pages still show eyewear).
+  var EYEWEAR = ['sunglass', 'eyeglass', 'eyewear', 'spectacle', 'glasseslit', 'smartbuyglasses', 'sunglass hut'];
+  function notEyewear(p) {
+    if (!p) return false;
+    var hay = ((p.name || '') + ' ' + (p.brand || '') + ' ' + (p.advertiser_name || p.advertiser || '') + ' ' + (p.category || '') + ' ' + (p.subcategory || '') + ' ' + (p.feed_category || '')).toLowerCase();
+    for (var i = 0; i < EYEWEAR.length; i++) { if (hay.indexOf(EYEWEAR[i]) !== -1) return false; }
+    return true;
+  }
+  function okHome(p) { return okProd(p) && notEyewear(p); }
 
   /* ---------------- wishlist (localStorage) ---------------- */
   var WISH_KEY = 'ftw_saved';
@@ -401,7 +412,7 @@
     el.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8);
     try {
       var data = await fetchProducts(opts);
-      var items = ((data && data.products) || []).filter(okProd);
+      var items = ((data && data.products) || []).filter(okHome);
       if (opts && opts.slice) items = items.slice(opts.slice[0], opts.slice[1]);
       if (!items.length) { hideSection(el); return; }
       el.innerHTML = items.map(function (p) { return pcard(p, cardOpts); }).join('');
@@ -422,9 +433,11 @@
   // Trending + Biggest Discounts use the store-diversified discount pool (max
   // 2 per store) so no single store floods the rail. Biggest Discounts takes a
   // later slice so it shows different products than Trending.
-  fillProducts('prods', { endpoint: '/api/products/trending', limit: 16 });                       // Trending — premium mix (watches/bags/dresses/jewellery)
-  lazyFill('prodsBig', { endpoint: '/api/products/diverse-discounts', limit: 8 });                    // Biggest Discounts — diverse markdowns
-  lazyFill('prods2', { sort: 'popularity', limit: 8, page: 1, minprice: 8 }, { newBadge: true });      // New In — on scroll
+  // Over-fetch + slice so each rail stays full AFTER the eyewear/brand-safety
+  // filter removes items (otherwise a filtered rail collapses to one short row).
+  fillProducts('prods', { endpoint: '/api/products/trending', limit: 28, slice: [0, 16] });            // Trending — premium mix (watches/bags/dresses/jewellery)
+  lazyFill('prodsBig', { endpoint: '/api/products/diverse-discounts', limit: 20, slice: [0, 8] });     // Biggest Discounts — diverse markdowns
+  lazyFill('prods2', { sort: 'popularity', limit: 24, page: 1, minprice: 8, slice: [0, 8] }, { newBadge: true }); // New In — 2 full rows
 
   /* ---- geo: show "Shop India's Favourite Stores" only to India visitors ----
      Default stays visible; hide only for a CONFIRMED non-IN country (fail-open,
@@ -463,17 +476,17 @@
       deals.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8);
       try {
         var base = window.API_BASE || '';
-        var r = await fetch(base + '/api/products/top-deals?limit=12');
+        var r = await fetch(base + '/api/products/top-deals?limit=24');
         var dd = r.ok ? await r.json() : null;
-        var dp = ((dd && dd.products) || []).filter(okProd);
+        var dp = ((dd && dd.products) || []).filter(okHome);
         // Top up from the diverse-discount pool if the curated list is thin, so
         // the section always shows a full two rows.
         if (dp.length < 8) {
           try {
-            var r2 = await fetch(base + '/api/products/diverse-discounts?limit=16');
+            var r2 = await fetch(base + '/api/products/diverse-discounts?limit=24');
             var dd2 = r2.ok ? await r2.json() : null;
             var seen = {}; dp.forEach(function (p) { if (p && p.id != null) seen[p.id] = 1; });
-            ((dd2 && dd2.products) || []).filter(okProd).forEach(function (p) {
+            ((dd2 && dd2.products) || []).filter(okHome).forEach(function (p) {
               if (dp.length < 12 && p && (p.id == null || !seen[p.id])) { dp.push(p); if (p.id != null) seen[p.id] = 1; }
             });
           } catch (e2) { }
