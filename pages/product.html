@@ -132,7 +132,31 @@
 
   function img(u, w){ if(!u) return ''; return 'https://images.weserv.nl/?url=' + encodeURIComponent(u.replace(/^https?:\/\//,'')) + '&w=' + (w||700) + '&output=webp&q=82'; }
 
+  // Record this view for the homepage "Recently Viewed" rail (per-browser).
+  // Stores a slim record with the fields the homepage card renderer reads.
+  function recordRecent(p){
+    try {
+      if (!p || p.id == null || p.id === '') return;
+      var rec = {
+        id: p.id, name: p.name, brand: p.brand,
+        advertiser_name: p.advertiser || p.advertiser_name,
+        image_url: (p.images && p.images.length ? p.images[0] : p.image_url),
+        price: p.price, price_old: p.price_old,
+        price_display: p.price_display, price_old_display: p.price_old_display,
+        url: p.url, affiliate_url: p.affiliate_url,
+        category: p.category, subcategory: p.subcategory
+      };
+      var arr = [];
+      try { arr = JSON.parse(localStorage.getItem('ftw_recent') || '[]'); } catch(e){ arr = []; }
+      if (!Array.isArray(arr)) arr = [];
+      arr = arr.filter(function(x){ return x && String(x.id) !== String(p.id); });
+      arr.unshift(rec);
+      localStorage.setItem('ftw_recent', JSON.stringify(arr.slice(0, 16)));
+    } catch(e){}
+  }
+
   function render(p){
+    recordRecent(p);
     var retailer = p.advertiser || p.brand || 'our partner store';
     var brand = p.brand || p.advertiser || '';
     var link = p.affiliate_url || p.url || '#';
