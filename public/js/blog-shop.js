@@ -25,6 +25,7 @@
     return cur + Number(p).toFixed(2);
   }
 
+  function bslug(s){ return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 70) || 'item'; }
   function cardHTML(p) {
     var link = p.affiliate_url || p.url || '#';
     var img = p.image_url || '';
@@ -37,13 +38,19 @@
       var d = Math.round((1 - Number(p.price) / Number(p.price_old)) * 100);
       if (d > 0 && d < 100) pct = '<span class="bs-pct">-' + d + '%</span>';
     }
-    return '<a class="bs-card" href="' + link + '" target="_blank" rel="nofollow sponsored noopener">'
+    // Link the card to the internal product page (crawlable) so blog posts feed
+    // Google links to product pages; the product page carries the Shop Now button.
+    // Fall back to the outbound store link when there's no product id.
+    var purl = (p.id != null && p.id !== '') ? '/product/' + encodeURIComponent(p.id) + '/' + bslug(p.name) : '';
+    var href = purl || link;
+    var attrs = purl ? '' : ' target="_blank" rel="nofollow sponsored noopener"';
+    return '<a class="bs-card" href="' + href + '"' + attrs + '>'
       + '<div class="bs-img">' + (pct) + '<img src="' + img + '" alt="' + name.replace(/"/g, '') + '" loading="lazy" decoding="async"></div>'
       + '<div class="bs-body">'
       + (brand ? '<div class="bs-brand">' + brand + '</div>' : '')
       + '<div class="bs-name">' + name + '</div>'
       + '<div class="bs-price">' + price + (old ? ' <span class="bs-old">' + old + '</span>' : '') + '</div>'
-      + '<div class="bs-cta">Shop Now →</div>'
+      + '<div class="bs-cta">' + (purl ? 'View deal →' : 'Shop Now →') + '</div>'
       + '</div></a>';
   }
 
