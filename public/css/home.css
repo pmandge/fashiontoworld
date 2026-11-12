@@ -93,6 +93,14 @@
 
   /* ---------- PRODUCTS ---------- */
   .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  /* Horizontal-scroll product rails — one swipeable row, saves vertical space
+     (the dominant fashion-app pattern). .hrail overrides the grid. */
+  .prod-grid.hrail{display:flex;overflow-x:auto;gap:16px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;padding-bottom:10px;scrollbar-width:thin;scroll-padding-left:2px}
+  .prod-grid.hrail::-webkit-scrollbar{height:7px}
+  .prod-grid.hrail::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+  .prod-grid.hrail>.pcard,.prod-grid.hrail>.loading-skeleton{flex:0 0 auto;width:230px;scroll-snap-align:start}
+  .prod-grid.hrail>.loading-skeleton{height:360px;border-radius:12px}
+  @media(max-width:560px){.prod-grid.hrail{gap:12px}.prod-grid.hrail>.pcard,.prod-grid.hrail>.loading-skeleton{width:160px}}
   .pcard{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:.25s;display:flex;flex-direction:column}
   .pcard:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
   .pcard-img{aspect-ratio:3/4;position:relative}
