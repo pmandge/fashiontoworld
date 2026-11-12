@@ -75,8 +75,18 @@ const AdmitadAPI = (() => {
    * Get products from Admitad datafeed
    * @param {Object} opts - { category, brand, page, sort, q }
    */
+  // Block explicit / adult-lingerie products from every surface (brand-safety).
+  // Matches name/brand/advertiser/category against a keyword blocklist.
+  var ADULT_BLOCK = ['lingerie', 'thong', 'g-string', 'gstring', 'bodystocking', 'body stocking', 'babydoll', 'crotchless', 'crotch', 'negligee', 'garter belt', 'nipple', 'pasties', 'erotic', 'fetish', 'bondage', 'bdsm', 'obsessive'];
+  function isAllowed(p) {
+    if (!p) return false;
+    var hay = ((p.name || '') + ' ' + (p.brand || '') + ' ' + (p.advertiser_name || p.advertiser || '') + ' ' + (p.category || '') + ' ' + (p.subcategory || '') + ' ' + (p.feed_category || '')).toLowerCase();
+    for (var i = 0; i < ADULT_BLOCK.length; i++) { if (hay.indexOf(ADULT_BLOCK[i]) !== -1) return false; }
+    return true;
+  }
+
   async function getProducts(opts = {}) {
-    return request('/products', {
+    var _data = await request('/products', {
       category: opts.category || '',
       subcategory: opts.subcategory || '',
       gender: opts.gender || '',
@@ -94,6 +104,8 @@ const AdmitadAPI = (() => {
       q: opts.q || '',
       currency: CONFIG.currency,
     });
+    if (_data && Array.isArray(_data.products)) _data.products = _data.products.filter(isAllowed);
+    return _data;
   }
 
   /**
@@ -711,6 +723,7 @@ const AdmitadAPI = (() => {
   // ─── PUBLIC INTERFACE ────────────────────────────────────────
   return {
     getProducts,
+    isAllowed,
     getCoupons,
     getBrands,
     getStores,

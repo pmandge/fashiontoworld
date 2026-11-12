@@ -7,6 +7,7 @@
  */
 (function () {
   var API = window.AdmitadAPI;
+  function okProd(p) { return (API && API.isAllowed) ? API.isAllowed(p) : true; }
 
   /* ---------------- wishlist (localStorage) ---------------- */
   var WISH_KEY = 'ftw_saved';
@@ -400,7 +401,7 @@
     el.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8);
     try {
       var data = await fetchProducts(opts);
-      var items = (data && data.products) || [];
+      var items = ((data && data.products) || []).filter(okProd);
       if (opts && opts.slice) items = items.slice(opts.slice[0], opts.slice[1]);
       if (!items.length) { hideSection(el); return; }
       el.innerHTML = items.map(function (p) { return pcard(p, cardOpts); }).join('');
@@ -424,6 +425,17 @@
   fillProducts('prods', { endpoint: '/api/products/trending', limit: 16 });                       // Trending — premium mix (watches/bags/dresses/jewellery)
   lazyFill('prodsBig', { endpoint: '/api/products/diverse-discounts', limit: 8 });                    // Biggest Discounts — diverse markdowns
   lazyFill('prods2', { sort: 'popularity', limit: 8, page: 1, minprice: 8 }, { newBadge: true });      // New In — on scroll
+
+  /* ---- geo: show "Shop India's Favourite Stores" only to India visitors ----
+     Default stays visible; hide only for a CONFIRMED non-IN country (fail-open,
+     so the primary India audience keeps it even if the geo lookup is unavailable). */
+  (function () {
+    var sec = document.getElementById('shopIndia');
+    if (!sec) return;
+    fetch('/_geo').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      if (d && d.country && d.country !== 'IN') sec.style.display = 'none';
+    }).catch(function () { });
+  })();
 
   /* ---------------- live: ticker + today's deals (coupons) ---------------- */
   function shortOffer(c) {
@@ -451,10 +463,22 @@
       deals.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8);
       try {
         var base = window.API_BASE || '';
-        var r = await fetch(base + '/api/products/top-deals');
+        var r = await fetch(base + '/api/products/top-deals?limit=12');
         var dd = r.ok ? await r.json() : null;
-        var dp = (dd && dd.products) || [];
-        if (dp.length) { deals.innerHTML = dp.map(function (p) { return pcard(p, {}); }).join(''); lazyCards(deals); }
+        var dp = ((dd && dd.products) || []).filter(okProd);
+        // Top up from the diverse-discount pool if the curated list is thin, so
+        // the section always shows a full two rows.
+        if (dp.length < 8) {
+          try {
+            var r2 = await fetch(base + '/api/products/diverse-discounts?limit=16');
+            var dd2 = r2.ok ? await r2.json() : null;
+            var seen = {}; dp.forEach(function (p) { if (p && p.id != null) seen[p.id] = 1; });
+            ((dd2 && dd2.products) || []).filter(okProd).forEach(function (p) {
+              if (dp.length < 12 && p && (p.id == null || !seen[p.id])) { dp.push(p); if (p.id != null) seen[p.id] = 1; }
+            });
+          } catch (e2) { }
+        }
+        if (dp.length) { deals.innerHTML = dp.slice(0, 12).map(function (p) { return pcard(p, {}); }).join(''); lazyCards(deals); }
         else { hideSection(deals); }
       } catch (e) { hideSection(deals); }
     }

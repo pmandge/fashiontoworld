@@ -16,6 +16,11 @@
   path = "/product/*"
   function = "product"
 
+# Visitor country lookup (/_geo) — client uses it to show India-only sections to IN visitors.
+[[edge_functions]]
+  path = "/_geo"
+  function = "geo"
+
 [[redirects]]
   from = "/sitemap.xml"
   to = "https://api.fashiontoworld.co/api/sitemap.xml"
