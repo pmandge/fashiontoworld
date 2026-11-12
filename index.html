@@ -294,22 +294,38 @@
 @media(max-width:600px){.india-inner{padding:0 20px}.india-grid{grid-template-columns:repeat(2,1fr);gap:12px}.india-band{padding:40px 0}}
 </style>
   
-<!-- TRENDING (real outbound products) -->
+<!-- CATEGORY GRID — browse first (categories are the #1 homepage job) -->
+<section class="section" style="background:var(--cream)">
+  <div class="container">
+    <div class="sec-head"><p class="eyebrow">Browse</p><h2>Find Your Style</h2><p class="sec-sub">Shop women’s, men’s and kids’ fashion, shoes, bags, watches and jewellery from worldwide-shipping stores — curated and refreshed daily.</p></div>
+    <div class="cat-grid" id="cats"></div>
+  </div>
+</section>
+
+<!-- TODAYS TOP DEALS — promoted high (the hero's promise + top conversion rail) -->
+<section class="section deals-hub" id="deals">
+  <div class="container">
+    <div class="sec-head row"><div><p class="eyebrow">Limited time</p><h2>Today's Top Deals</h2></div><a class='link-more' href='/pages/search.html?markdown=true&sort=discount'>All deals &#8250;</a></div>
+    <div class="deal-grid" id="todaysDeals"></div>
+  </div>
+</section>
+
+<!-- TRENDING (real outbound products) — swipeable rail -->
 <section class="section">
   <div class="container">
     <div class="sec-head row">
       <div><p class="eyebrow">Up to 60% off</p><h2>Trending This Week</h2></div>
       <a class='link-more' href='/pages/search.html?sort=popularity'>See more ›</a>
     </div>
-    <div class="prod-grid" id="prods"></div>
+    <div class="prod-grid hrail" id="prods"></div>
   </div>
 </section>
 
-<!-- CATEGORY GRID (Watches split from Jewellery) -->
-<section class="section" style="background:var(--cream)">
+<!-- NEW IN THIS WEEK (freshness + more outbound clicks) — swipeable rail -->
+<section class="section">
   <div class="container">
-    <div class="sec-head"><p class="eyebrow">Browse</p><h2>Find Your Style</h2><p class="sec-sub">Shop women’s, men’s and kids’ fashion, shoes, bags, watches and jewellery from worldwide-shipping stores — curated and refreshed daily.</p></div>
-    <div class="cat-grid" id="cats"></div>
+    <div class="sec-head row"><div><p class="eyebrow">Just landed</p><h2>New In This Week</h2></div><a class='link-more' href='/pages/women.html'>See all new &#8250;</a></div>
+    <div class="prod-grid hrail" id="prods2"></div>
   </div>
 </section>
 
@@ -339,14 +355,6 @@
   </div>
 </section>
 
-<!-- NEW IN THIS WEEK (freshness + more outbound clicks) -->
-<section class="section">
-  <div class="container">
-    <div class="sec-head row"><div><p class="eyebrow">Just landed</p><h2>New In This Week</h2></div><a class='link-more' href='/pages/women.html'>See all new &#8250;</a></div>
-    <div class="prod-grid" id="prods2"></div>
-  </div>
-</section>
-
 <!-- POPULAR BRANDS (text wordmarks) -->
 <section class="section brands">
   <div class="container" style="text-align:center">
@@ -362,14 +370,6 @@
       <span class="brand-word">Dolce &amp; Gabbana</span>
     </div>
     <a class='btn-outline' href='/pages/brands.html'>All brands →</a>
-  </div>
-</section>
-
-<!-- BIGGEST DISCOUNTS (two rows, by %) -->
-<section class="section">
-  <div class="container">
-    <div class="sec-head"><p class="eyebrow">Clearance</p><h2>Biggest Discounts</h2><p class="sec-sub">The steepest verified markdowns across our worldwide-shipping stores &#8212; sorted by percentage off and refreshed every day.</p><a class='link-more' href='/pages/search.html?markdown=true&sort=discount' style="display:inline-block;margin-top:14px;">See more &#8250;</a></div>
-    <div class="prod-grid" id="prodsBig"></div>
   </div>
 </section>
 
@@ -393,14 +393,6 @@
         <span class="cta-arw">&#8250;</span>
       </a>
     </div>
-  </div>
-</section>
-
-<!-- TODAYS TOP DEALS (compact, more cards) -->
-<section class="section deals-hub" id="deals">
-  <div class="container">
-    <div class="sec-head row"><div><p class="eyebrow">Limited time</p><h2>Today's Top Deals</h2></div><a class='link-more' href='/pages/search.html?markdown=true&sort=discount'>All deals &#8250;</a></div>
-    <div class="deal-grid" id="todaysDeals"></div>
   </div>
 </section>
 

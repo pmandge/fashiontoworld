@@ -434,10 +434,11 @@
   // 2 per store) so no single store floods the rail. Biggest Discounts takes a
   // later slice so it shows different products than Trending.
   // Over-fetch + slice so each rail stays full AFTER the eyewear/brand-safety
-  // filter removes items (otherwise a filtered rail collapses to one short row).
-  fillProducts('prods', { endpoint: '/api/products/trending', limit: 28, slice: [0, 16] });            // Trending — premium mix (watches/bags/dresses/jewellery)
-  lazyFill('prodsBig', { endpoint: '/api/products/diverse-discounts', limit: 20, slice: [0, 8] });     // Biggest Discounts — diverse markdowns
-  lazyFill('prods2', { sort: 'popularity', limit: 24, page: 1, minprice: 8, slice: [0, 8] }, { newBadge: true }); // New In — 2 full rows
+  // filter removes items. Trending + New In render as horizontal-scroll rails
+  // (.hrail), so ~12 cards each give plenty to swipe through.
+  fillProducts('prods', { endpoint: '/api/products/trending', limit: 24, slice: [0, 12] });            // Trending — swipeable rail
+  lazyFill('prods2', { sort: 'popularity', limit: 24, page: 1, minprice: 8, slice: [0, 12] }, { newBadge: true }); // New In — swipeable rail
+  // (Biggest Discounts rail removed — consolidated into Today's Top Deals.)
 
   /* ---- geo: show "Shop India's Favourite Stores" only to India visitors ----
      Default stays visible; hide only for a CONFIRMED non-IN country (fail-open,
