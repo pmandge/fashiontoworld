@@ -77,8 +77,8 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=optional" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=optional"></noscript>
 <link rel="preconnect" href="https://images.unsplash.com">
 <link rel="preconnect" href="https://images.weserv.nl" crossorigin>
 <!-- LCP: preload the first hero image so the browser fetches it immediately
@@ -139,6 +139,9 @@
 .cta-arw{font-family:serif;font-size:22px;color:rgba(255,255,255,.5)}
 .cta-card--gold .cta-arw{color:#12100c}
 @media (max-width:820px){ .cta-band-grid{grid-template-columns:1fr} }
+/* CLS: live counts (products/stores) swap placeholder->real numbers after load.
+   Tabular figures keep every digit the same width so the swap can't reflow text. */
+#cnt,.js-prodcount,.js-storecount,.trust-num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
 </style>
 </head>
 <body>
