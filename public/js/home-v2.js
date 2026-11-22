@@ -319,7 +319,7 @@
   }
   var _bgObs = ('IntersectionObserver' in window) ? new IntersectionObserver(function (entries) {
     entries.forEach(function (e) { if (e.isIntersecting) { _bgPaint(e.target); _bgObs.unobserve(e.target); } });
-  }, { rootMargin: '200px 0px' }) : null;
+  }, { rootMargin: '64px 0px' }) : null;
   function bgFill(nodes, w) {
     nodes.forEach(function (ph) {
       if (w) ph.setAttribute('data-bgw', w);
@@ -372,7 +372,7 @@
     entries.forEach(function (e) {
       if (e.isIntersecting) { paintCard(e.target); _cardObs.unobserve(e.target); }
     });
-  }, { rootMargin: '200px 0px' }) : null;
+  }, { rootMargin: '64px 0px' }) : null;
   function lazyCards(root) {
     var nodes = (root || document).querySelectorAll('.pcard-img[data-pimg]:not([data-done])');
     nodes.forEach(function (ph) {
