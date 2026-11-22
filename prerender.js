@@ -185,9 +185,43 @@ async function buildProductSitemap() {
   console.log('[prerender] product sitemap: ' + urls.length + ' product URLs written');
 }
 
+// Inline the homepage's render-blocking CSS at build time.
+// The <link> stylesheets in index.html stay as the editable source of truth;
+// this bakes their contents into a single <style> so the deployed homepage has
+// ZERO render-blocking CSS requests — the hero (the LCP element) can paint
+// immediately instead of waiting ~2s for three CSS round-trips. Fail-safe:
+// any problem leaves index.html exactly as committed.
+function inlineHomepageCss() {
+  const root = __dirname;
+  const file = path.join(root, 'index.html');
+  if (!fs.existsSync(file)) { console.warn('[prerender] css-inline: no index.html'); return; }
+  // In source order: main -> home -> responsive-fixes (preserves the cascade).
+  const sheets = ['public/css/main.css', 'public/css/home.css', 'public/css/responsive-fixes.css'];
+  let html = fs.readFileSync(file, 'utf8');
+  let combined = '';
+  for (const rel of sheets) {
+    const p = path.join(root, rel);
+    if (!fs.existsSync(p)) { console.warn('[prerender] css-inline: missing', rel, '— skipping inline'); return; }
+    combined += '\n/* ' + rel + ' */\n' + fs.readFileSync(p, 'utf8');
+  }
+  if (combined.indexOf('</style') > -1) { console.warn('[prerender] css-inline: CSS contains </style> — skipping'); return; }
+  // Replace the first stylesheet link with the inlined block; drop the other two.
+  const linkRe = /[ \t]*<link[^>]+rel=["']stylesheet["'][^>]+href=["']public\/css\/(?:main|home|responsive-fixes)\.css["'][^>]*>\n?/g;
+  const found = html.match(linkRe);
+  if (!found || found.length < 3) { console.warn('[prerender] css-inline: expected 3 css links, found', found ? found.length : 0, '— skipping'); return; }
+  let first = true;
+  html = html.replace(linkRe, () => {
+    if (first) { first = false; return '<style id="ftw-inline-css">' + combined + '\n</style>\n'; }
+    return '';
+  });
+  fs.writeFileSync(file, html);
+  console.log('[prerender] css-inline: baked', (combined.length / 1024).toFixed(0) + ' KB of CSS into index.html (0 render-blocking stylesheets)');
+}
+
 async function run() {
   const root = __dirname;
   let done = 0, skipped = 0;
+  try { inlineHomepageCss(); } catch (e) { console.warn('[prerender] css-inline failed:', e.message); }
   for (const [rel, params, gridId] of TARGETS) {
     const file = path.join(root, rel);
     try {
@@ -211,5 +245,5 @@ async function run() {
   console.log(`[prerender] done: ${done} pages baked, ${skipped} left as-is`);
 }
 
-module.exports = { esc, optimizedImg, httpsImg, priceText, card, itemListLd, injectGrid, slugify, buildProductSitemap };
+module.exports = { esc, optimizedImg, httpsImg, priceText, card, itemListLd, injectGrid, slugify, buildProductSitemap, inlineHomepageCss };
 if (require.main === module) run();
