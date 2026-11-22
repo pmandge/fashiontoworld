@@ -32,12 +32,13 @@
         var im=new Image();
         im.onload=function(){ if(im.naturalWidth<=1) card.remove(); };
         im.onerror=function(){
-          if(test===url){ card.remove(); return; }
-          // proxy failed -> confirm against the original before removing the card
-          var im2=new Image();
-          im2.onload=function(){ if(im2.naturalWidth<=1) card.remove(); };
-          im2.onerror=function(){ card.remove(); };
-          im2.src=url;
+          // If we tested the raw URL directly (nothing to proxy), a failure means
+          // the image is genuinely gone -> drop the card. If we tested a PROXY and
+          // it failed, that only means this host can't be proxied (e.g. http-only
+          // CDNs like theluxurycloset) — NOT that the image is broken. Keep the
+          // card and let the lazy display loader fetch it only if the user scrolls
+          // to it; never eager-load the heavy original here (that was the 5 MB).
+          if(test===url) card.remove();
         };
         im.src=test;
       })(un[j]);
