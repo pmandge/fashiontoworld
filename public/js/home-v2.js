@@ -319,7 +319,7 @@
   }
   var _bgObs = ('IntersectionObserver' in window) ? new IntersectionObserver(function (entries) {
     entries.forEach(function (e) { if (e.isIntersecting) { _bgPaint(e.target); _bgObs.unobserve(e.target); } });
-  }, { rootMargin: '400px 0px' }) : null;
+  }, { rootMargin: '200px 0px' }) : null;
   function bgFill(nodes, w) {
     nodes.forEach(function (ph) {
       if (w) ph.setAttribute('data-bgw', w);
@@ -327,11 +327,24 @@
     });
   }
 
-  /* -------- lazy product images (resized via proxy, original as fallback) ---- */
+  /* -------- lazy product images (resized via proxy, original as last resort) ---- */
+  // PERF: merchant originals are often 0.5-2 MB each. We paint a 400px copy via a
+  // proxy. If one proxy fails for a host (hotlink-blocked / rate-limited), we try a
+  // SECOND, independent proxy before ever falling back to the full-size original —
+  // that fallback was loading 500-700 KB images and alone accounted for most of the
+  // page weight.
   function proxied(url, w) {
     try {
       var clean = String(url).replace(/^https?:\/\//, '');
       return 'https://images.weserv.nl/?url=' + encodeURIComponent(clean) + '&w=' + (w || 400) + '&q=72&output=webp';
+    } catch (e) { return url; }
+  }
+  function proxied2(url, w) {
+    // Photon (WordPress.com) — different CDN + fetcher, catches hosts weserv can't.
+    try {
+      var clean = String(url).replace(/^https?:\/\//, '');
+      var sep = clean.indexOf('?') > -1 ? '&' : '?';
+      return 'https://i0.wp.com/' + clean + sep + 'resize=' + (w || 400) + ',' + Math.round((w || 400) * 1.25) + '&quality=72';
     } catch (e) { return url; }
   }
   function paintCard(ph) {
@@ -339,13 +352,19 @@
     if (!raw || ph.getAttribute('data-done')) return;
     ph.setAttribute('data-done', '1');
     var small = proxied(raw, 400);
+    var alt = proxied2(raw, 400);
     var im = new Image();
     im.onload = function () { ph.style.backgroundImage = "url('" + small + "')"; };
     im.onerror = function () {
-      // proxy failed -> use the merchant's original so a product is never blank
-      var fb = new Image();
-      fb.onload = function () { ph.style.backgroundImage = "url('" + raw + "')"; };
-      fb.src = raw;
+      // weserv failed -> try Photon (still a resized copy) before the heavy original
+      var p = new Image();
+      p.onload = function () { ph.style.backgroundImage = "url('" + alt + "')"; };
+      p.onerror = function () {
+        var fb = new Image();
+        fb.onload = function () { ph.style.backgroundImage = "url('" + raw + "')"; };
+        fb.src = raw;
+      };
+      p.src = alt;
     };
     im.src = small;
   }
@@ -353,7 +372,7 @@
     entries.forEach(function (e) {
       if (e.isIntersecting) { paintCard(e.target); _cardObs.unobserve(e.target); }
     });
-  }, { rootMargin: '400px 0px' }) : null;
+  }, { rootMargin: '200px 0px' }) : null;
   function lazyCards(root) {
     var nodes = (root || document).querySelectorAll('.pcard-img[data-pimg]:not([data-done])');
     nodes.forEach(function (ph) {
