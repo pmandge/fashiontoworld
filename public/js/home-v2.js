@@ -544,7 +544,11 @@
       } catch (e) { tickFallback(tick); }
     }
 
-    if (deals) {
+    if (deals && deals.getAttribute('data-prerendered')) {
+      // Server baked this rail at build time (prerender.js) — skip the API call
+      // and the re-render; just activate the lazy image loader on the baked cards.
+      lazyCards(deals);
+    } else if (deals) {
       deals.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8);
       try {
         var base = window.API_BASE || '';
