@@ -20,10 +20,26 @@
         if(d){ var m=(d.getAttribute('style')||'').match(/url\(["']?([^"')]+)/); if(m) url=m[1]; }
         if(!url) url=card.getAttribute('data-img')||'';
         if(!url){ card.remove(); return; }
+        // PERF: this only needs to know whether the image exists, not display it.
+        // Loading the full-size merchant original here (0.5-2 MB each, 18+ at once)
+        // was adding ~5 MB to the page and starving the hero (LCP). Verify via a
+        // tiny proxied copy instead; only touch the heavy original if the proxy
+        // itself fails, so a genuinely-broken card is still removed.
+        var test=url;
+        if(/^https?:\/\//i.test(url) && !/images\.weserv\.nl|i0\.wp\.com/.test(url)){
+          test='https://images.weserv.nl/?url='+encodeURIComponent(url.replace(/^https?:\/\//,''))+'&w=96&q=60&output=webp';
+        }
         var im=new Image();
-        im.onerror=function(){ card.remove(); };
         im.onload=function(){ if(im.naturalWidth<=1) card.remove(); };
-        im.src=url;
+        im.onerror=function(){
+          if(test===url){ card.remove(); return; }
+          // proxy failed -> confirm against the original before removing the card
+          var im2=new Image();
+          im2.onload=function(){ if(im2.naturalWidth<=1) card.remove(); };
+          im2.onerror=function(){ card.remove(); };
+          im2.src=url;
+        };
+        im.src=test;
       })(un[j]);
     }
   }
