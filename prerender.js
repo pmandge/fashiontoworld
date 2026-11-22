@@ -218,10 +218,77 @@ function inlineHomepageCss() {
   console.log('[prerender] css-inline: baked', (combined.length / 1024).toFixed(0) + ' KB of CSS into index.html (0 render-blocking stylesheets)');
 }
 
+// --- Homepage "Today's Top Deals" bake ---------------------------------------
+// The homepage normally fetches /api/products/top-deals and builds this rail in
+// JS on every load (main-thread work = TBT, plus an API round-trip before the
+// cards appear). Bake the top 12 into the HTML at build time so the browser has
+// them immediately; home-v2.js sees data-prerendered and skips the fetch+render.
+// Markup MUST match home-v2.js pcard() so the lazy image loader, wishlist and
+// click handling keep working. Fail-safe: any problem leaves the rail client-rendered.
+const HOME_EYEWEAR = ['sunglass', 'eyeglass', 'eyewear', 'spectacle', 'glasseslit', 'smartbuyglasses', 'sunglass hut'];
+function notEyewear(p) {
+  if (!p) return false;
+  const hay = ((p.name || '') + ' ' + (p.brand || '') + ' ' + (p.advertiser_name || p.advertiser || '') + ' ' + (p.category || '') + ' ' + (p.subcategory || '') + ' ' + (p.feed_category || '')).toLowerCase();
+  return !HOME_EYEWEAR.some(t => hay.indexOf(t) !== -1);
+}
+function okHomeBuild(p) { return isAllowed(p) && notEyewear(p); }
+
+function pcardHtml(p) {
+  const link = p.affiliate_url || p.url || '';
+  const out = /^https?:/i.test(link);
+  const href = out ? link : '#';
+  const disc = (p.price_old && p.price_old > p.price) ? Math.round((1 - p.price / p.price_old) * 100) : 0;
+  const price = p.price_display || (p.price ? ('$' + p.price) : '');
+  const was = p.price_old ? (p.price_old_display || ('$' + p.price_old)) : '';
+  const img = p.image_url || '';
+  const purl = (p.id != null && p.id !== '') ? '/product/' + encodeURIComponent(p.id) + '/' + slugify(p.name) : '';
+  const badge = disc ? '<span class="pcard-badge">-' + disc + '%</span>' : '';
+  const wid = (p.id || p.product_id || p.affiliate_url || p.url || p.name || '').toString();
+  const heart = '<button class="pcard-heart" data-wid="' + esc(wid) + '" aria-label="Save item" onclick="return false;"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>';
+  return '<article class="pcard" data-wid="' + esc(wid) + '" data-name="' + esc(p.name || '') + '" data-brand="' + esc(p.brand || p.advertiser_name || '') + '" data-price="' + esc(price) + '" data-img="' + esc(img) + '" data-href="' + esc(href) + '">' +
+    (purl ? '<a class="pcard-link" href="' + esc(purl) + '">' : '') +
+    '<div class="pcard-img" style="background:#efe9df center/cover no-repeat"' + (img ? (' data-pimg="' + esc(img) + '"') : '') + '>' + badge + heart + '</div>' +
+    '<div class="pcard-body"><p class="pcard-brand">' + esc(p.brand || p.advertiser_name || '') + '</p>' +
+    '<h3 class="pcard-name">' + esc(p.name || '') + '</h3>' +
+    '<p class="pcard-price">' + esc(price) + (was ? '<span class="was">' + esc(was) + '</span>' : '') + '</p></div>' +
+    (purl ? '</a>' : '') +
+    '<div class="pcard-foot"><a class="pcard-btn" href="' + href + '"' + (out ? ' target="_blank" rel="sponsored nofollow noopener"' : '') + '>Shop Now &#8594;</a></div></article>';
+}
+
+async function bakeTodaysDeals() {
+  const file = path.join(__dirname, 'index.html');
+  if (!fs.existsSync(file)) { console.warn('[prerender] deals: no index.html'); return; }
+  if (typeof fetch !== 'function') { console.warn('[prerender] deals: no global fetch'); return; }
+  const getJson = async (url) => { const r = await fetch(url); return r.ok ? await r.json() : null; };
+  let dp = [];
+  try {
+    const dd = await getJson(API + '/api/products/top-deals?limit=24');
+    dp = ((dd && dd.products) || []).filter(okHomeBuild);
+  } catch (e) { console.warn('[prerender] top-deals fetch:', e.message); return; }
+  if (dp.length < 8) {
+    try {
+      const dd2 = await getJson(API + '/api/products/diverse-discounts?limit=24');
+      const seen = Object.create(null); dp.forEach(p => { if (p && p.id != null) seen[p.id] = 1; });
+      ((dd2 && dd2.products) || []).filter(okHomeBuild).forEach(p => {
+        if (dp.length < 12 && p && (p.id == null || !seen[p.id])) { dp.push(p); if (p.id != null) seen[p.id] = 1; }
+      });
+    } catch (e) { /* fall through with what we have */ }
+  }
+  if (dp.length < MIN_OK) { console.warn('[prerender] today\'s deals: only ' + dp.length + ' products — leaving client-rendered'); return; }
+  const cards = dp.slice(0, 12).map(pcardHtml).join('\n');
+  const html = fs.readFileSync(file, 'utf8');
+  const anchor = '<div class="deal-grid" id="todaysDeals"></div>';
+  if (html.indexOf(anchor) === -1) { console.warn('[prerender] deals: #todaysDeals anchor not found — skipping'); return; }
+  const out = html.replace(anchor, '<div class="deal-grid" id="todaysDeals" data-prerendered="1">\n' + cards + '\n</div>');
+  fs.writeFileSync(file, out);
+  console.log('[prerender] baked ' + Math.min(dp.length, 12) + " products into Today's Top Deals (rail is now server-rendered)");
+}
+
 async function run() {
   const root = __dirname;
   let done = 0, skipped = 0;
   try { inlineHomepageCss(); } catch (e) { console.warn('[prerender] css-inline failed:', e.message); }
+  try { await bakeTodaysDeals(); } catch (e) { console.warn('[prerender] deals bake failed:', e.message); }
   for (const [rel, params, gridId] of TARGETS) {
     const file = path.join(root, rel);
     try {
@@ -245,5 +312,5 @@ async function run() {
   console.log(`[prerender] done: ${done} pages baked, ${skipped} left as-is`);
 }
 
-module.exports = { esc, optimizedImg, httpsImg, priceText, card, itemListLd, injectGrid, slugify, buildProductSitemap, inlineHomepageCss };
+module.exports = { esc, optimizedImg, httpsImg, priceText, card, itemListLd, injectGrid, slugify, buildProductSitemap, inlineHomepageCss, pcardHtml, okHomeBuild, bakeTodaysDeals };
 if (require.main === module) run();
