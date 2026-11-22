@@ -261,11 +261,14 @@ async function bakeTodaysDeals() {
   if (typeof fetch !== 'function') { console.warn('[prerender] deals: no global fetch'); return; }
   const getJson = async (url) => { const r = await fetch(url); return r.ok ? await r.json() : null; };
   let dp = [];
+  // top-deals is a small curated list (~10, ~8 after filtering — right at the
+  // threshold), so a hiccup must NOT abort: fall through and fill from the
+  // diverse-discounts pool. Combine both and keep up to 12.
   try {
     const dd = await getJson(API + '/api/products/top-deals?limit=24');
     dp = ((dd && dd.products) || []).filter(okHomeBuild);
-  } catch (e) { console.warn('[prerender] top-deals fetch:', e.message); return; }
-  if (dp.length < 8) {
+  } catch (e) { console.warn('[prerender] top-deals fetch:', e.message); }
+  if (dp.length < 12) {
     try {
       const dd2 = await getJson(API + '/api/products/diverse-discounts?limit=24');
       const seen = Object.create(null); dp.forEach(p => { if (p && p.id != null) seen[p.id] = 1; });
@@ -274,7 +277,8 @@ async function bakeTodaysDeals() {
       });
     } catch (e) { /* fall through with what we have */ }
   }
-  if (dp.length < MIN_OK) { console.warn('[prerender] today\'s deals: only ' + dp.length + ' products — leaving client-rendered'); return; }
+  const DEALS_MIN = 6; // a partial rail still beats a client round-trip; combined pool is ~28
+  if (dp.length < DEALS_MIN) { console.warn('[prerender] today\'s deals: only ' + dp.length + ' products — leaving client-rendered'); return; }
   const cards = dp.slice(0, 12).map(pcardHtml).join('\n');
   const html = fs.readFileSync(file, 'utf8');
   const anchor = '<div class="deal-grid" id="todaysDeals"></div>';
