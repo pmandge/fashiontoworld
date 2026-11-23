@@ -260,26 +260,34 @@ async function bakeTodaysDeals() {
   if (!fs.existsSync(file)) { console.warn('[prerender] deals: no index.html'); return; }
   if (typeof fetch !== 'function') { console.warn('[prerender] deals: no global fetch'); return; }
   const getJson = async (url) => { const r = await fetch(url); return r.ok ? await r.json() : null; };
-  let dp = [];
-  // top-deals is a small curated list (~10, ~8 after filtering — right at the
-  // threshold), so a hiccup must NOT abort: fall through and fill from the
-  // diverse-discounts pool. Combine both and keep up to 12.
-  try {
-    const dd = await getJson(API + '/api/products/top-deals?limit=24');
-    dp = ((dd && dd.products) || []).filter(okHomeBuild);
-  } catch (e) { console.warn('[prerender] top-deals fetch:', e.message); }
-  if (dp.length < 12) {
-    try {
-      const dd2 = await getJson(API + '/api/products/diverse-discounts?limit=24');
-      const seen = Object.create(null); dp.forEach(p => { if (p && p.id != null) seen[p.id] = 1; });
-      ((dd2 && dd2.products) || []).filter(okHomeBuild).forEach(p => {
-        if (dp.length < 12 && p && (p.id == null || !seen[p.id])) { dp.push(p); if (p.id != null) seen[p.id] = 1; }
-      });
-    } catch (e) { /* fall through with what we have */ }
+  // Build a combined pool (top-deals first so the curated picks win), then dedupe
+  // by IMAGE — the same product often appears as separate size/colour variants
+  // (e.g. "Kim Dress size M" and "size XS" share one photo) and id-only dedupe
+  // missed those. Cap at 8 so the grid always fills whole rows (4-col desktop,
+  // 2-col mobile). A hiccup on either endpoint must not abort.
+  let pool = [];
+  try { const dd = await getJson(API + '/api/products/top-deals?limit=24'); pool = pool.concat(((dd && dd.products) || [])); }
+  catch (e) { console.warn('[prerender] top-deals fetch:', e.message); }
+  try { const dd2 = await getJson(API + '/api/products/diverse-discounts?limit=24'); pool = pool.concat(((dd2 && dd2.products) || [])); }
+  catch (e) { /* fall through with what we have */ }
+  const DEALS_CAP = 8;
+  const seen = Object.create(null);
+  const dp = [];
+  for (const p of pool) {
+    if (!okHomeBuild(p)) continue;
+    const imgKey = (p.image_url || '').split('?')[0];
+    const base = (p.name || '').toLowerCase().replace(/\s*[|\-–]\s*(size|colou?r)\b.*/i, '').replace(/\s+/g, ' ').trim();
+    const nameKey = base ? ('n:' + base) : '';
+    if (!imgKey && !nameKey) continue;                              // skip empty products
+    if ((imgKey && seen[imgKey]) || (nameKey && seen[nameKey])) continue; // same photo OR same product (ignoring size/colour)
+    if (imgKey) seen[imgKey] = 1;
+    if (nameKey) seen[nameKey] = 1;
+    dp.push(p);
+    if (dp.length >= DEALS_CAP) break;
   }
-  const DEALS_MIN = 6; // a partial rail still beats a client round-trip; combined pool is ~28
+  const DEALS_MIN = 4; // a partial rail still beats a client round-trip
   if (dp.length < DEALS_MIN) { console.warn('[prerender] today\'s deals: only ' + dp.length + ' products — leaving client-rendered'); return; }
-  const cards = dp.slice(0, 12).map(pcardHtml).join('\n');
+  const cards = dp.map(pcardHtml).join('\n');
   const html = fs.readFileSync(file, 'utf8');
   const anchor = '<div class="deal-grid" id="todaysDeals"></div>';
   if (html.indexOf(anchor) === -1) { console.warn('[prerender] deals: #todaysDeals anchor not found — skipping'); return; }
