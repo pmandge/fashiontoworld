@@ -552,22 +552,21 @@
       deals.innerHTML = '<div class="loading-skeleton"></div>'.repeat(8);
       try {
         var base = window.API_BASE || '';
-        var r = await fetch(base + '/api/products/top-deals?limit=24');
-        var dd = r.ok ? await r.json() : null;
-        var dp = ((dd && dd.products) || []).filter(okHome);
-        // Top up from the diverse-discount pool if the curated list is thin, so
-        // the section always shows a full two rows.
-        if (dp.length < 8) {
-          try {
-            var r2 = await fetch(base + '/api/products/diverse-discounts?limit=24');
-            var dd2 = r2.ok ? await r2.json() : null;
-            var seen = {}; dp.forEach(function (p) { if (p && p.id != null) seen[p.id] = 1; });
-            ((dd2 && dd2.products) || []).filter(okHome).forEach(function (p) {
-              if (dp.length < 12 && p && (p.id == null || !seen[p.id])) { dp.push(p); if (p.id != null) seen[p.id] = 1; }
-            });
-          } catch (e2) { }
+        var pool = [];
+        try { var r = await fetch(base + '/api/products/top-deals?limit=24'); var dd = r.ok ? await r.json() : null; pool = pool.concat(((dd && dd.products) || [])); } catch (e1) { }
+        try { var r2 = await fetch(base + '/api/products/diverse-discounts?limit=24'); var dd2 = r2.ok ? await r2.json() : null; pool = pool.concat(((dd2 && dd2.products) || [])); } catch (e2) { }
+        // Dedupe by image (catches size/colour variants of one product); cap at 8 for whole rows.
+        var seen = {}; var dp = [];
+        for (var di = 0; di < pool.length && dp.length < 8; di++) {
+          var dpp = pool[di]; if (!okHome(dpp)) continue;
+          var dimg = (dpp.image_url || '').split('?')[0];
+          var dbase = (dpp.name || '').toLowerCase().replace(/\s*[|\-–]\s*(size|colou?r)\b.*/i, '').replace(/\s+/g, ' ').trim();
+          var dname = dbase ? ('n:' + dbase) : '';
+          if (!dimg && !dname) continue;
+          if ((dimg && seen[dimg]) || (dname && seen[dname])) continue;
+          if (dimg) seen[dimg] = 1; if (dname) seen[dname] = 1; dp.push(dpp);
         }
-        if (dp.length) { deals.innerHTML = dp.slice(0, 12).map(function (p) { return pcard(p, {}); }).join(''); lazyCards(deals); }
+        if (dp.length) { deals.innerHTML = dp.map(function (p) { return pcard(p, {}); }).join(''); lazyCards(deals); }
         else { hideSection(deals); }
       } catch (e) { hideSection(deals); }
     }

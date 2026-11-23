@@ -97,9 +97,9 @@
   .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
   /* Horizontal-scroll product rails — one swipeable row, saves vertical space
      (the dominant fashion-app pattern). .hrail overrides the grid. */
-  .prod-grid.hrail{display:flex;overflow-x:auto;gap:16px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;padding-bottom:10px;scrollbar-width:thin;scroll-padding-left:2px}
-  .prod-grid.hrail::-webkit-scrollbar{height:7px}
-  .prod-grid.hrail::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+  /* Modern carousel: hidden scrollbar + snap; the partly-visible next card is the scroll affordance. */
+  .prod-grid.hrail{display:flex;overflow-x:auto;gap:16px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;padding-bottom:2px;scrollbar-width:none;-ms-overflow-style:none;scroll-padding-left:2px}
+  .prod-grid.hrail::-webkit-scrollbar{display:none}
   .prod-grid.hrail>.pcard,.prod-grid.hrail>.loading-skeleton{flex:0 0 auto;width:230px;scroll-snap-align:start}
   .prod-grid.hrail>.loading-skeleton{height:360px;border-radius:12px}
   @media(max-width:560px){.prod-grid.hrail{gap:12px}.prod-grid.hrail>.pcard,.prod-grid.hrail>.loading-skeleton{width:160px}}
@@ -156,6 +156,8 @@
   .brand-row{display:flex;flex-wrap:wrap;gap:18px 50px;align-items:center;justify-content:center;margin-bottom:30px}
   .brand-word{font-family:var(--font-serif);font-size:26px;letter-spacing:.04em;color:#2a2a2a;opacity:.78;transition:opacity .2s}
   .brand-word:hover{opacity:1}
+  /* Mobile: the per-word inline sizes/spacing wrap into a jumble — normalise them. */
+  @media(max-width:600px){.brand-row{gap:12px 22px;margin-bottom:22px}.brand-word{font-size:18px!important;letter-spacing:.04em!important}}
   .btn-outline{display:inline-flex;gap:9px;align-items:center;border:1px solid var(--ink);border-radius:30px;padding:12px 26px;font-size:13px;letter-spacing:.06em;font-weight:500;transition:.2s}
   .btn-outline:hover{background:var(--ink);color:#fff}
 
@@ -181,11 +183,13 @@
   .news-ok{font-weight:600;margin:0}
   .news-note{font-size:13px;margin-top:12px}
   /* Compact mid-page email capture */
-  .mini-news-card{display:flex;align-items:center;justify-content:space-between;gap:26px;background:var(--cream);border:1px solid var(--border);border-radius:16px;padding:26px 32px}
-  .mini-news-copy h3{font-family:var(--font-serif);font-size:24px;color:var(--ink);margin:0 0 4px}
+  .mini-news-card{display:flex;align-items:center;justify-content:space-between;gap:30px;background:linear-gradient(135deg,var(--cream),#fff);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:18px;padding:28px 34px;max-width:960px;margin:0 auto;box-shadow:0 4px 18px rgba(26,20,16,.04)}
+  .mini-news-copy h3{font-family:var(--font-serif);font-size:26px;color:var(--ink);margin:0 0 4px}
   .mini-news-copy p{color:var(--text-muted);font-size:14px;margin:0;line-height:1.5}
-  .news-form.mini{margin:0;flex:1 1 360px;max-width:440px;border:1px solid var(--border)}
-  @media(max-width:640px){.mini-news-card{flex-direction:column;align-items:stretch;text-align:center;gap:16px;padding:24px 20px}.news-form.mini{max-width:100%}}
+  .news-form.mini{margin:0;flex:1 1 340px;max-width:420px;border:1px solid var(--border);box-shadow:0 2px 8px rgba(26,20,16,.05)}
+  /* When the card stacks (column), the form's flex-basis applies to the VERTICAL
+     axis — flex:1 1 340px made the pill 340px tall. Reset it so it's a normal row. */
+  @media(max-width:640px){.mini-news-card{flex-direction:column;align-items:stretch;text-align:center;gap:18px;padding:26px 22px;border-left-width:1px;border-top:4px solid var(--gold)}.mini-news-copy h3{font-size:23px}.news-form.mini{max-width:100%;flex:0 0 auto;width:100%}}
 
   /* ---------- FOOTER ---------- */
   .footer{background:var(--ink);color:rgba(255,255,255,.75);padding:50px 0 30px}

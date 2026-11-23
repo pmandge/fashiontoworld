@@ -42,7 +42,16 @@
       ".ftw-cc-btn.ghost:hover{background:#f5f2ec}" +
       ".ftw-cc-btn.solid{background:#c0492f;border-color:#c0492f;color:#fff}" +
       ".ftw-cc-btn.solid:hover{background:#9e3a24}" +
-      "@media(max-width:560px){.ftw-cc-actions{justify-content:stretch}.ftw-cc-btn{flex:1 1 auto}}";
+      // Mobile: slim bottom bar so it doesn't cover the screen (was a tall card).
+      "@media(max-width:640px){" +
+        ".ftw-cc{left:8px;right:8px;bottom:8px;border-radius:12px}" +
+        ".ftw-cc-inner{padding:12px 14px}" +
+        ".ftw-cc h4{font-size:16px}" +
+        ".ftw-cc p{font-size:12px;line-height:1.4;margin:4px 0 0}" +
+        ".ftw-cc-prefs{gap:10px;margin:10px 0 0}" +
+        ".ftw-cc-actions{gap:6px;margin-top:10px;flex-wrap:nowrap;justify-content:stretch}" +
+        ".ftw-cc-btn{flex:1 1 auto;padding:9px 8px;font-size:12px;white-space:nowrap}" +
+      "}";
     document.head.appendChild(s);
   }
 
