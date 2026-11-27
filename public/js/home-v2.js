@@ -533,7 +533,9 @@
       italo:  { geo: 'US DE FR IT PL GB SE AT DK CH AU CZ BE PT NL IE CA FI ES HR HU SI', link: 'https://ad.admitad.com/g/l926tcw2sm272a4927b987e51e1a66/', cta: 'Shop Italo Jewelry →', text: 'Fine jewelry on <b>Italo Jewelry</b> — rings, necklaces &amp; more, shipped worldwide.' },
       kc:     { geo: 'US DE FR IT PL', link: 'https://dkfrh.com/g/mecn64hou7272a4927b91910db6aa6/', cta: 'Shop KICKS CREW →', text: 'Authentic sneakers &amp; streetwear on <b>KICKS CREW</b> — shipped worldwide.' },
       gs:     { geo: 'GB US SE NL IT AT DK DE FI FR IE CZ BE AU ES PL PT HU', link: 'https://bywiola.com/g/nx2yncwth6272a4927b9d497214fca/', cta: 'Shop G-shopper →', text: 'Global marketplace finds on <b>G-shopper</b> — fashion, gadgets &amp; home, shipped worldwide.' },
-      sw:     { geo: 'GB US SE NL AT DK CH DE IE AU BE PT PL CA IT FR FI ES CZ HR HU SI UA', link: 'https://codeaven.com/g/r9ybpohdxo272a4927b9806f4427c0/', cta: 'Shop StyleWe →', text: 'Women’s designer-style fashion on <b>StyleWe</b> — dresses &amp; more, shipped worldwide.' }
+      sw:     { geo: 'GB US SE NL AT DK CH DE IE AU BE PT PL CA IT FR FI ES CZ HR HU SI UA', link: 'https://codeaven.com/g/r9ybpohdxo272a4927b9806f4427c0/', cta: 'Shop StyleWe →', text: 'Women’s designer-style fashion on <b>StyleWe</b> — dresses &amp; more, shipped worldwide.' },
+      nora:   { geo: 'GB US SE AT DK DE CH CZ ES FI FR CA IE IT NL PL PT BE AU HR HU UA', link: 'https://qwpeg.com/g/of8pqgktr2272a4927b9c8dbeb8f0d/', cta: 'Shop NoraCora →', text: 'Women’s vintage &amp; casual fashion on <b>NoraCora</b> — dresses, tops &amp; more, shipped worldwide.' },
+      jfn:    { geo: 'AT US SE CH DK GB AU PT PL NL IT IE FR FI ES CZ CA BE HR HU SI UA', link: 'https://rzekl.com/g/kmcoj56juv272a4927b9608cdf386b/', cta: 'Shop JustFashionNow →', text: 'Trendy women’s fashion on <b>JustFashionNow</b> — dresses, tops &amp; more, shipped worldwide.' }
     };
     // Build CPC-payout country -> covering merchants from each merchant's geo.
     // Rotating across merchants lets a repeat visitor's clicks still pay
