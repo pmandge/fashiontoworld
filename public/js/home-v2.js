@@ -525,17 +525,25 @@
     var cpcCta = document.getElementById('cpcBandCta');
     if (!india && !cpc) return;
     // CPC merchants (Admitad affiliate deeplinks -> advertiser homepage).
+    // `geo` = ISO-2 countries where this offer pays CPC. Add a merchant by
+    // adding a row here; the per-country rotation below is built from it.
     var MERCH = {
-      ali:    { link: 'https://rzekl.com/g/1e8d114494272a4927b916525dc3e8/', cta: 'Shop AliExpress →', text: 'Millions more deals on <b>AliExpress</b> — fashion, tech &amp; home, shipped worldwide.' },
-      chicme: { link: 'https://rzekl.com/g/gf807z8tar272a4927b9312b8f391a/', cta: 'Shop ChicMe →', text: 'Trending women’s fashion on <b>ChicMe</b> — dresses, tops &amp; more, shipped worldwide.' },
-      italo:  { link: 'https://ad.admitad.com/g/l926tcw2sm272a4927b987e51e1a66/', cta: 'Shop Italo Jewelry →', text: 'Fine jewelry on <b>Italo Jewelry</b> — rings, necklaces &amp; more, shipped worldwide.' },
-      kc:     { link: 'https://dkfrh.com/g/mecn64hou7272a4927b91910db6aa6/', cta: 'Shop KICKS CREW →', text: 'Authentic sneakers &amp; streetwear on <b>KICKS CREW</b> — shipped worldwide.' }
+      ali:    { geo: 'US DE FR IT PL GB SE AT DK CH AU CZ BE PT NL IE CA FI ES HR HU SI', link: 'https://rzekl.com/g/1e8d114494272a4927b916525dc3e8/', cta: 'Shop AliExpress →', text: 'Millions more deals on <b>AliExpress</b> — fashion, tech &amp; home, shipped worldwide.' },
+      chicme: { geo: 'US DE FR IT PL GB SE AT DK CH AU CZ BE PT NL IE CA FI ES HR HU SI', link: 'https://rzekl.com/g/gf807z8tar272a4927b9312b8f391a/', cta: 'Shop ChicMe →', text: 'Trending women’s fashion on <b>ChicMe</b> — dresses, tops &amp; more, shipped worldwide.' },
+      italo:  { geo: 'US DE FR IT PL GB SE AT DK CH AU CZ BE PT NL IE CA FI ES HR HU SI', link: 'https://ad.admitad.com/g/l926tcw2sm272a4927b987e51e1a66/', cta: 'Shop Italo Jewelry →', text: 'Fine jewelry on <b>Italo Jewelry</b> — rings, necklaces &amp; more, shipped worldwide.' },
+      kc:     { geo: 'US DE FR IT PL', link: 'https://dkfrh.com/g/mecn64hou7272a4927b91910db6aa6/', cta: 'Shop KICKS CREW →', text: 'Authentic sneakers &amp; streetwear on <b>KICKS CREW</b> — shipped worldwide.' },
+      gs:     { geo: 'GB US SE NL IT AT DK DE FI FR IE CZ BE AU ES PL PT HU', link: 'https://bywiola.com/g/nx2yncwth6272a4927b9d497214fca/', cta: 'Shop G-shopper →', text: 'Global marketplace finds on <b>G-shopper</b> — fashion, gadgets &amp; home, shipped worldwide.' },
+      sw:     { geo: 'GB US SE NL AT DK CH DE IE AU BE PT PL CA IT FR FI ES CZ HR HU SI UA', link: 'https://codeaven.com/g/r9ybpohdxo272a4927b9806f4427c0/', cta: 'Shop StyleWe →', text: 'Women’s designer-style fashion on <b>StyleWe</b> — dresses &amp; more, shipped worldwide.' }
     };
-    // CPC-payout country -> covering merchants. Rotating across merchants lets a
-    // repeat visitor's clicks still pay (same-offer repeat clicks may not).
-    var AC = ['ali', 'chicme', 'italo'];        // AliExpress + ChicMe + Italo — all 22 CPC countries
-    var ACK = ['ali', 'chicme', 'italo', 'kc']; // + KICKS CREW — US, DE, FR, IT, PL
-    var CPC = { US:ACK, DE:ACK, FR:ACK, IT:ACK, PL:ACK, GB:AC, SE:AC, AT:AC, DK:AC, CH:AC, AU:AC, CZ:AC, BE:AC, PT:AC, NL:AC, IE:AC, CA:AC, FI:AC, ES:AC, HR:AC, HU:AC, SI:AC };
+    // Build CPC-payout country -> covering merchants from each merchant's geo.
+    // Rotating across merchants lets a repeat visitor's clicks still pay
+    // (same-offer repeat clicks may not). Order follows MERCH insertion.
+    var CPC = {};
+    Object.keys(MERCH).forEach(function (k) {
+      (MERCH[k].geo || '').split(/\s+/).forEach(function (cc) {
+        if (cc) { (CPC[cc] = CPC[cc] || []).push(k); }
+      });
+    });
     // Purchased/paid traffic => never serve CPC (rules). Reliable paid click-ids +
     // explicitly-tagged paid UTM mediums. fbclid is intentionally NOT used (Facebook
     // adds it to ORGANIC clicks too, and organic social is allowed). Sticky per session.
