@@ -526,13 +526,15 @@
     if (!india && !cpc) return;
     // CPC merchants (Admitad affiliate deeplinks -> advertiser homepage).
     var MERCH = {
-      ali: { link: 'https://rzekl.com/g/1e8d114494272a4927b916525dc3e8/', cta: 'Shop AliExpress →', text: 'Millions more deals on <b>AliExpress</b> — fashion, tech &amp; home, shipped worldwide.' },
-      kc:  { link: 'https://dkfrh.com/g/mecn64hou7272a4927b91910db6aa6/', cta: 'Shop KICKS CREW →', text: 'Authentic sneakers &amp; streetwear on <b>KICKS CREW</b> — shipped worldwide.' }
+      ali:    { link: 'https://rzekl.com/g/1e8d114494272a4927b916525dc3e8/', cta: 'Shop AliExpress →', text: 'Millions more deals on <b>AliExpress</b> — fashion, tech &amp; home, shipped worldwide.' },
+      chicme: { link: 'https://rzekl.com/g/gf807z8tar272a4927b9312b8f391a/', cta: 'Shop ChicMe →', text: 'Trending women’s fashion on <b>ChicMe</b> — dresses, tops &amp; more, shipped worldwide.' },
+      kc:     { link: 'https://dkfrh.com/g/mecn64hou7272a4927b91910db6aa6/', cta: 'Shop KICKS CREW →', text: 'Authentic sneakers &amp; streetwear on <b>KICKS CREW</b> — shipped worldwide.' }
     };
     // CPC-payout country -> covering merchants. Rotating across merchants lets a
     // repeat visitor's clicks still pay (same-offer repeat clicks may not).
-    var A = ['ali'], B = ['ali', 'kc']; // KICKS CREW CPC countries: US, DE, FR, IT, PL
-    var CPC = { US:B, DE:B, FR:B, IT:B, PL:B, GB:A, SE:A, AT:A, DK:A, CH:A, AU:A, CZ:A, BE:A, PT:A, NL:A, IE:A, CA:A, FI:A, ES:A, HR:A, HU:A, SI:A };
+    var AC = ['ali', 'chicme'];         // AliExpress + ChicMe — all 22 CPC countries
+    var ACK = ['ali', 'chicme', 'kc'];  // + KICKS CREW — US, DE, FR, IT, PL
+    var CPC = { US:ACK, DE:ACK, FR:ACK, IT:ACK, PL:ACK, GB:AC, SE:AC, AT:AC, DK:AC, CH:AC, AU:AC, CZ:AC, BE:AC, PT:AC, NL:AC, IE:AC, CA:AC, FI:AC, ES:AC, HR:AC, HU:AC, SI:AC };
     // Purchased/paid traffic => never serve CPC (rules). Reliable paid click-ids +
     // explicitly-tagged paid UTM mediums. fbclid is intentionally NOT used (Facebook
     // adds it to ORGANIC clicks too, and organic social is allowed). Sticky per session.
