@@ -53,3 +53,17 @@
   for = "/*.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+# Removed store-review posts -> redirect to the blog index (no 404s, keep link equity)
+[[redirects]]
+  from = "/pages/blog-noracora-vs-justfashionnow.html"
+  to = "/pages/blog.html"
+  status = 301
+[[redirects]]
+  from = "/pages/blog-stylewe-review.html"
+  to = "/pages/blog.html"
+  status = 301
+[[redirects]]
+  from = "/pages/blog-glasseslit-review.html"
+  to = "/pages/blog.html"
+  status = 301
