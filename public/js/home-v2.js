@@ -521,9 +521,18 @@
     var india = document.getElementById('shopIndia');
     var cpc = document.getElementById('cpcBand');
     var cpcLink = document.getElementById('cpcBandLink');
+    var cpcText = document.getElementById('cpcBandText');
+    var cpcCta = document.getElementById('cpcBandCta');
     if (!india && !cpc) return;
-    // Admitad AliExpress CPC-payout countries (ISO-2).
-    var CPC = { GB:1, US:1, SE:1, AT:1, DK:1, DE:1, CH:1, AU:1, CZ:1, BE:1, PT:1, PL:1, NL:1, IT:1, IE:1, CA:1, FR:1, FI:1, ES:1, HR:1, HU:1, SI:1 };
+    // CPC merchants (Admitad affiliate deeplinks -> advertiser homepage).
+    var MERCH = {
+      ali: { link: 'https://rzekl.com/g/1e8d114494272a4927b916525dc3e8/', cta: 'Shop AliExpress →', text: 'Millions more deals on <b>AliExpress</b> — fashion, tech &amp; home, shipped worldwide.' },
+      kc:  { link: 'https://dkfrh.com/g/mecn64hou7272a4927b91910db6aa6/', cta: 'Shop KICKS CREW →', text: 'Authentic sneakers &amp; streetwear on <b>KICKS CREW</b> — shipped worldwide.' }
+    };
+    // CPC-payout country -> covering merchants. Rotating across merchants lets a
+    // repeat visitor's clicks still pay (same-offer repeat clicks may not).
+    var A = ['ali'], B = ['ali', 'kc']; // KICKS CREW CPC countries: US, DE, FR, IT, PL
+    var CPC = { US:B, DE:B, FR:B, IT:B, PL:B, GB:A, SE:A, AT:A, DK:A, CH:A, AU:A, CZ:A, BE:A, PT:A, NL:A, IE:A, CA:A, FI:A, ES:A, HR:A, HU:A, SI:A };
     // Purchased/paid traffic => never serve CPC (rules). Reliable paid click-ids +
     // explicitly-tagged paid UTM mediums. fbclid is intentionally NOT used (Facebook
     // adds it to ORGANIC clicks too, and organic social is allowed). Sticky per session.
@@ -537,11 +546,24 @@
       } catch (e) {}
       return false;
     }
+    // Rotating pick so repeat visitors alternate merchants (more billable clicks).
+    function pick(list) {
+      if (list.length === 1) return list[0];
+      var n;
+      try { n = (parseInt(localStorage.getItem('ftw_cpc_rot') || '0', 10) || 0); localStorage.setItem('ftw_cpc_rot', String(n + 1)); } catch (e) { n = Math.floor(Math.random() * 1e6); }
+      return list[n % list.length];
+    }
     fetch('/_geo').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
       var c = d && d.country;
       if (india && c && c !== 'IN') india.style.display = 'none';
-      if (cpc && c && CPC[c] && !isPaid()) {
-        if (cpcLink) { try { cpcLink.href = cpcLink.href.split('?')[0] + '?subid=ftwcpc_' + c.toLowerCase(); } catch (e) {} }
+      var list = c && CPC[c];
+      if (cpc && list && !isPaid()) {
+        var key = pick(list), m = MERCH[key];
+        if (m) {
+          if (cpcLink) { try { cpcLink.href = m.link.split('?')[0] + '?subid=ftwcpc_' + key + '_' + c.toLowerCase(); } catch (e) { cpcLink.href = m.link; } }
+          if (cpcText) cpcText.innerHTML = m.text;
+          if (cpcCta) cpcCta.textContent = m.cta;
+        }
         cpc.hidden = false; cpc.setAttribute('aria-hidden', 'false');
       }
     }).catch(function () { });
