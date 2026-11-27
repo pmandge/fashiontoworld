@@ -511,14 +511,39 @@
     document.querySelectorAll('.news-form').forEach(wire);
   })();
 
-  /* ---- geo: show "Shop India's Favourite Stores" only to India visitors ----
-     Default stays visible; hide only for a CONFIRMED non-IN country (fail-open,
-     so the primary India audience keeps it even if the geo lookup is unavailable). */
+  /* ---- geo: India-band + CPC partner banner, from one /_geo lookup ----
+     India-band: default visible; hide only for a CONFIRMED non-IN country (fail-open,
+       so the primary India audience keeps it even if the geo lookup is unavailable).
+     CPC-band: default hidden; reveal ONLY for a CONFIRMED Admitad CPC-payout country
+       AND only on organic traffic (Admitad CPC Model Rules prohibit purchased/paid
+       traffic). Fail-closed — an unknown geo or a paid visit never shows it. */
   (function () {
-    var sec = document.getElementById('shopIndia');
-    if (!sec) return;
+    var india = document.getElementById('shopIndia');
+    var cpc = document.getElementById('cpcBand');
+    var cpcLink = document.getElementById('cpcBandLink');
+    if (!india && !cpc) return;
+    // Admitad AliExpress CPC-payout countries (ISO-2).
+    var CPC = { GB:1, US:1, SE:1, AT:1, DK:1, DE:1, CH:1, AU:1, CZ:1, BE:1, PT:1, PL:1, NL:1, IT:1, IE:1, CA:1, FR:1, FI:1, ES:1, HR:1, HU:1, SI:1 };
+    // Purchased/paid traffic => never serve CPC (rules). Reliable paid click-ids +
+    // explicitly-tagged paid UTM mediums. fbclid is intentionally NOT used (Facebook
+    // adds it to ORGANIC clicks too, and organic social is allowed). Sticky per session.
+    function isPaid() {
+      try {
+        if (sessionStorage.getItem('ftw_paid') === '1') return true;
+        var q = location.search || '';
+        var paid = /[?&](gclid|ttclid|msclkid|twclid|wbraid|gbraid)=/i.test(q);
+        if (!paid) { var m = (new URLSearchParams(q).get('utm_medium') || '').toLowerCase(); paid = /paid|cpc|ppc|cpm|display/.test(m); }
+        if (paid) { try { sessionStorage.setItem('ftw_paid', '1'); } catch (e) {} return true; }
+      } catch (e) {}
+      return false;
+    }
     fetch('/_geo').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
-      if (d && d.country && d.country !== 'IN') sec.style.display = 'none';
+      var c = d && d.country;
+      if (india && c && c !== 'IN') india.style.display = 'none';
+      if (cpc && c && CPC[c] && !isPaid()) {
+        if (cpcLink) { try { cpcLink.href = cpcLink.href.split('?')[0] + '?subid=ftwcpc_' + c.toLowerCase(); } catch (e) {} }
+        cpc.hidden = false; cpc.setAttribute('aria-hidden', 'false');
+      }
     }).catch(function () { });
   })();
 
